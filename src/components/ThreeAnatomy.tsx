@@ -1,7 +1,6 @@
 'use client'
 
-import * as THREE from 'three'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Html, OrbitControls, useGLTF } from '@react-three/drei'
 
@@ -25,7 +24,7 @@ function Model({
   showLabels?: boolean
   onPickPart?: (name: string | null) => void
 }) {
-  const group = useRef<THREE.Group>(null!)
+  const group = useRef<any>(null)
   const { scene } = useGLTF(url)
 
   // Simple hover state for labels
@@ -33,9 +32,9 @@ function Model({
 
   // Make all meshes interactive
   useEffect(() => {
-    scene.traverse((obj) => {
-      if ((obj as THREE.Mesh).isMesh) {
-        const mesh = obj as THREE.Mesh
+    scene.traverse((obj: any) => {
+      if (obj && obj.isMesh) {
+        const mesh = obj as any
         mesh.castShadow = true
         mesh.receiveShadow = true
         // Enable pointer events
