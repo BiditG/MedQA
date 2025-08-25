@@ -1,12 +1,21 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { createBrowserClient } from '@/utils/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Mode, ModeToggle } from '@/app/quiz/components/ModeToggle'
-import { Input } from '@/components/ui/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '../../../components/ui/sheet'
+import { Skeleton } from '@/components/ui/skeleton'
+import { SlidersHorizontal } from 'lucide-react'
 
 function normalizeStr(x?: string | null) {
   return (x ?? '').toString().trim()
@@ -32,6 +41,7 @@ export function FilterPanel({
   onStart: () => void
   onUrlSync: (next: FilterState) => void
 }) {
+  const [open, setOpen] = useState(false)
   // subjects
   const { data: subjects, isLoading: loadingSubjects } = useQuery({
     queryKey: ['subjects'],
@@ -104,15 +114,14 @@ export function FilterPanel({
   const disabled = loadingSubjects || loadingTopics
   const canStartNow = canStart && (availableCount ?? 0) > 0
 
-  return (
-    <Card className="shadow-md">
-      <CardHeader>
-        <CardTitle>Choose your practice</CardTitle>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        {/* Subject */}
-        <div>
-          <label className="mb-1 block text-xs font-medium">Subject</label>
+  const Panel = (
+    <div className="grid gap-4" id="start" aria-live="polite">
+      {/* Subject */}
+      <div>
+        <label className="mb-1 block text-xs font-medium">Subject</label>
+        {loadingSubjects ? (
+          <Skeleton className="h-10 w-full" />
+        ) : (
           <select
             value={value.subject}
             onChange={(e) =>
@@ -129,14 +138,18 @@ export function FilterPanel({
               </option>
             ))}
           </select>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Pick a subject to filter topics.
-          </p>
-        </div>
+        )}
+        <p className="mt-1 text-xs text-muted-foreground">
+          Pick a subject to filter topics.
+        </p>
+      </div>
 
-        {/* Topic */}
-        <div>
-          <label className="mb-1 block text-xs font-medium">Topic</label>
+      {/* Topic */}
+      <div>
+        <label className="mb-1 block text-xs font-medium">Topic</label>
+        {loadingTopics && value.subject ? (
+          <Skeleton className="h-10 w-full" />
+        ) : (
           <select
             value={value.topic}
             onChange={(e) => onChange({ ...value, topic: e.target.value })}
@@ -151,60 +164,138 @@ export function FilterPanel({
               </option>
             ))}
           </select>
-          <p className="mt-1 text-xs text-muted-foreground" aria-live="polite">
-            {value.subject
-              ? 'Topics updated.'
-              : 'Pick a subject to see topics.'}
-          </p>
-        </div>
+        )}
+        <p className="mt-1 text-xs text-muted-foreground" aria-live="polite">
+          {value.subject ? 'Topics updated.' : 'Pick a subject to see topics.'}
+        </p>
+      </div>
 
-        {/* Mode */}
-        <div>
-          <label className="mb-1 block text-xs font-medium">Mode</label>
-          <ModeToggle
-            mode={value.mode}
-            onChange={(m) => {
-              const next = { ...value, mode: m }
+      {/* Mode */}
+      <div>
+        <label className="mb-1 block text-xs font-medium">Mode</label>
+        <ModeToggle
+          mode={value.mode}
+          onChange={(m) => {
+            const next = { ...value, mode: m }
+            onChange(next)
+            onUrlSync(next)
+          }}
+        />
+        <p className="mt-1 text-xs text-muted-foreground">
+          Casual: explanations; Exam: timer + negative marking
+        </p>
+      </div>
+
+      {/* Count */}
+      <div>
+        <label className="mb-1 block text-xs font-medium">Question count</label>
+        <div className="flex gap-2">
+          {[10, 20, 30].map((n) => (
+            <Button
+              key={n}
+              type="button"
+              variant={value.count === n ? 'default' : 'outline'}
+              onClick={() => onChange({ ...value, count: n })}
+              className="h-8"
+              aria-pressed={value.count === n}
+            >
+              {n}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div className="text-xs text-muted-foreground" role="status">
+          ~ {(availableCount ?? 0).toLocaleString()} questions match your
+          filters
+        </div>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              const next = {
+                subject: '',
+                topic: '',
+                mode: 'casual' as Mode,
+                count: 10,
+              }
               onChange(next)
               onUrlSync(next)
             }}
-          />
-          <p className="mt-1 text-xs text-muted-foreground">
-            Casual: explanations; Exam: timer + negative marking
-          </p>
-        </div>
-
-        {/* Count */}
-        <div>
-          <label className="mb-1 block text-xs font-medium">
-            Question count
-          </label>
-          <div className="flex gap-2">
-            {[10, 20, 30].map((n) => (
-              <Button
-                key={n}
-                type="button"
-                variant={value.count === n ? 'default' : 'outline'}
-                onClick={() => onChange({ ...value, count: n })}
-                className="h-8"
-                aria-pressed={value.count === n}
-              >
-                {n}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between pt-2">
-          <div className="text-xs text-muted-foreground">
-            ~ {(availableCount ?? 0).toLocaleString()} questions match your
-            filters
-          </div>
+          >
+            Reset
+          </Button>
           <Button type="button" onClick={onStart} disabled={!canStartNow}>
-            Start Quiz
+            Start
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="relative">
+      {/* Desktop */}
+      <Card className="hidden shadow-md md:block">
+        <CardHeader>
+          <CardTitle>Choose your practice</CardTitle>
+        </CardHeader>
+        <CardContent>{Panel}</CardContent>
+      </Card>
+
+      {/* Mobile Sheet */}
+      <div className="md:hidden">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start gap-2"
+            >
+              <SlidersHorizontal className="h-4 w-4" aria-hidden /> Filters
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[85vh] overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Choose your practice</SheetTitle>
+              <SheetDescription>
+                Select subject, topic, mode, and count.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="mt-4">{Panel}</div>
+            <div className="sticky bottom-0 mt-6 flex items-center justify-between border-t bg-background/70 py-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const next = {
+                    subject: '',
+                    topic: '',
+                    mode: 'casual' as Mode,
+                    count: 10,
+                  }
+                  onChange(next)
+                  onUrlSync(next)
+                }}
+              >
+                Reset
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  onStart()
+                  setOpen(false)
+                }}
+                disabled={!canStartNow}
+              >
+                Start
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </div>
   )
 }

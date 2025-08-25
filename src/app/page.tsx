@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import ThemeToggle from '@/components/ThemeToggle'
 import { Hero } from './(home)/components/Hero'
 import { FilterPanel, type FilterState } from './(home)/components/FilterPanel'
 import { StatsPreview } from './(home)/components/StatsPreview'
@@ -10,6 +9,9 @@ import { RecentPills } from './(home)/components/RecentPills'
 import { StartBar } from './(home)/components/StartBar'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+// AppTopbar is provided by AppShell in layout; avoid double nav
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Brain, FileText, Activity, Box } from 'lucide-react'
 
 function HomeInner() {
   const router = useRouter()
@@ -51,30 +53,12 @@ function HomeInner() {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center">
-      {/* Top nav */}
-      <nav className="flex h-16 w-full items-center justify-center border-b border-b-foreground/10">
-        <div className="flex w-full max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="text-base font-semibold">
-            MedPrep MCQs
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/quiz"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Quiz
-            </Link>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       <Hero />
 
       {/* Main content */}
       <section className="w-full">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-8 md:grid-cols-3">
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 md:pr-2">
             <FilterPanel
               value={filters}
               onChange={setFilters}
@@ -82,41 +66,9 @@ function HomeInner() {
               onStart={onStart}
               onUrlSync={syncUrl}
             />
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {[
-                {
-                  href: '/tutor',
-                  title: 'AI Tutor',
-                  desc: 'Chat with an explainer bot.',
-                },
-                {
-                  href: '/pdf-to-mcq',
-                  title: 'PDF → MCQ',
-                  desc: 'Turn files into questions.',
-                },
-                {
-                  href: '/visualize',
-                  title: '3D Viz',
-                  desc: 'Explore anatomy (UI only).',
-                },
-                {
-                  href: '/diagnose',
-                  title: 'Diagnose with AI',
-                  desc: 'Guess the diagnosis.',
-                },
-              ].map((c) => (
-                <Link
-                  key={c.href}
-                  href={c.href}
-                  className="rounded-2xl border p-4 transition-colors hover:bg-accent/40"
-                >
-                  <div className="text-lg font-medium">{c.title}</div>
-                  <div className="text-sm text-muted-foreground">{c.desc}</div>
-                </Link>
-              ))}
-            </div>
+            <FeatureGrid />
           </div>
-          <div className="grid gap-4 md:col-span-1">
+          <div className="grid gap-4 md:col-span-1 md:pl-2">
             <StatsPreview subject={filters.subject} topic={filters.topic} />
             <QuickActions />
           </div>
@@ -158,5 +110,53 @@ export default function Home() {
     >
       <HomeInner />
     </Suspense>
+  )
+}
+
+function FeatureGrid() {
+  const cards = [
+    {
+      href: '/tutor',
+      title: 'AI Tutor',
+      desc: 'Chat with a clinical explainer to deepen understanding.',
+      Icon: Brain,
+    },
+    {
+      href: '/pdf-to-mcq',
+      title: 'PDF → MCQ',
+      desc: 'Transform notes and PDFs into practice questions.',
+      Icon: FileText,
+    },
+    {
+      href: '/visualize',
+      title: '3D Visualize',
+      desc: 'Explore anatomy in 3D (preview).',
+      Icon: Box,
+    },
+    {
+      href: '/diagnose',
+      title: 'Diagnose with AI',
+      desc: 'Interview a simulated patient and find the diagnosis.',
+      Icon: Activity,
+    },
+  ] as const
+  return (
+    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {cards.map(({ href, title, desc, Icon }) => (
+        <Link key={href} href={href} className="group outline-none">
+          <Card className="h-full transition-transform group-hover:translate-y-[-2px]">
+            <CardHeader className="flex-row items-center gap-3">
+              <div className="bg-primary/15 inline-flex h-9 w-9 items-center justify-center rounded-lg text-primary">
+                <Icon className="h-4 w-4" aria-hidden />
+              </div>
+              <CardTitle className="text-base">{title}</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0 text-sm text-muted-foreground">
+              {desc}
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
+    </div>
   )
 }

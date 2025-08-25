@@ -55,5 +55,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, hsl(152 70% 15% / 0.25), transparent 60%),
+      radial-gradient(900px 480px at 90% 0%, hsl(260 70% 20% / 0.18), transparent 60%),
+      radial-gradient(700px 420px at 50% 100%, hsl(200 75% 20% / 0.12), transparent 60%);
+    background-attachment: fixed;
   }
 }

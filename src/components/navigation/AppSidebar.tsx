@@ -58,6 +58,7 @@ export function AppSidebar({
       <div
         role="dialog"
         aria-modal="true"
+        aria-label="Navigation menu"
         aria-hidden={!open}
         className={cn(
           'fixed inset-0 z-40 transition-opacity md:hidden',
@@ -74,6 +75,9 @@ export function AppSidebar({
             open ? 'translate-x-0' : '-translate-x-full',
           )}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') onClose()
+          }}
         >
           <div className="flex h-16 items-center gap-2 border-b px-4">
             <div className="h-8 w-8 rounded-md bg-primary/20" aria-hidden />
