@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { Brain, Sparkles } from 'lucide-react'
 
-export function Hero() {
+export function Hero({
+  onMobileStartClick,
+}: {
+  onMobileStartClick?: () => void
+}) {
   return (
     <section className="w-full border-b border-border/50">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-4 py-10 md:grid-cols-2 md:py-14">
@@ -19,12 +23,23 @@ export function Hero() {
             fast.
           </p>
           <div className="flex flex-wrap gap-3 pt-1">
-            <Link
+            <a
               href="#start"
+              onClick={(e) => {
+                try {
+                  if (
+                    typeof window !== 'undefined' &&
+                    window.matchMedia('(max-width: 639px)').matches
+                  ) {
+                    e.preventDefault()
+                    onMobileStartClick?.()
+                  }
+                } catch {}
+              }}
               className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             >
-              Start practicing
-            </Link>
+              START MCQ
+            </a>
             <Link
               href="/tutor"
               className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"

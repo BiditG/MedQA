@@ -2,6 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
+import { cn } from '@/utils/tailwind'
+import { Search, X, Pill, Sparkles, AlertTriangle } from 'lucide-react'
 
 type DrugInfo = {
   brandName: string | null
@@ -139,7 +144,6 @@ export default function DrugSearch() {
     }
 
     if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    // eslint-disable-next-line no-restricted-globals
     debounceRef.current = window.setTimeout(async () => {
       try {
         const url = `/api/drugs?q=${encodeURIComponent(term.trim())}&limit=8`
@@ -226,23 +230,29 @@ export default function DrugSearch() {
   }, [showSuggestions, suggestions, activeIndex])
 
   return (
-    <div ref={containerRef} className="mx-auto w-full max-w-3xl px-4">
-      <div className="rounded-2xl bg-gradient-to-r from-primary/5 via-transparent to-primary/5 p-1">
+    <div ref={containerRef} className="mx-auto w-full max-w-5xl px-4 md:px-6">
+      <div className="rounded-2xl border bg-gradient-to-r from-primary/5 via-transparent to-primary/5 p-[1px]">
         <div className="rounded-2xl bg-background p-4 shadow-lg sm:p-6">
-          <div className="flex items-start justify-between gap-4">
+          {/* Header */}
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-start">
             <div>
-              <h2 className="text-2xl font-bold">Drug Lookup</h2>
+              <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground">
+                <Pill className="h-3.5 w-3.5" /> OpenFDA Drugs
+              </div>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
+                Drug Lookup
+              </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Search OpenFDA drug labels for brand, generic, dosing and safety
-                info.
+                Search drug labels for brand, generic, dosing and safety info.
               </p>
             </div>
             <div className="text-right text-xs text-muted-foreground">
-              Tips: try a brand name or generic (e.g. ibuprofen). Suggestions
-              appear as you type.
+              Tips: try a brand or generic name (e.g. <em>ibuprofen</em>).
+              Suggestions appear as you type.
             </div>
           </div>
 
+          {/* Search Bar */}
           <form
             onSubmit={handleSearch}
             className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -251,31 +261,11 @@ export default function DrugSearch() {
               Search drug
             </label>
             <div className="relative w-full flex-1">
-              <svg
-                className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden
-              >
-                <path
-                  d="M21 21l-4.35-4.35"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle
-                  cx="10.5"
-                  cy="10.5"
-                  r="5.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-              </svg>
-              <input
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+              <Input
                 ref={inputRef}
                 id="drug-search"
-                className="w-full rounded-2xl border bg-input py-3 pl-11 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full rounded-2xl bg-input py-3 pl-11 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                 placeholder="e.g. ibuprofen or paracetamol"
                 value={term}
                 onChange={(e) => {
@@ -289,7 +279,6 @@ export default function DrugSearch() {
                 disabled={loading}
                 autoComplete="off"
               />
-
               {term && (
                 <button
                   type="button"
@@ -303,7 +292,7 @@ export default function DrugSearch() {
                   }}
                   className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-muted/10"
                 >
-                  ×
+                  <X className="h-4 w-4" />
                 </button>
               )}
 
@@ -317,7 +306,10 @@ export default function DrugSearch() {
                         setShowSuggestions(false)
                         handleSearch()
                       }}
-                      className={`w-full px-4 py-3 text-left text-sm hover:bg-primary/5 ${idx === activeIndex ? 'bg-primary/5' : ''}`}
+                      className={cn(
+                        'w-full px-4 py-3 text-left text-sm hover:bg-primary/5',
+                        idx === activeIndex && 'bg-primary/5',
+                      )}
                     >
                       <span className="font-medium">{s}</span>
                     </button>
@@ -338,7 +330,6 @@ export default function DrugSearch() {
                       className="h-4 w-4 animate-spin text-white"
                       viewBox="0 0 24 24"
                       fill="none"
-                      aria-hidden
                     >
                       <circle
                         className="opacity-25"
@@ -376,12 +367,17 @@ export default function DrugSearch() {
             </div>
           </form>
 
+          {/* Error */}
           {error && !loading && (
             <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              {error}
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="mt-0.5 h-4 w-4" />
+                <span>{error}</span>
+              </div>
             </div>
           )}
 
+          {/* Loading skeleton */}
           {loading && (
             <div className="mt-6 space-y-6">
               <div className="animate-pulse rounded-2xl border bg-gradient-to-r from-white/60 to-primary/5 p-5 shadow-inner">
@@ -397,76 +393,97 @@ export default function DrugSearch() {
             </div>
           )}
 
+          {/* Result */}
           {result && !loading && (
             <div className="mt-6 space-y-6">
-              <div className="rounded-xl border bg-gradient-to-r from-white/60 to-primary/5 p-5 shadow-inner">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-2xl font-extrabold">
-                      {result.brandName ?? result.genericName ?? 'Unknown'}
-                    </h3>
-                    {result.genericName && (
-                      <div className="mt-1 text-sm text-muted-foreground">
-                        Generic: {result.genericName}
+              <Card className="border bg-gradient-to-r from-white/60 to-primary/5 shadow-inner">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-2xl font-extrabold">
+                        {result.brandName ?? result.genericName ?? 'Unknown'}
+                      </h3>
+                      {result.genericName && (
+                        <div className="mt-1 text-sm text-muted-foreground">
+                          Generic: {result.genericName}
+                        </div>
+                      )}
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {result.drugClass && (
+                          <Badge className="bg-primary/10 text-primary">
+                            {result.drugClass}
+                          </Badge>
+                        )}
+                        {result.routes && (
+                          <Badge className="bg-accent/10 text-accent-foreground">
+                            {result.routes}
+                          </Badge>
+                        )}
                       </div>
-                    )}
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {result.drugClass && (
-                        <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                          {result.drugClass}
-                        </span>
-                      )}
-                      {result.routes && (
-                        <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
-                          {result.routes}
-                        </span>
-                      )}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Data from OpenFDA — simplified for readability
                     </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Data from OpenFDA — results simplified for readability
-                  </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="rounded-lg border bg-white p-4 shadow-sm">
-                  <div className="text-xs text-muted-foreground">
-                    Dosage & Administration
-                  </div>
-                  <div className="mt-2 whitespace-pre-wrap text-sm text-foreground/90">
-                    {result.dosage ?? 'Not available'}
-                  </div>
-                </div>
-
-                <div className="rounded-lg border bg-white p-4 shadow-sm">
-                  <div className="text-xs text-muted-foreground">
-                    Route(s) of administration
-                  </div>
-                  <div className="mt-2 text-sm">
-                    {result.routes ?? 'Not available'}
-                  </div>
-                </div>
-
-                <div className="rounded-lg border bg-white p-4 shadow-sm md:col-span-2">
-                  <div className="flex items-center justify-between">
+                <Card className="bg-white">
+                  <CardContent className="p-4">
                     <div className="text-xs text-muted-foreground">
-                      Side effects / Adverse reactions
+                      Dosage & Administration
                     </div>
-                  </div>
-                  <div className="mt-2 whitespace-pre-wrap text-sm leading-relaxed">
-                    {result.sideEffects ?? 'Not available'}
-                  </div>
-                </div>
+                    <div className="mt-2 whitespace-pre-wrap text-sm text-foreground/90">
+                      {result.dosage ?? 'Not available'}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                <div className="rounded-lg border bg-white p-4 shadow-sm md:col-span-2">
-                  <div className="text-xs text-muted-foreground">
-                    Warnings & Precautions
-                  </div>
-                  <div className="mt-2 whitespace-pre-wrap text-sm leading-relaxed">
-                    {result.warnings ?? 'Not available'}
-                  </div>
-                </div>
+                <Card className="bg-white">
+                  <CardContent className="p-4">
+                    <div className="text-xs text-muted-foreground">
+                      Route(s) of administration
+                    </div>
+                    <div className="mt-2 text-sm">
+                      {result.routes ?? 'Not available'}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white md:col-span-2">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs text-muted-foreground">
+                        Side effects / Adverse reactions
+                      </div>
+                    </div>
+                    <div className="mt-2 whitespace-pre-wrap text-sm leading-relaxed">
+                      {result.sideEffects ?? 'Not available'}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white md:col-span-2">
+                  <CardContent className="p-4">
+                    <div className="text-xs text-muted-foreground">
+                      Warnings & Precautions
+                    </div>
+                    <div className="mt-2 whitespace-pre-wrap text-sm leading-relaxed">
+                      {result.warnings ?? 'Not available'}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {/* Nice empty state */}
+          {!result && !loading && !error && (
+            <div className="mt-6 rounded-xl border bg-muted/30 p-6 text-center">
+              <Sparkles className="mx-auto h-6 w-6 text-muted-foreground" />
+              <div className="mt-2 text-sm text-muted-foreground">
+                Start typing a drug name above to see details.
               </div>
             </div>
           )}

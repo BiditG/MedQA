@@ -1,12 +1,25 @@
 import { Button } from '@/components/ui/button'
 
-export function StartBar({
+export function StartBar(props: {
+  mode: string
+  subject?: string
+  topic?: string
+  count: number
+  canStart: boolean
+  onStart: () => void
+  mobileOpen?: boolean
+}) {
+  return <StartBarInner {...props} />
+}
+
+function StartBarInner({
   mode,
   subject,
   topic,
   count,
   canStart,
   onStart,
+  mobileOpen,
 }: {
   mode: string
   subject?: string
@@ -14,7 +27,10 @@ export function StartBar({
   count: number
   canStart: boolean
   onStart: () => void
+  mobileOpen?: boolean
 }) {
+  if (mobileOpen) return null
+
   return (
     <div className="sticky bottom-0 left-0 right-0 border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:hidden">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 text-sm">

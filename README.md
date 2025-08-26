@@ -1,9 +1,9 @@
 ![image](https://github.com/michaeltroya/supa-next-starter/assets/38507347/2ea40874-98de-49ec-ab6a-74c816e6ca22)
 
-<h1 align="center">⚡ SupaNext Starter Kit ⚡</h1>
+<h1 align="center">🚀 MEDQAS</h1>
 
 <p align="center">
- The Last Next.js and Supabase Starter You Will Ever Need
+ MEDQAS — focused medical MCQ practice with AI assistance
 </p>
 
 <div align="center">
@@ -90,12 +90,9 @@
 
 ## Showcase
 
-Websites started using this template:
+MEDQAS is built from a Next.js starter. This repository contains the MEDQAS application code.
 
-- [mainspring.pro](https://www.mainspring.pro/)
-- [Add yours](https://github.com/michaeltroya/supa-next-starter/edit/main/README.md)
-
-# Documentation
+## Documentation
 
 ### Requirements
 

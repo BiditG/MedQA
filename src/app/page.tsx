@@ -24,6 +24,7 @@ function HomeInner() {
     count: Number(params.get('count') || 10),
   }
   const [filters, setFilters] = useState<FilterState>(initial)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   // Keep URL in sync (stable callback for exhaustive-deps)
   const syncUrl = useCallback(
@@ -53,7 +54,7 @@ function HomeInner() {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center">
-      <Hero />
+      <Hero onMobileStartClick={() => setMobileFiltersOpen(true)} />
 
       {/* Main content */}
       <section className="w-full">
@@ -65,6 +66,8 @@ function HomeInner() {
               canStart={true}
               onStart={onStart}
               onUrlSync={syncUrl}
+              mobileOpen={mobileFiltersOpen}
+              onMobileOpenChange={setMobileFiltersOpen}
             />
             <FeatureGrid />
           </div>
@@ -98,6 +101,7 @@ function HomeInner() {
         count={filters.count}
         canStart={true}
         onStart={onStart}
+        mobileOpen={mobileFiltersOpen}
       />
     </div>
   )

@@ -40,7 +40,7 @@ export function AppSidebar({
         <div className="flex h-16 items-center gap-2 border-b px-4">
           <div className="h-8 w-8 rounded-md bg-primary/20" aria-hidden />
           <Link href="/" className="text-sm font-semibold">
-            MedPrep
+            MEDQAS
           </Link>
         </div>
         <nav className="flex-1 overflow-y-auto p-3" aria-label="Primary">
@@ -85,7 +85,7 @@ export function AppSidebar({
           <div className="flex h-16 items-center gap-2 border-b px-4">
             <div className="h-8 w-8 rounded-md bg-primary/20" aria-hidden />
             <Link href="/" className="text-sm font-semibold" onClick={onClose}>
-              MedPrep
+              MEDQAS
             </Link>
           </div>
           <nav className="flex-1 overflow-y-auto p-3" aria-label="Primary">

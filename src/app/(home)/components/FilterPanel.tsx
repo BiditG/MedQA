@@ -34,12 +34,16 @@ export function FilterPanel({
   canStart,
   onStart,
   onUrlSync,
+  mobileOpen, // optional externally controlled open state for mobile sheet
+  onMobileOpenChange,
 }: {
   value: FilterState
   onChange: (next: FilterState) => void
   canStart: boolean
   onStart: () => void
   onUrlSync: (next: FilterState) => void
+  mobileOpen?: boolean
+  onMobileOpenChange?: (open: boolean) => void
 }) {
   const [open, setOpen] = useState(false)
   // subjects
@@ -247,7 +251,13 @@ export function FilterPanel({
 
       {/* Mobile Sheet */}
       <div className="md:hidden">
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet
+          open={mobileOpen ?? open}
+          onOpenChange={(v) => {
+            setOpen(v)
+            onMobileOpenChange?.(v)
+          }}
+        >
           <SheetTrigger asChild>
             <Button
               type="button"

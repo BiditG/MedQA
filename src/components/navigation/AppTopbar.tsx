@@ -43,7 +43,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             id={brandId}
             className="text-sm font-semibold tracking-tight sm:text-base"
           >
-            MedPrep MCQs
+            MEDQAS
           </span>
         </Link>
 
