@@ -10,7 +10,13 @@ import {
   useBounds,
   useGLTF,
 } from '@react-three/drei'
-import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+// Avoid importing types from 'three/examples/..' which may not have declaration files
+// in some environments (e.g. Vercel). Provide a minimal local GLTF type used here.
+type GLTF = {
+  scene: THREE.Object3D
+  nodes?: Record<string, any>
+  materials?: Record<string, any>
+}
 import * as THREE from 'three'
 
 type ThreeAnatomyProps = {
