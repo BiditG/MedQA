@@ -41,8 +41,7 @@ function Model({
   showLabels?: boolean
   onPickPart?: (name: string | null) => void
 }) {
-  // useGLTF returns a slightly different internal type; cast via unknown first to avoid
-  // an overly-strict structural comparison while keeping a helpful type for scene usage.
+  // Cast to GLTF for typed .scene access without adding 'three-stdlib' runtime dep
   const gltf = useGLTF(url) as unknown as GLTF & { scene: THREE.Object3D }
   const scene = gltf.scene
   const [hoverInfo, setHoverInfo] = useState<HoverInfo>(null)
@@ -153,7 +152,7 @@ export default function ThreeAnatomy({
 }: ThreeAnatomyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Fullscreen management
+  // Fullscreen management (client-only; safe-guarded)
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -263,8 +262,9 @@ function Lights() {
   )
 }
 
-// Optional: preload helper
+// Optional: preload helper (NO-OP on the server to avoid RSC boundary issues)
 export function preloadAnatomyModel(url: string) {
+  if (typeof window === 'undefined') return
   try {
     useGLTF.preload(url)
   } catch {}

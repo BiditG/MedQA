@@ -1,31 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
-
-// Lightweight fuzzy search: prefix -> substring -> subsequence heuristic
-function fuzzySearch(list: string[], q: string, limit = 8) {
-  const s = q.toLowerCase()
-  const scored = list.map((item) => {
-    const lower = item.toLowerCase()
-    if (lower === s) return { item, score: 0 }
-    if (lower.startsWith(s)) return { item, score: 1 }
-    const idx = lower.indexOf(s)
-    if (idx >= 0) return { item, score: 2 + idx / 1000 }
-
-    // subsequence match (all chars in order)
-    let i = 0
-    let j = 0
-    while (i < s.length && j < lower.length) {
-      if (s[i] === lower[j]) i++
-      j++
-    }
-    const subseq = i === s.length
-    const ratio = subseq ? s.length / lower.length : 999
-    return { item, score: 10 + ratio }
-  })
-  scored.sort((a, b) => a.score - b.score)
-  return scored.slice(0, limit).map((s) => s.item)
-}
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
 type DrugInfo = {
@@ -42,6 +17,18 @@ function safeJoin(arr: any): string | null {
   if (!arr) return null
   if (Array.isArray(arr)) return arr.join(', ')
   return String(arr)
+}
+
+// Simple local fuzzy search used for the client-side glossary fallback
+function fuzzySearch(list: string[], q: string, limit = 8) {
+  const needle = q.trim().toLowerCase()
+  if (!needle) return []
+  return list
+    .map((s) => ({ s, idx: s.toLowerCase().indexOf(needle) }))
+    .filter((x) => x.idx >= 0)
+    .sort((a, b) => a.idx - b.idx)
+    .slice(0, limit)
+    .map((x) => x.s)
 }
 
 export default function DrugSearch() {
@@ -61,7 +48,6 @@ export default function DrugSearch() {
     if (e) e.preventDefault()
     setError(null)
     setResult(null)
-    // close suggestions when a search is initiated to show results unobstructed
     setShowSuggestions(false)
     const q = term.trim()
     if (!q) {
@@ -70,7 +56,6 @@ export default function DrugSearch() {
     }
     setLoading(true)
     try {
-      // Search both brand and generic names (OR). Limit to 1 result for simplicity.
       const url = `/api/drugs?q=${encodeURIComponent(q)}`
       const res = await fetch(url)
       if (!res.ok) {
@@ -98,7 +83,6 @@ export default function DrugSearch() {
       const brandName = safeJoin(openfda.brand_name) || null
       const genericName = safeJoin(openfda.generic_name) || null
 
-      // Try several possible pharm class fields
       const drugClass =
         safeJoin(openfda.pharm_class_epc) ||
         safeJoin(openfda.pharm_class_pe) ||
@@ -106,10 +90,8 @@ export default function DrugSearch() {
         safeJoin(openfda.pharm_class_moa) ||
         null
 
-      // Route / administration
       const routes = safeJoin(openfda.route) || safeJoin(item.route) || null
 
-      // Dosage: try structured fields, fall back to label sections
       const dosage =
         safeJoin(openfda.dosage_and_administration) ||
         (Array.isArray(item.dosage_and_administration)
@@ -140,7 +122,6 @@ export default function DrugSearch() {
     }
   }
 
-  // Fetch suggestions (debounced)
   useEffect(() => {
     if (!term.trim()) {
       setSuggestions([])
@@ -157,7 +138,6 @@ export default function DrugSearch() {
       return
     }
 
-    // fallback to server suggestions (debounced)
     if (debounceRef.current) window.clearTimeout(debounceRef.current)
     // eslint-disable-next-line no-restricted-globals
     debounceRef.current = window.setTimeout(async () => {
@@ -194,9 +174,8 @@ export default function DrugSearch() {
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current)
     }
-  }, [term])
+  }, [term, glossary])
 
-  // Close suggestions when clicking outside the component
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!containerRef.current) return
@@ -209,7 +188,6 @@ export default function DrugSearch() {
     return () => document.removeEventListener('click', onDocClick)
   }, [])
 
-  // lazy-load glossary when input is focused for the first time
   async function loadGlossary() {
     if (glossary) return
     try {
@@ -222,7 +200,6 @@ export default function DrugSearch() {
     }
   }
 
-  // Keyboard navigation for suggestions
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (!showSuggestions) return
@@ -298,7 +275,7 @@ export default function DrugSearch() {
               <input
                 ref={inputRef}
                 id="drug-search"
-                className="w-full rounded-xl border bg-input py-3 pl-11 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full rounded-2xl border bg-input py-3 pl-11 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                 placeholder="e.g. ibuprofen or paracetamol"
                 value={term}
                 onChange={(e) => {
@@ -312,6 +289,7 @@ export default function DrugSearch() {
                 disabled={loading}
                 autoComplete="off"
               />
+
               {term && (
                 <button
                   type="button"
@@ -323,15 +301,14 @@ export default function DrugSearch() {
                     setShowSuggestions(false)
                     inputRef.current?.focus()
                   }}
-                  className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-muted/10"
+                  className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-muted/10"
                 >
                   ×
                 </button>
               )}
 
-              {/* Suggestions dropdown */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-56 overflow-auto rounded-lg border bg-background py-1 shadow-lg transition-opacity duration-150">
+                <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-64 overflow-auto rounded-2xl border bg-background py-1 shadow-2xl">
                   {suggestions.map((s, idx) => (
                     <button
                       key={s + idx}
@@ -340,7 +317,7 @@ export default function DrugSearch() {
                         setShowSuggestions(false)
                         handleSearch()
                       }}
-                      className={`w-full px-3 py-2 text-left text-sm hover:bg-primary/5 ${idx === activeIndex ? 'bg-primary/5' : ''}`}
+                      className={`w-full px-4 py-3 text-left text-sm hover:bg-primary/5 ${idx === activeIndex ? 'bg-primary/5' : ''}`}
                     >
                       <span className="font-medium">{s}</span>
                     </button>
@@ -349,8 +326,12 @@ export default function DrugSearch() {
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button type="submit" className="px-6 py-2" disabled={loading}>
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                type="submit"
+                className="w-full px-5 py-2 sm:w-auto"
+                disabled={loading}
+              >
                 {loading ? (
                   <span className="inline-flex items-center gap-2">
                     <svg
@@ -401,10 +382,9 @@ export default function DrugSearch() {
             </div>
           )}
 
-          {/* Loading skeleton while fetching results */}
           {loading && (
             <div className="mt-6 space-y-6">
-              <div className="animate-pulse rounded-xl border bg-gradient-to-r from-white/60 to-primary/5 p-5 shadow-inner">
+              <div className="animate-pulse rounded-2xl border bg-gradient-to-r from-white/60 to-primary/5 p-5 shadow-inner">
                 <div className="mb-3 h-6 w-1/3 rounded bg-slate-200"></div>
                 <div className="h-4 w-1/4 rounded bg-slate-200"></div>
               </div>
