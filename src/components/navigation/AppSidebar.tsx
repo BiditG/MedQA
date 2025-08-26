@@ -25,6 +25,7 @@ export function AppSidebar({
   const links = [
     { href: '/', label: 'Dashboard', icon: Home },
     { href: '/drugs', label: 'Drug Lookup', icon: Pill },
+    { href: '/disease-glossary', label: 'Glossary', icon: FileUp },
     { href: '/devices', label: 'Device Lookup', icon: Box },
     { href: '/tutor', label: 'Tutor', icon: Bot },
     { href: '/pdf-to-mcq', label: 'PDF → MCQ', icon: FileUp },

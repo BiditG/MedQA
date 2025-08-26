@@ -138,6 +138,12 @@ function FeatureGrid() {
       Icon: Box,
     },
     {
+      href: '/disease-glossary',
+      title: 'Disease Glossary',
+      desc: 'English ↔ Nepali disease names for quick lookup.',
+      Icon: FileText,
+    },
+    {
       href: '/diagnose',
       title: 'Diagnose with AI',
       desc: 'Interview a simulated patient and find the diagnosis.',

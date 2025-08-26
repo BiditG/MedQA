@@ -56,6 +56,11 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
           <TopbarLink href="/visualize" label="3D Viz" Icon={Box} />
           <TopbarLink href="/drugs" label="Drug Lookup" Icon={Pill} />
           <TopbarLink href="/devices" label="Device Lookup" Icon={Box} />
+          <TopbarLink
+            href="/disease-glossary"
+            label="Glossary"
+            Icon={FileText}
+          />
           <TopbarLink href="/diagnose" label="Diagnose" Icon={Activity} />
         </nav>
 
