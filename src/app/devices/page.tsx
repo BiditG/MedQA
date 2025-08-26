@@ -1,9 +1,14 @@
-import DeviceSearch from '@/components/DeviceSearch'
+import dynamic from 'next/dynamic'
 
 export const metadata = {
   title: 'Device Lookup',
   description: 'Search FDA device databases and recalls',
 }
+
+// Client-only dynamic import to avoid importing client components from server
+const DeviceSearch = dynamic(() => import('@/components/DeviceSearch'), {
+  ssr: false,
+})
 
 export default function Page() {
   return (

@@ -1,5 +1,11 @@
-import DrugSearch from '@/components/DrugSearch'
+import dynamic from 'next/dynamic'
 import { PageHeader } from '@/components/PageHeader'
+
+// Dynamically load the client component on the client only to avoid server-side
+// attempting to access client module internals (prevents "default.then" errors).
+const DrugSearch = dynamic(() => import('@/components/DrugSearch'), {
+  ssr: false,
+})
 
 export default function DrugsPage() {
   return (

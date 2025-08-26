@@ -10,7 +10,7 @@ import {
   useBounds,
   useGLTF,
 } from '@react-three/drei'
-import type { GLTF } from 'three-stdlib'
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import * as THREE from 'three'
 
 type ThreeAnatomyProps = {
@@ -41,7 +41,9 @@ function Model({
   showLabels?: boolean
   onPickPart?: (name: string | null) => void
 }) {
-  const gltf = useGLTF(url) as GLTF & { scene: THREE.Object3D }
+  // useGLTF returns a slightly different internal type; cast via unknown first to avoid
+  // an overly-strict structural comparison while keeping a helpful type for scene usage.
+  const gltf = useGLTF(url) as unknown as GLTF & { scene: THREE.Object3D }
   const scene = gltf.scene
   const [hoverInfo, setHoverInfo] = useState<HoverInfo>(null)
 

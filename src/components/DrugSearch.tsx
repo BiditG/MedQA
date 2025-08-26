@@ -249,9 +249,9 @@ export default function DrugSearch() {
   }, [showSuggestions, suggestions, activeIndex])
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-4xl">
+    <div ref={containerRef} className="mx-auto w-full max-w-3xl px-4">
       <div className="rounded-2xl bg-gradient-to-r from-primary/5 via-transparent to-primary/5 p-1">
-        <div className="rounded-2xl bg-background p-6 shadow-lg">
+        <div className="rounded-2xl bg-background p-4 shadow-lg sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-2xl font-bold">Drug Lookup</h2>
@@ -268,12 +268,12 @@ export default function DrugSearch() {
 
           <form
             onSubmit={handleSearch}
-            className="mt-6 flex items-center gap-3"
+            className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
           >
             <label htmlFor="drug-search" className="sr-only">
               Search drug
             </label>
-            <div className="relative flex-1">
+            <div className="relative w-full flex-1">
               <svg
                 className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground"
                 viewBox="0 0 24 24"

@@ -63,8 +63,8 @@ export default function DeviceSearch() {
   }, [])
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-4xl p-4">
-      <div className="rounded-2xl border bg-background p-5 shadow-sm">
+    <div ref={containerRef} className="mx-auto w-full max-w-3xl p-4">
+      <div className="rounded-2xl border bg-background p-4 shadow-sm sm:p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold">Device Lookup</h2>
@@ -78,11 +78,14 @@ export default function DeviceSearch() {
           </div>
         </div>
 
-        <form onSubmit={search} className="mt-4 grid gap-3 sm:grid-cols-3">
+        <form
+          onSubmit={search}
+          className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3"
+        >
           <input
             aria-label="device-name"
             placeholder="Device name (e.g. pacemaker)"
-            className="col-span-2 rounded border px-3 py-2"
+            className="col-span-2 w-full rounded border px-3 py-2 sm:col-span-2"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -157,17 +160,19 @@ export default function DeviceSearch() {
                 {results.results &&
                 Array.isArray(results.results) &&
                 results.results.length > 0 ? (
-                  results.results.map((r: DeviceRecord, i: number) => {
-                    if (r.device_class || r.device_name)
-                      return <ClassificationCard key={i} record={r} />
-                    if (r.k_number || r.clearance_date || r.submission_number)
-                      return <K510Card key={i} record={r} />
-                    if (r.pma_number || r.approval_date)
-                      return <PmaCard key={i} record={r} />
-                    if (r.recalling_firm || r.recall_initiation_date)
-                      return <EnforcementCard key={i} record={r} />
-                    return <DeviceCard key={i} record={r} />
-                  })
+                  <div className="grid grid-cols-1 gap-3">
+                    {results.results.map((r: DeviceRecord, i: number) => {
+                      if (r.device_class || r.device_name)
+                        return <ClassificationCard key={i} record={r} />
+                      if (r.k_number || r.clearance_date || r.submission_number)
+                        return <K510Card key={i} record={r} />
+                      if (r.pma_number || r.approval_date)
+                        return <PmaCard key={i} record={r} />
+                      if (r.recalling_firm || r.recall_initiation_date)
+                        return <EnforcementCard key={i} record={r} />
+                      return <DeviceCard key={i} record={r} />
+                    })}
+                  </div>
                 ) : (
                   <div className="text-sm text-gray-600">No records found.</div>
                 )}
