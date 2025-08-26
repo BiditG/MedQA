@@ -13,8 +13,49 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Next.js and Supabase Starter Kit',
-  description: 'The fastest way to build apps with Next.js and Supabase',
+  title: {
+    default: 'MEDQAS — All-in-One Medical App for Nepali Learners',
+    template: '%s | MEDQAS',
+  },
+  description:
+    'MEDQAS is Nepal’s all-in-one medical learning app: practice MCQs, explore a Nepali disease glossary, and track your progress to boost exam success.',
+  openGraph: {
+    title: 'MEDQAS — All-in-One Medical App for Nepali Students',
+    description:
+      'Practice thousands of clinical MCQs, learn Nepali disease names, and prepare smarter with MEDQAS — designed for Nepal’s future doctors.',
+    url: defaultUrl,
+    siteName: 'MEDQAS',
+    images: [
+      {
+        url: `${defaultUrl}/opengraph-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'MEDQAS – All-in-One Medical Learning App',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MEDQAS — Nepal’s All-in-One Medical App',
+    description:
+      'MCQ practice, Nepali glossary, and progress tracking — MEDQAS helps Nepali medical students master exams faster.',
+    images: [`${defaultUrl}/opengraph-image.png`],
+  },
+  keywords: [
+    'medical app Nepal',
+    'Nepali medical students',
+    'all in one medical app',
+    'practice MCQs',
+    'Nepali disease glossary',
+    'Nepali medicine learning',
+    'medical entrance Nepal',
+    'MCQ practice Nepal',
+  ],
+  authors: [{ name: 'MEDQAS Team' }],
+  creator: 'MEDQAS',
+  publisher: 'MEDQAS',
 }
 
 export default function RootLayout({
@@ -26,15 +67,15 @@ export default function RootLayout({
     <html
       lang="en"
       className={GeistSans.className}
-      style={{ colorScheme: 'dark' }}
+      style={{ colorScheme: 'light' }}
       suppressHydrationWarning
     >
       <body className="bg-background text-foreground">
         <NextTopLoader showSpinner={false} height={2} color="#2acf80" />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <ReactQueryProvider>
