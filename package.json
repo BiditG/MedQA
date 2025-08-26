@@ -51,6 +51,7 @@
     "react-dom": "18.2.0",
     "tailwind-merge": "^2.2.0",
     "three": "^0.159.0",
+  "fuse.js": "^6.6.2",
     "undici": "^5.28.2"
   },
   "devDependencies": {

@@ -3,7 +3,15 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
-import { Menu, Stethoscope, Brain, FileText, Activity } from 'lucide-react'
+import {
+  Menu,
+  Stethoscope,
+  Brain,
+  FileText,
+  Activity,
+  Pill,
+  Box,
+} from 'lucide-react'
 import { useId } from 'react'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
@@ -45,6 +53,9 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
         >
           <TopbarLink href="/tutor" label="AI Tutor" Icon={Brain} />
           <TopbarLink href="/pdf-to-mcq" label="PDF→MCQ" Icon={FileText} />
+          <TopbarLink href="/visualize" label="3D Viz" Icon={Box} />
+          <TopbarLink href="/drugs" label="Drug Lookup" Icon={Pill} />
+          <TopbarLink href="/devices" label="Device Lookup" Icon={Box} />
           <TopbarLink href="/diagnose" label="Diagnose" Icon={Activity} />
         </nav>
 

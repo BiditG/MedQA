@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   Settings,
   Stethoscope,
+  Pill,
 } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/utils/tailwind'
@@ -23,6 +24,8 @@ export function AppSidebar({
 }) {
   const links = [
     { href: '/', label: 'Dashboard', icon: Home },
+    { href: '/drugs', label: 'Drug Lookup', icon: Pill },
+    { href: '/devices', label: 'Device Lookup', icon: Box },
     { href: '/tutor', label: 'Tutor', icon: Bot },
     { href: '/pdf-to-mcq', label: 'PDF → MCQ', icon: FileUp },
     { href: '/visualize', label: '3D Viz', icon: Box },

@@ -1,0 +1,42 @@
+{
+  "Heart": {
+    "desiredRadius": 1,
+    "margin": 1.35,
+    "allowUserControl": true
+  },
+  "Lungs": {
+    "desiredRadius": 1.2,
+    "margin": 1.35,
+    "allowUserControl": true
+  },
+  "Brain": {
+    "desiredRadius": 1.05,
+    "margin": 1.35,
+    "allowUserControl": true
+  },
+  "Eye": {
+    "desiredRadius": 0.6,
+    "margin": 1.25,
+    "allowUserControl": true
+  },
+  "Skull": {
+    "desiredRadius": 1.25,
+    "margin": 1.4,
+    "allowUserControl": true
+  },
+  "Skeletal": {
+    "desiredRadius": 1.8,
+    "margin": 1.45,
+    "allowUserControl": true
+  },
+  "Spine": {
+    "desiredRadius": 1,
+    "margin": 1.35,
+    "allowUserControl": true
+  },
+  "DigestiveSystem": {
+    "desiredRadius": 1.6,
+    "margin": 1.4,
+    "allowUserControl": true
+  }
+}
