@@ -15,16 +15,18 @@ export function QuizHeader({
 }) {
   return (
     <div className="mb-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            {title}
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge className="border-primary/20 bg-primary/10 text-primary">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge className="border-primary/20 bg-primary/10 text-xs text-primary sm:text-sm">
             {index + 1} / {total}
           </Badge>
-          <Badge className="border-emerald-500/20 bg-emerald-500/10 text-emerald-500">
+          <Badge className="border-emerald-500/20 bg-emerald-500/10 text-xs text-emerald-500 sm:text-sm">
             Score: {score}
           </Badge>
         </div>

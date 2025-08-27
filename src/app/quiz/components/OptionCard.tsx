@@ -46,13 +46,15 @@ export function OptionCard({
           onClick?.()
         }
       }}
-      className={cn(base, states[state])}
+      className={cn(base, states[state], 'py-3')}
     >
       <div className="flex items-start gap-3">
-        <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 select-none items-center justify-center rounded-full border text-xs font-medium">
+        <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 shrink-0 select-none items-center justify-center rounded-full border text-sm font-medium">
           {String.fromCharCode(65 + index)}
         </span>
-        <span className="leading-relaxed">{children}</span>
+        <span className="whitespace-pre-wrap break-words leading-relaxed">
+          {children}
+        </span>
       </div>
     </button>
   )

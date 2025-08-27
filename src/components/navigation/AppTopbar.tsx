@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -12,6 +13,12 @@ import {
   Pill,
   Box,
 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
 import { useId } from 'react'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
@@ -51,17 +58,47 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
           aria-label="Primary"
           className="ml-2 hidden items-center gap-1 md:flex"
         >
-          <TopbarLink href="/tutor" label="AI Tutor" Icon={Brain} />
-          <TopbarLink href="/pdf-to-mcq" label="PDF→MCQ" Icon={FileText} />
+          {/* Lookup dropdown: drugs & devices */}
+          <TopbarDropdown
+            label="Lookup"
+            Icon={Pill}
+            items={[
+              { href: '/drugs', label: 'Drug Lookup' },
+              { href: '/devices', label: 'Device Lookup' },
+            ]}
+          />
+
+          {/* Checks dropdown: clinical/check quizzes */}
+          <TopbarDropdown
+            label="Checks"
+            Icon={Activity}
+            items={[
+              { href: '/heart-check', label: 'Heart Check' },
+              { href: '/stroke-check', label: 'Stroke Check' },
+              { href: '/bacteria-check', label: 'Bacteria Quiz' },
+              { href: '/pneumonia-check', label: 'Pneumonia Check' },
+              { href: '/mri-check', label: 'Tumour Check' },
+            ]}
+          />
+
+          {/* AI dropdown: AI tools */}
+          <TopbarDropdown
+            label="AI"
+            Icon={Brain}
+            items={[
+              { href: '/tutor', label: 'AI Tutor' },
+              { href: '/pdf-to-mcq', label: 'PDF → MCQ' },
+              { href: '/diagnose', label: 'Diagnose' },
+            ]}
+          />
+
+          <TopbarLink href="/quiz" label="Practice" Icon={Brain} />
           <TopbarLink href="/visualize" label="3D Viz" Icon={Box} />
-          <TopbarLink href="/drugs" label="Drug Lookup" Icon={Pill} />
-          <TopbarLink href="/devices" label="Device Lookup" Icon={Box} />
           <TopbarLink
             href="/disease-glossary"
             label="Glossary"
             Icon={FileText}
           />
-          <TopbarLink href="/diagnose" label="Diagnose" Icon={Activity} />
         </nav>
 
         <div className="ml-auto flex items-center gap-1">
@@ -90,5 +127,36 @@ function TopbarLink({
       <span className="hidden sm:inline">{label}</span>
       <span className="sr-only">{label}</span>
     </Link>
+  )
+}
+
+function TopbarDropdown({
+  label,
+  Icon,
+  items,
+}: {
+  label: string
+  Icon: React.ComponentType<{ className?: string }>
+  items: { href: string; label: string }[]
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+        >
+          <Icon className="h-4 w-4" />
+          <span className="hidden sm:inline">{label}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {items.map((it) => (
+          <DropdownMenuItem asChild key={it.href}>
+            <Link href={it.href}>{it.label}</Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

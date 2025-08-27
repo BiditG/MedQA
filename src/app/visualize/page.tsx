@@ -23,6 +23,7 @@ export default function VisualizePage() {
     { id: 'skull', label: 'Skull', url: '/models/skull.glb' },
     { id: 'spine', label: 'Spine', url: '/models/spine.glb' },
     { id: 'eye', label: 'Eye', url: '/models/eye.glb' },
+    { id: 'kidney', label: 'Kidney', url: '/models/kidney.glb' },
   ]
 
   const [modelUrl, setModelUrl] = useState(availableModels[0].url)

@@ -28,15 +28,10 @@ export function QuestionCard({
   onSelect: (opt: string, idx: number) => void
 }) {
   return (
-    <Card className="shadow-md">
+    <Card className="w-full max-w-full overflow-hidden shadow-md">
       <CardContent className="pt-6">
         {/* Badges */}
         <div className="mb-2 flex flex-wrap gap-2 text-xs">
-          {exam && (
-            <Badge className="border-sky-500/20 bg-sky-500/10 text-sky-600 dark:text-sky-300">
-              {exam}
-            </Badge>
-          )}
           {subject && (
             <Badge className="border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-300">
               {subject}
@@ -47,15 +42,13 @@ export function QuestionCard({
               {topic}
             </Badge>
           )}
-          {typeof year === 'number' && (
-            <Badge className="border-muted-foreground/10 bg-muted text-foreground/80">
-              {year}
-            </Badge>
-          )}
+          {/* year removed to avoid showing source year on every card */}
         </div>
 
         {/* Question */}
-        <h2 className="mb-4 text-lg font-medium leading-relaxed">{q}</h2>
+        <h2 className="mb-4 whitespace-pre-wrap break-words text-base font-medium leading-relaxed sm:text-lg">
+          {q}
+        </h2>
 
         {/* Options */}
         <div
@@ -92,7 +85,7 @@ export function QuestionCard({
                 onClick={() => onSelect(opt, idx)}
                 disabled={showOutcome}
               >
-                {opt}
+                <span className="whitespace-pre-wrap break-words">{opt}</span>
               </OptionCard>
             )
           })}

@@ -16,16 +16,25 @@ export function QuizFooter({
   const isLast = index + 1 >= total
   return (
     <div className="sticky bottom-0 left-0 right-0 mt-6 border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex w-full max-w-3xl items-center gap-4 px-4 py-3">
-        <div className="flex-1">
-          <div className="mb-1 text-xs text-muted-foreground">
-            Question {index + 1} of {total}
+      <div className="mx-auto w-full max-w-3xl px-4 py-3">
+        {/* small screens: stack progress and button */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex-1">
+            <div className="mb-1 text-xs text-muted-foreground">
+              Question {index + 1} of {total}
+            </div>
+            <Progress value={percent} />
           </div>
-          <Progress value={percent} />
+          <div className="sm:ml-2">
+            <Button
+              className="w-full sm:w-auto"
+              onClick={onNext}
+              disabled={!canNext}
+            >
+              {isLast ? 'Finish' : 'Next'}
+            </Button>
+          </div>
         </div>
-        <Button onClick={onNext} disabled={!canNext}>
-          {isLast ? 'Finish' : 'Next'}
-        </Button>
       </div>
     </div>
   )

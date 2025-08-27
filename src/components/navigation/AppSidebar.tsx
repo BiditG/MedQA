@@ -5,6 +5,7 @@ import {
   Activity,
   Bot,
   Box,
+  Brain,
   FileUp,
   Home,
   Image as ImageIcon,
@@ -22,16 +23,40 @@ export function AppSidebar({
   open: boolean
   onClose: () => void
 }) {
-  const links = [
-    { href: '/', label: 'Dashboard', icon: Home },
-    { href: '/drugs', label: 'Drug Lookup', icon: Pill },
-    { href: '/disease-glossary', label: 'Glossary', icon: FileUp },
-    { href: '/devices', label: 'Device Lookup', icon: Box },
-    { href: '/tutor', label: 'Tutor', icon: Bot },
-    { href: '/pdf-to-mcq', label: 'PDF → MCQ', icon: FileUp },
-    { href: '/visualize', label: '3D Viz', icon: Box },
-    { href: '/diagnose', label: 'Diagnose', icon: Stethoscope },
-    { href: '/settings', label: 'Settings', icon: Settings },
+  const groups = [
+    {
+      title: 'Practice',
+      items: [{ href: '/quiz', label: 'Practice MCQs', icon: Brain }],
+    },
+    {
+      title: 'Checks',
+      items: [
+        { href: '/heart-check', label: 'Heart Check', icon: Activity },
+        { href: '/stroke-check', label: 'Stroke Check', icon: Activity },
+        { href: '/bacteria-check', label: 'Bacteria Quiz', icon: Activity },
+        { href: '/pneumonia-check', label: 'Pneumonia Check', icon: ImageIcon },
+        { href: '/mri-check', label: 'Tumour Check', icon: ImageIcon },
+      ],
+    },
+    {
+      title: 'Lookup',
+      items: [
+        { href: '/drugs', label: 'Drug Lookup', icon: Pill },
+        { href: '/medicines', label: 'Medicine Directory', icon: Pill },
+        { href: '/devices', label: 'Device Lookup', icon: Box },
+        { href: '/disease-glossary', label: 'Glossary', icon: FileUp },
+      ],
+    },
+    {
+      title: 'AI',
+      items: [
+        { href: '/tutor', label: 'Tutor', icon: Bot },
+        { href: '/pdf-to-mcq', label: 'PDF → MCQ', icon: FileUp },
+        { href: '/visualize', label: '3D Viz', icon: Box },
+        { href: '/diagnose', label: 'Diagnose', icon: Stethoscope },
+        { href: '/pathogenesis', label: 'Pathogenesis', icon: Activity },
+      ],
+    },
   ]
 
   return (
@@ -45,16 +70,25 @@ export function AppSidebar({
           </Link>
         </div>
         <nav className="flex-1 overflow-y-auto p-3" aria-label="Primary">
-          <ul className="space-y-1">
-            {links.map((l) => (
-              <NavLink
-                key={l.href}
-                href={l.href}
-                icon={l.icon}
-                label={l.label}
-              />
+          <div className="space-y-4">
+            {groups.map((g) => (
+              <div key={g.title}>
+                <div className="px-3 pb-2 text-xs font-semibold text-muted-foreground">
+                  {g.title}
+                </div>
+                <ul className="space-y-1">
+                  {g.items.map((l) => (
+                    <NavLink
+                      key={l.href}
+                      href={l.href}
+                      icon={l.icon}
+                      label={l.label}
+                    />
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         </nav>
       </aside>
 
@@ -90,17 +124,26 @@ export function AppSidebar({
             </Link>
           </div>
           <nav className="flex-1 overflow-y-auto p-3" aria-label="Primary">
-            <ul className="space-y-1">
-              {links.map((l) => (
-                <NavLink
-                  key={l.href}
-                  href={l.href}
-                  icon={l.icon}
-                  label={l.label}
-                  onClick={onClose}
-                />
+            <div className="space-y-4">
+              {groups.map((g) => (
+                <div key={g.title}>
+                  <div className="px-3 pb-2 text-xs font-semibold text-muted-foreground">
+                    {g.title}
+                  </div>
+                  <ul className="space-y-1">
+                    {g.items.map((l) => (
+                      <NavLink
+                        key={l.href}
+                        href={l.href}
+                        icon={l.icon}
+                        label={l.label}
+                        onClick={onClose}
+                      />
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </nav>
         </div>
       </div>
