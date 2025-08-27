@@ -152,16 +152,18 @@ export default function StrokeReport() {
                 'ever_married',
                 'work_type',
                 'Residence_type',
-              ].map((k) => (
-                <div key={k} className="rounded border p-3">
-                  <div className="text-xs text-muted-foreground">
-                    {fieldMeta[k]?.label ?? k}
+              ].map((k) => {
+                const meta = fieldMeta[k]
+                const label = meta?.label ?? k
+                const fmt = meta && meta.fmt
+                const formatted = fmt ? fmt(row[k]) : row[k]
+                return (
+                  <div key={k} className="rounded border p-3">
+                    <div className="text-xs text-muted-foreground">{label}</div>
+                    <div className="font-mono text-sm">{formatted}</div>
                   </div>
-                  <div className="font-mono text-sm">
-                    {fieldMeta[k]?.fmt ? fieldMeta[k].fmt(row[k]) : row[k]}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
             <div className="space-y-3">
@@ -172,16 +174,18 @@ export default function StrokeReport() {
                 'avg_glucose_level',
                 'bmi',
                 'smoking_status',
-              ].map((k) => (
-                <div key={k} className="rounded border p-3">
-                  <div className="text-xs text-muted-foreground">
-                    {fieldMeta[k]?.label ?? k}
+              ].map((k) => {
+                const meta = fieldMeta[k]
+                const label = meta?.label ?? k
+                const fmt = meta && meta.fmt
+                const formatted = fmt ? fmt(row[k]) : row[k]
+                return (
+                  <div key={k} className="rounded border p-3">
+                    <div className="text-xs text-muted-foreground">{label}</div>
+                    <div className="font-mono text-sm">{formatted}</div>
                   </div>
-                  <div className="font-mono text-sm">
-                    {fieldMeta[k]?.fmt ? fieldMeta[k].fmt(row[k]) : row[k]}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </CardContent>
