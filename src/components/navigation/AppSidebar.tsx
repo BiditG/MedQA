@@ -26,7 +26,11 @@ export function AppSidebar({
   const groups = [
     {
       title: 'Practice',
-      items: [{ href: '/quiz', label: 'Practice MCQs', icon: Brain }],
+      items: [
+        { href: '/quiz', label: 'Practice MCQs', icon: Brain },
+        { href: '/cee-practice', label: 'CEE Practice', icon: Brain },
+        { href: '/cee-exam', label: 'CEE Full Exam', icon: Brain },
+      ],
     },
     {
       title: 'Checks',

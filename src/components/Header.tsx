@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import NextLogo from './NextLogo'
 import SupabaseLogo from './SupabaseLogo'
 
@@ -38,6 +39,20 @@ export default function Header() {
           Next.js
         </a>
       </p>
+      <div className="mt-4 flex justify-center">
+        <Link
+          href="/cee-practice"
+          className="inline-block rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:opacity-95"
+        >
+          CEE MCQ Practice
+        </Link>
+        <Link
+          href="/cee-exam"
+          className="ml-3 inline-block rounded bg-red-600 px-4 py-2 text-sm font-medium text-white hover:opacity-95"
+        >
+          CEE Full Exam
+        </Link>
+      </div>
       <div className="my-8 w-full bg-gradient-to-r from-transparent via-foreground/10 to-transparent p-[1px]" />
     </div>
   )

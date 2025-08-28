@@ -26,9 +26,9 @@ export function OptionCard({
     hover: 'bg-accent/50 shadow-sm',
     selected: 'bg-primary/5 border-primary text-foreground shadow-sm',
     correct:
-      'bg-emerald-100/30 dark:bg-emerald-500/10 border-emerald-400/60 text-emerald-700 dark:text-emerald-300',
+      'bg-green-100 dark:bg-green-900/20 border-green-500 text-green-800 dark:text-green-200',
     wrong:
-      'bg-rose-100/30 dark:bg-rose-500/10 border-rose-400/60 text-rose-700 dark:text-rose-300',
+      'bg-red-100 dark:bg-red-900/20 border-red-500 text-red-800 dark:text-red-200',
     disabled: 'opacity-100',
   }
 

@@ -93,6 +93,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
           />
 
           <TopbarLink href="/quiz" label="Practice" Icon={Brain} />
+          <TopbarLink href="/cee-practice" label="CEE Practice" Icon={Brain} />
           <TopbarLink href="/visualize" label="3D Viz" Icon={Box} />
           <TopbarLink
             href="/disease-glossary"

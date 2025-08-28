@@ -64,7 +64,7 @@ function getCorrectIndexOrText(answer: string) {
 }
 
 function QuizClient() {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams() ?? new URLSearchParams()
   const router = useRouter()
 
   const initialSubject = searchParams.get('subject') || ''
@@ -126,6 +126,7 @@ function QuizClient() {
   // Quiz state
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [revealed, setRevealed] = useState(false) // casual: after an answer; exam: reveal only in review
 
@@ -194,6 +195,7 @@ function QuizClient() {
     if (mode === 'casual') {
       if (selected) return // one try
       setSelected(option)
+      setSelectedIndex(idx)
       setRevealed(true)
       const correct =
         current.answerInfo.type === 'index'
@@ -208,6 +210,7 @@ function QuizClient() {
       // lock selection for this question by moving to next immediately or allow manual next?
       // We'll allow manual Next so user can change within question until they click Next.
       setSelected(option)
+      setSelectedIndex(idx)
     }
   }
 
@@ -222,12 +225,14 @@ function QuizClient() {
     }
     setCurrentIndex((i) => i + 1)
     setSelected(null)
+    setSelectedIndex(null)
     setRevealed(false)
   }
 
   function onRestart() {
     setCurrentIndex(0)
     setSelected(null)
+    setSelectedIndex(null)
     setScore(0)
     setRevealed(false)
     setSelections([])
@@ -466,7 +471,12 @@ function QuizClient() {
               {topic ? ` • ${topic}` : ''} • {count} q
             </span>
             <Link
-              href={`/?${new URLSearchParams({ ...(subject && { subject }), ...(topic && { topic }), mode, count: String(count) }).toString()}`}
+              href={`/?${new URLSearchParams({
+                ...(subject && { subject }),
+                ...(topic && { topic }),
+                mode,
+                count: String(count),
+              }).toString()}`}
               className="underline-offset-2 hover:underline"
             >
               Adjust
@@ -496,7 +506,12 @@ function QuizClient() {
             <div className="mt-4">
               <Button asChild>
                 <Link
-                  href={`/?${new URLSearchParams({ ...(subject && { subject }), ...(topic && { topic }), mode, count: String(count) }).toString()}`}
+                  href={`/?${new URLSearchParams({
+                    ...(subject && { subject }),
+                    ...(topic && { topic }),
+                    mode,
+                    count: String(count),
+                  }).toString()}`}
                 >
                   Adjust filters
                 </Link>
@@ -532,6 +547,7 @@ function QuizClient() {
                 options={current.options as string[]}
                 answerInfo={current.answerInfo}
                 selected={selected}
+                selectedIndex={selectedIndex}
                 onSelect={onSelect}
               />
 

@@ -1,0 +1,38 @@
+[
+  {
+    "subject": "Physics",
+    "chapter": "Mechanics",
+    "topic": "Kinematics",
+    "question": "A particle moves with constant acceleration. Its velocity changes from 10 m/s to 30 m/s in 5 s. What is the acceleration?",
+    "optionA": "2 m/s^2",
+    "optionB": "4 m/s^2",
+    "optionC": "6 m/s^2",
+    "optionD": "8 m/s^2",
+    "answer": "B",
+    "explanation": "Acceleration = (30-10)/5 = 4 m/s^2"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Organic",
+    "topic": "Hydrocarbons",
+    "question": "Which of the following compounds is aromatic?",
+    "optionA": "Cyclohexane",
+    "optionB": "Cyclohexene",
+    "optionC": "Benzene",
+    "optionD": "Cyclobutane",
+    "answer": "C",
+    "explanation": "Benzene has a conjugated 6π-electron system and is aromatic."
+  },
+  {
+    "subject": "Biology",
+    "chapter": "Genetics",
+    "topic": "Mendelian",
+    "question": "In Mendel's peas, tall (T) is dominant over short (t). What proportion of F2 offspring from Tt x Tt are short?",
+    "optionA": "1/4",
+    "optionB": "1/2",
+    "optionC": "3/4",
+    "optionD": "All",
+    "answer": "A",
+    "explanation": "TT:Tt:tt = 1:2:1 → 1/4 are short (tt)."
+  }
+]

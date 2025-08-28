@@ -15,6 +15,7 @@ export function QuestionCard({
   options,
   answerInfo,
   selected,
+  selectedIndex,
   onSelect,
 }: {
   exam?: string | null
@@ -25,6 +26,7 @@ export function QuestionCard({
   options: string[]
   answerInfo: AnswerInfo
   selected: string | null
+  selectedIndex?: number | null
   onSelect: (opt: string, idx: number) => void
 }) {
   return (
@@ -56,39 +58,69 @@ export function QuestionCard({
           role="radiogroup"
           aria-label="Options"
         >
-          {options.map((opt, idx) => {
-            const isCorrect =
-              answerInfo.type === 'index'
-                ? idx === answerInfo.index
-                : opt === answerInfo.text
-            const isSelected = selected === opt
+          {(() => {
+            // Determine if user selected a wrong answer (calculate once for all options)
             const showOutcome = selected !== null
+            let userSelectedWrong = false
+            if (
+              showOutcome &&
+              selectedIndex !== null &&
+              selectedIndex !== undefined
+            ) {
+              const selectedOptionText = options[selectedIndex]
+              const isSelectedCorrect =
+                answerInfo.type === 'index'
+                  ? selectedIndex === answerInfo.index
+                  : selectedOptionText === answerInfo.text
+              userSelectedWrong = !isSelectedCorrect
+            }
 
-            const state = showOutcome
-              ? isSelected && isCorrect
-                ? 'correct'
-                : isSelected && !isCorrect
-                  ? 'wrong'
-                  : isCorrect
+            return options.map((opt, idx) => {
+              const optText = (opt ?? '').toString()
+              const optNorm = optText.trim()
+              const selectedNorm = (selected ?? '').toString().trim()
+              // Derive correct option text from answerInfo; fall back to text compare
+              let correctText = ''
+              if (answerInfo.type === 'index') {
+                correctText = options[answerInfo.index] ?? ''
+              } else {
+                correctText = answerInfo.text ?? ''
+              }
+              const correctNorm = correctText.toString().trim()
+              const isCorrect = correctNorm !== '' && optNorm === correctNorm
+              // Prefer numeric selectedIndex when provided to avoid text mismatches
+              const isSelected =
+                typeof selectedIndex === 'number' && selectedIndex !== null
+                  ? selectedIndex === idx
+                  : selectedNorm !== '' && selectedNorm === optNorm
+
+              // When showing outcome, highlight selected and reveal correct if selected is wrong
+              const state = showOutcome
+                ? isSelected
+                  ? isCorrect
                     ? 'correct'
+                    : 'wrong'
+                  : userSelectedWrong && isCorrect
+                    ? 'correct' // reveal correct answer when user selected wrong
                     : 'default'
-              : isSelected
-                ? 'selected'
-                : 'default'
+                : isSelected
+                  ? 'selected'
+                  : 'default'
 
-            return (
-              <OptionCard
-                key={idx}
-                index={idx}
-                selected={isSelected}
-                state={state}
-                onClick={() => onSelect(opt, idx)}
-                disabled={showOutcome}
-              >
-                <span className="whitespace-pre-wrap break-words">{opt}</span>
-              </OptionCard>
-            )
-          })}
+              return (
+                <OptionCard
+                  key={idx}
+                  index={idx}
+                  selected={isSelected}
+                  state={state}
+                  onClick={() => onSelect(opt, idx)}
+                  disabled={showOutcome}
+                >
+                  <span className="whitespace-pre-wrap break-words">{opt}</span>
+                </OptionCard>
+              )
+            })
+          })()}
         </div>
       </CardContent>
     </Card>
