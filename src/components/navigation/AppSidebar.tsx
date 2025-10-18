@@ -14,20 +14,25 @@ import {
   Pill,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import { cn } from '@/utils/tailwind'
+import { Lock } from 'lucide-react'
+import { useProfile } from '@/hooks/useProfile'
 
 export function AppSidebar({
   open,
   onClose,
+  onLockedClick,
 }: {
   open: boolean
   onClose: () => void
+  onLockedClick?: () => void
 }) {
   const groups = [
     {
       title: 'Practice',
       items: [
-        { href: '/quiz', label: 'Practice MCQs', icon: Brain },
+        { href: '/quiz', label: 'AIIMS/NEET PG MCQs', icon: Brain },
         { href: '/cee-practice', label: 'CEE Practice', icon: Brain },
         { href: '/cee-exam', label: 'CEE Full Exam', icon: Brain },
       ],
@@ -63,6 +68,36 @@ export function AppSidebar({
     },
   ]
 
+  const { profile, loading } = useProfile()
+
+  const [authOpen, setAuthOpen] = useState(false)
+
+  // Prevent body from scrolling when mobile sidebar is open so touch scroll stays within the sidebar
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = prevOverflow || ''
+    }
+    return () => {
+      document.body.style.overflow = prevOverflow || ''
+      // restore only overflow; avoid touchAction to not interfere with native scrolling
+    }
+  }, [open])
+
+  function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
+    // Lock rules for regular users (non-premium, non-admin)
+    // - AI group: all items locked
+    // - Lookup: all locked except Glossary and Medicine Directory
+    // - Practice: all locked except CEE Practice (/cee-practice)
+    if (gTitle === 'AI') return true
+    if (gTitle === 'Lookup')
+      return !['Glossary', 'Medicine Directory'].includes(itemLabel)
+    if (gTitle === 'Practice') return itemHref !== '/cee-practice'
+    return false
+  }
+
   return (
     <>
       {/* Desktop sidebar */}
@@ -72,6 +107,13 @@ export function AppSidebar({
           <Link href="/" className="text-sm font-semibold">
             MEDQAS
           </Link>
+          <div className="ml-auto">
+            {profile ? (
+              <Link href="/profile" className="text-sm text-muted-foreground">
+                {profile.email}
+              </Link>
+            ) : null}
+          </div>
         </div>
         <nav className="flex-1 overflow-y-auto p-3" aria-label="Primary">
           <div className="space-y-4">
@@ -81,14 +123,28 @@ export function AppSidebar({
                   {g.title}
                 </div>
                 <ul className="space-y-1">
-                  {g.items.map((l) => (
-                    <NavLink
-                      key={l.href}
-                      href={l.href}
-                      icon={l.icon}
-                      label={l.label}
-                    />
-                  ))}
+                  {g.items.map((l) => {
+                    const restricted = isRestricted(g.title, l.href, l.label)
+                    const disabled =
+                      !loading &&
+                      restricted &&
+                      !(profile?.premium || profile?.role === 'admin')
+                    return (
+                      <NavLink
+                        key={l.href}
+                        href={l.href}
+                        icon={l.icon}
+                        label={l.label}
+                        onClick={disabled ? onLockedClick : undefined}
+                        disabled={disabled}
+                        trailing={
+                          disabled ? (
+                            <Lock className="h-4 w-4 text-muted-foreground" />
+                          ) : null
+                        }
+                      />
+                    )
+                  })}
                 </ul>
               </div>
             ))}
@@ -108,9 +164,8 @@ export function AppSidebar({
             ? 'pointer-events-auto opacity-100'
             : 'pointer-events-none opacity-0',
         )}
-        onClick={onClose}
       >
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
         <div
           className={cn(
             'absolute inset-y-0 left-0 w-72 border-r bg-background shadow-xl transition-transform',
@@ -127,7 +182,15 @@ export function AppSidebar({
               MEDQAS
             </Link>
           </div>
-          <nav className="flex-1 overflow-y-auto p-3" aria-label="Primary">
+          <nav
+            className="max-h-screen flex-1 overflow-y-auto p-3"
+            aria-label="Primary"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain',
+              touchAction: 'pan-y',
+            }}
+          >
             <div className="space-y-4">
               {groups.map((g) => (
                 <div key={g.title}>
@@ -135,15 +198,28 @@ export function AppSidebar({
                     {g.title}
                   </div>
                   <ul className="space-y-1">
-                    {g.items.map((l) => (
-                      <NavLink
-                        key={l.href}
-                        href={l.href}
-                        icon={l.icon}
-                        label={l.label}
-                        onClick={onClose}
-                      />
-                    ))}
+                    {g.items.map((l) => {
+                      const restricted = isRestricted(g.title, l.href, l.label)
+                      const disabled =
+                        !loading &&
+                        restricted &&
+                        !(profile?.premium || profile?.role === 'admin')
+                      return (
+                        <NavLink
+                          key={l.href}
+                          href={l.href}
+                          icon={l.icon}
+                          label={l.label}
+                          onClick={onClose}
+                          disabled={disabled}
+                          trailing={
+                            disabled ? (
+                              <Lock className="h-4 w-4 text-muted-foreground" />
+                            ) : null
+                          }
+                        />
+                      )
+                    })}
                   </ul>
                 </div>
               ))}

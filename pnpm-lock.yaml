@@ -70,7 +70,7 @@ importers:
         version: 6.6.2
       geist:
         specifier: ^1.0.0
-        version: 1.2.0(next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 1.2.0(next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       jspdf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -82,13 +82,13 @@ importers:
         version: 11.10.1
       next:
         specifier: ^14.1.0
-        version: 14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-themes:
         specifier: ^0.2.1
-        version: 0.2.1(next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.2.1(next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nextjs-toploader:
         specifier: ^1.6.4
-        version: 1.6.4(next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.6.4(next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -675,6 +675,10 @@ packages:
 
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
+
+  '@opentelemetry/api@1.9.0':
+    resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
+    engines: {node: '>=8.0.0'}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -5636,6 +5640,9 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
+  '@opentelemetry/api@1.9.0':
+    optional: true
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -7935,9 +7942,9 @@ snapshots:
 
   fuse.js@6.6.2: {}
 
-  geist@1.2.0(next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
+  geist@1.2.0(next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
     dependencies:
-      next: 14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   gensync@1.0.0-beta.2: {}
 
@@ -9289,13 +9296,13 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-themes@0.2.1(next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-themes@0.2.1(next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      next: 14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@next/env': 14.1.0
       '@swc/helpers': 0.5.2
@@ -9316,14 +9323,15 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.1.0
       '@next/swc-win32-ia32-msvc': 14.1.0
       '@next/swc-win32-x64-msvc': 14.1.0
+      '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-toploader@1.6.4(next@14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  nextjs-toploader@1.6.4(next@14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@types/nprogress': 0.2.3
-      next: 14.1.0(@babel/core@7.23.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nprogress: 0.2.0
       prop-types: 15.8.1
       react: 18.2.0

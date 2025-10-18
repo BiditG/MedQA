@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { createBrowserClient } from '@/utils/supabase'
+import { createBrowserClient } from '@/utils/supabase-browser'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { createBrowserClient } from '@/utils/supabase'
+import { createBrowserClient } from '@/utils/supabase-browser'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Mode, ModeToggle } from '@/app/quiz/components/ModeToggle'

@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { ChatBubble } from '@/components/chat/ChatBubble'
 import { Spinner } from '@/components/ui/spinner'
+// PremiumGuard removed; access control handled in middleware
 import {
   Clipboard,
   MessageSquare,

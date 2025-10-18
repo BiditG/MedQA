@@ -1,9 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
+import { useProfile } from '@/hooks/useProfile'
+import { Loader2, LogOut, User } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
 import {
   Menu,
   Stethoscope,
@@ -12,17 +20,17 @@ import {
   Activity,
   Pill,
   Box,
+  Lock,
 } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
 import { useId } from 'react'
+import SubscriptionModal from '@/components/SubscriptionModal'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
   const brandId = useId()
+  const { profile, loading } = useProfile()
+  const [authOpen, setAuthOpen] = useState(false)
+  const [subOpen, setSubOpen] = useState(false)
+  // Firebase removed — rely on Supabase profile only
   return (
     <header
       className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/50"
@@ -66,6 +74,9 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               { href: '/drugs', label: 'Drug Lookup' },
               { href: '/devices', label: 'Device Lookup' },
             ]}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
           />
 
           {/* Checks dropdown: clinical/check quizzes */}
@@ -79,6 +90,9 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               { href: '/pneumonia-check', label: 'Pneumonia Check' },
               { href: '/mri-check', label: 'Tumour Check' },
             ]}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
           />
 
           {/* AI dropdown: AI tools */}
@@ -90,21 +104,110 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               { href: '/pdf-to-mcq', label: 'PDF → MCQ' },
               { href: '/diagnose', label: 'Diagnose' },
             ]}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
           />
 
-          <TopbarLink href="/quiz" label="Practice" Icon={Brain} />
-          <TopbarLink href="/cee-practice" label="CEE Practice" Icon={Brain} />
-          <TopbarLink href="/visualize" label="3D Viz" Icon={Box} />
+          <TopbarLink
+            href="/quiz"
+            label="Practice"
+            Icon={Brain}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
+          />
+          <TopbarLink
+            href="/cee-practice"
+            label="CEE Practice"
+            Icon={Brain}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
+          />
+          <TopbarLink
+            href="/visualize"
+            label="3D Viz"
+            Icon={Box}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
+          />
           <TopbarLink
             href="/disease-glossary"
             label="Glossary"
             Icon={FileText}
+            profile={profile}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
           />
         </nav>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-3">
           <ThemeToggle />
+          <button
+            onClick={() => setSubOpen(true)}
+            className="hidden items-center gap-2 rounded-lg bg-gradient-to-r from-primary to-amber-500 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:brightness-95 md:inline-flex"
+          >
+            Subscribe
+          </button>
+          <div>
+            {!profile && loading ? (
+              <div className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                <span className="hidden sm:inline">Loading…</span>
+                <span className="sr-only">Loading profile</span>
+              </div>
+            ) : profile ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center gap-2 rounded-md px-2 py-1 hover:bg-accent/40">
+                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">
+                      {(profile?.full_name || profile?.email || 'U')
+                        .charAt(0)
+                        .toUpperCase()}
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  {profile?.role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <button
+                      onClick={async () => {
+                        const supabase = (
+                          await import('@/utils/supabase-browser')
+                        ).createBrowserClient()
+                        await supabase.auth.signOut()
+                        window.location.href = '/'
+                      }}
+                    >
+                      <span className="flex items-center gap-2">
+                        <LogOut className="h-4 w-4" /> Sign out
+                      </span>
+                    </button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+              >
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign in</span>
+                <span className="sr-only">Sign in</span>
+              </Link>
+            )}
+          </div>
         </div>
+        <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
       </div>
     </header>
   )
@@ -114,11 +217,53 @@ function TopbarLink({
   href,
   label,
   Icon,
+  profile,
+  loading,
+  onLockedClick,
 }: {
   href: string
   label: string
   Icon: React.ComponentType<{ className?: string }>
+  profile?: any
+  loading?: boolean
+  onLockedClick?: () => void
 }) {
+  function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
+    if (gTitle === 'AI') return true
+    if (gTitle === 'Lookup')
+      return !['Glossary', 'Medicine Directory'].includes(itemLabel)
+    if (gTitle === 'Practice') return itemHref !== '/cee-practice'
+    return false
+  }
+
+  // Derive restricted by mapping label/href into the same rules used by sidebar
+  const restricted = isRestricted(
+    label === 'Practice'
+      ? 'Practice'
+      : label === 'Glossary'
+        ? 'Lookup'
+        : label === 'CEE Practice'
+          ? 'Practice'
+          : 'Lookup',
+    href,
+    label,
+  )
+  const disabled =
+    !loading && restricted && !(profile?.premium || profile?.role === 'admin')
+
+  if (disabled) {
+    return (
+      <button
+        onClick={() => onLockedClick?.()}
+        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+      >
+        <Icon className="h-4 w-4" aria-hidden />
+        <span className="hidden sm:inline">{label}</span>
+        <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
+      </button>
+    )
+  }
+
   return (
     <Link
       href={href}
@@ -135,11 +280,49 @@ function TopbarDropdown({
   label,
   Icon,
   items,
+  profile,
+  loading,
+  onLockedClick,
 }: {
   label: string
   Icon: React.ComponentType<{ className?: string }>
   items: { href: string; label: string }[]
+  profile?: any
+  loading?: boolean
+  onLockedClick?: () => void
 }) {
+  function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
+    if (gTitle === 'AI') return true
+    if (gTitle === 'Lookup')
+      return !['Glossary', 'Medicine Directory'].includes(itemLabel)
+    if (gTitle === 'Practice') return itemHref !== '/cee-practice'
+    return false
+  }
+
+  const anyRestricted = items.some((it) =>
+    isRestricted(label, it.href, it.label),
+  )
+  const allRestricted = items.every((it) =>
+    isRestricted(label, it.href, it.label),
+  )
+  const hasAccess = loading || profile?.premium || profile?.role === 'admin'
+
+  // If entire group is restricted and the user lacks access, render a Subscribe
+  // button instead of the dropdown to avoid exposing the menu.
+  if (allRestricted && !hasAccess) {
+    return (
+      <Button
+        variant="ghost"
+        onClick={() => onLockedClick?.()}
+        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+      >
+        <Icon className="h-4 w-4" />
+        <span className="hidden sm:inline">{label}</span>
+        <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
+      </Button>
+    )
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -149,14 +332,37 @@ function TopbarDropdown({
         >
           <Icon className="h-4 w-4" />
           <span className="hidden sm:inline">{label}</span>
+          {/* If any child is restricted and user lacks access, show lock indicator */}
+          {!hasAccess && anyRestricted ? (
+            <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
+          ) : null}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {items.map((it) => (
-          <DropdownMenuItem asChild key={it.href}>
-            <Link href={it.href}>{it.label}</Link>
-          </DropdownMenuItem>
-        ))}
+        {items.map((it) => {
+          const restricted = isRestricted(label, it.href, it.label)
+          const disabled =
+            !loading &&
+            restricted &&
+            !(profile?.premium || profile?.role === 'admin')
+          if (disabled) {
+            return (
+              <DropdownMenuItem key={it.href}>
+                <button
+                  onClick={() => onLockedClick?.()}
+                  className="w-full text-left"
+                >
+                  {it.label}
+                </button>
+              </DropdownMenuItem>
+            )
+          }
+          return (
+            <DropdownMenuItem asChild key={it.href}>
+              <Link href={it.href}>{it.label}</Link>
+            </DropdownMenuItem>
+          )
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   )

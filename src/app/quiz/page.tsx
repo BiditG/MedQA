@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { createBrowserClient } from '@/utils/supabase'
+import { createBrowserClient } from '@/utils/supabase-browser'
 import { Button } from '@/components/ui/button'
 import { QuizHeader } from './components/QuizHeader'
 import { QuestionCard } from './components/QuestionCard'
@@ -360,7 +360,7 @@ function QuizClient() {
             onSubmit={onStartFormSubmit}
             className="rounded-2xl border p-4 sm:p-6"
           >
-            <h2 className="mb-2 text-lg font-semibold">Practice MCQs</h2>
+            <h2 className="mb-2 text-lg font-semibold">AIIMS/NEET PG MCQs</h2>
             <p className="mb-4 text-sm text-muted-foreground">
               Choose settings for your practice session.
             </p>

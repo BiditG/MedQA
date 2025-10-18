@@ -1,0 +1,58 @@
+{
+  "Physics": {
+    "totalMarks": 50,
+    "numQuestions": 50,
+    "topics": [
+      "Mechanics: motion, force, work, energy, power",
+      "Heat and thermodynamics",
+      "Waves and oscillations",
+      "Optics: reflection, refraction, lens, mirrors",
+      "Electricity and magnetism",
+      "Modern physics: atoms, nuclei, semiconductors"
+    ]
+  },
+  "Chemistry": {
+    "totalMarks": 50,
+    "numQuestions": 50,
+    "topics": [
+      "General chemistry: atomic structure, chemical bonding, periodic table",
+      "Physical chemistry: thermodynamics, kinetics, equilibrium, solutions",
+      "Inorganic chemistry: s, p, d block elements and compounds",
+      "Organic chemistry: hydrocarbons, functional groups, biomolecules, polymers",
+      "Environmental chemistry and everyday applications"
+    ]
+  },
+  "Botany": {
+    "totalMarks": 40,
+    "numQuestions": 40,
+    "topics": [
+      "Cell biology and genetics",
+      "Plant morphology and anatomy",
+      "Plant physiology (photosynthesis, respiration, transport)",
+      "Plant ecology and environment",
+      "Plant diversity, classification, and reproduction"
+    ]
+  },
+  "Zoology": {
+    "totalMarks": 40,
+    "numQuestions": 40,
+    "topics": [
+      "Cell biology and genetics",
+      "Human anatomy and physiology",
+      "Vertebrate and invertebrate diversity",
+      "Developmental biology and reproduction",
+      "Human health and disease",
+      "Ecology and environment"
+    ]
+  },
+  "Mental Agility Test (MAT)": {
+    "totalMarks": 20,
+    "numQuestions": 20,
+    "topics": [
+      "Verbal reasoning",
+      "Numerical reasoning",
+      "Logical sequencing",
+      "Spatial and abstract reasoning"
+    ]
+  }
+}

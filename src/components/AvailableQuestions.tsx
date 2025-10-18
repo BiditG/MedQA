@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useReducedMotion } from 'framer-motion'
-import { createBrowserClient } from '@/utils/supabase'
+import { createBrowserClient } from '@/utils/supabase-browser'
 
 const supabase = createBrowserClient()
 

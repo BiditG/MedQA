@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Hero } from './(home)/components/Hero'
 import { Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Brain,
@@ -18,8 +19,15 @@ import {
 import { motion, useReducedMotion } from 'framer-motion'
 
 function HomeInner() {
+  const params = useSearchParams()
+  const msg = params?.get('message')
   return (
     <div className="flex w-full flex-1 flex-col items-center">
+      {msg && (
+        <div className="w-full border border-emerald-600/20 bg-emerald-600/10 text-emerald-900 dark:text-emerald-200">
+          <div className="mx-auto max-w-6xl px-4 py-2 text-sm">{msg}</div>
+        </div>
+      )}
       <Hero />
       <section className="w-full">
         <div className="mx-auto max-w-6xl px-4 py-8">
@@ -49,7 +57,7 @@ function WhatWeOffer() {
   const cards = [
     {
       href: '/quiz',
-      title: 'Practice MCQs',
+      title: 'AIIMS/NEET PG MCQs',
       desc: 'Exam-style questions with explanations.',
       Icon: Brain,
     },
