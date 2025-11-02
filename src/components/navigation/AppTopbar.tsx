@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useProfile } from '@/hooks/useProfile'
+import { useSupabaseUser } from '@/hooks/useSupabaseUser' // <-- added
 import { Loader2, LogOut, User } from 'lucide-react'
 import {
   DropdownMenu,
@@ -27,10 +28,19 @@ import SubscriptionModal from '@/components/SubscriptionModal'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
   const brandId = useId()
-  const { profile, loading } = useProfile()
+  const { profile, loading: profileLoading } = useProfile()
+  const { user, loading: userLoading } = useSupabaseUser() // <-- added
   const [authOpen, setAuthOpen] = useState(false)
   const [subOpen, setSubOpen] = useState(false)
-  // Firebase removed — rely on Supabase profile only
+
+  const loading = profileLoading || userLoading // <-- combined loading state
+
+  // Merge user metadata with profile
+  const displayName =
+    user?.user_metadata?.full_name || profile?.full_name || user?.email
+  const avatarUrl =
+    user?.user_metadata?.avatar_url || user?.user_metadata?.picture
+
   return (
     <header
       className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/50"
@@ -152,21 +162,27 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             Subscribe
           </button>
           <div>
-            {!profile && loading ? (
+            {loading ? (
               <div className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                 <span className="hidden sm:inline">Loading…</span>
                 <span className="sr-only">Loading profile</span>
               </div>
-            ) : profile ? (
+            ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="inline-flex items-center gap-2 rounded-md px-2 py-1 hover:bg-accent/40">
-                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">
-                      {(profile?.full_name || profile?.email || 'U')
-                        .charAt(0)
-                        .toUpperCase()}
-                    </div>
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt="Profile"
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">
+                        {(displayName || 'U').charAt(0).toUpperCase()}
+                      </div>
+                    )}
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -187,6 +203,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
                         await supabase.auth.signOut()
                         window.location.href = '/'
                       }}
+                      className="w-full"
                     >
                       <span className="flex items-center gap-2">
                         <LogOut className="h-4 w-4" /> Sign out

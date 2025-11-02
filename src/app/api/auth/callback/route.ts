@@ -1,24 +1,30 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { createServerClient } from '@/utils/supabase-server'
+import { createRouteHandlerServerClient } from '@/utils/supabase-server'
 
-export async function GET(request: Request) {
-  // The `/auth/callback` route is required for the server-side auth flow implemented
-  // by the Auth Helpers package. It exchanges an auth code for the user's session.
-  // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-sign-in-with-code-exchange
-  const requestUrl = new URL(request.url)
-  const code = requestUrl.searchParams.get('code')
+export async function GET(req: Request) {
+  const url = new URL(req.url)
+  const code = url.searchParams.get('code')
 
-  if (code) {
-    const cookieStore = cookies()
-    const supabase = createServerClient(cookieStore)
-    const res = await supabase.auth.exchangeCodeForSession(code)
-    console.log('[auth:callback] exchangeCodeForSession result', {
-      error: res.error,
-      data: !!res.data,
-    })
+  if (!code) {
+    return NextResponse.redirect(
+      new URL('/login?message=No code provided', url.origin),
+    )
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(requestUrl.origin)
+  const res = NextResponse.redirect(new URL('/', url.origin))
+  const supabase = createRouteHandlerServerClient(res)
+
+  const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+  if (error) {
+    console.error('[auth/callback] error exchanging code', error)
+    return NextResponse.redirect(
+      new URL('/login?message=Auth error', url.origin),
+    )
+  }
+
+  // Optional: ensure profile exists (same logic as signin route)
+  // ...existing code from your signin route to upsert profile...
+
+  return res
 }

@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import SupaGoogleSignIn from '@/components/SupaGoogleSignIn'
+import SupaFacebookSignIn from '@/components/SupaFacebookSignIn'
 
 async function postJson(url: string, body: any) {
   const res = await fetch(url, {
@@ -99,6 +101,25 @@ export default function Login() {
               <p className="mb-4 text-sm text-muted-foreground">
                 Use your email and password to sign in.
               </p>
+
+              {/* Social sign-in buttons */}
+              <div className="mb-4 space-y-2">
+                <SupaGoogleSignIn />
+                <SupaFacebookSignIn />
+              </div>
+
+              {/* Divider */}
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-muted-foreground">
+                    Or continue with email
+                  </span>
+                </div>
+              </div>
+
               <form className="space-y-3" onSubmit={onSignIn}>
                 <label className="text-sm" htmlFor="signin-email">
                   Email
@@ -147,12 +168,30 @@ export default function Login() {
             </div>
           ) : (
             <div>
-              <h2 className="mb-2 text-lg font-semibold">Create an account</h2>
+              {/* Sign up view */}
+              <h2 className="mb-2 text-lg font-semibold">Create account</h2>
               <p className="mb-4 text-sm text-muted-foreground">
-                Create a new account to start practicing MCQs and track
-                progress.
+                Sign up to get started.
               </p>
-              <form onSubmit={onSignUp} className="space-y-3">
+
+              {/* Social sign-in for signup too */}
+              <div className="mb-4 space-y-2">
+                <SupaGoogleSignIn />
+                <SupaFacebookSignIn />
+              </div>
+
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-muted-foreground">
+                    Or continue with email
+                  </span>
+                </div>
+              </div>
+
+              <form className="space-y-3" onSubmit={onSignUp}>
                 <label className="text-sm" htmlFor="signup-email">
                   Email
                 </label>
