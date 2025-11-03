@@ -1,30 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const COHERE_API = 'https://api.cohere.com/v1/chat'
+// Gemma 3 27B Instruct via Google AI Studio
+const GOOGLE_AI_API =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent'
 
 type Msg = { role: 'user' | 'assistant' | 'system'; content: string }
 
-function toCohere(history: Msg[]) {
-  const preambles: string[] = []
-  const chat_history: Array<{ role: 'USER' | 'CHATBOT'; message: string }> = []
+function toGemma(history: Msg[]) {
+  const contents: Array<{
+    role: 'user' | 'model'
+    parts: Array<{ text: string }>
+  }> = []
+  let systemPrompt = ''
+
   for (const m of history) {
-    if (m.role === 'system') preambles.push(m.content)
-    else
-      chat_history.push({
-        role: m.role === 'user' ? 'USER' : 'CHATBOT',
-        message: m.content,
+    if (m.role === 'system') {
+      systemPrompt += m.content + '\n\n'
+    } else {
+      contents.push({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }],
       })
+    }
   }
-  return { preamble: preambles.join('\n\n'), chat_history }
+  return { systemPrompt, contents }
+}
+
+// Parse multiple API keys from env (comma-separated)
+function getApiKeys(): string[] {
+  const keys = process.env.GEMINI_API_KEY || ''
+  return keys
+    .split(',')
+    .map((k) => k.trim())
+    .filter(Boolean)
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.COHERE_API_KEY
-  if (!apiKey)
+  const apiKeys = getApiKeys()
+  if (apiKeys.length === 0) {
     return NextResponse.json(
-      { error: 'Missing COHERE_API_KEY' },
+      { error: 'Missing GEMINI_API_KEY (comma-separated for multiple keys)' },
       { status: 500 },
     )
+  }
 
   const body = await req.json().catch(() => ({}))
   const { messages, style, subject, topic } = body as {
@@ -33,6 +51,7 @@ export async function POST(req: NextRequest) {
     subject?: string
     topic?: string
   }
+
   if (!Array.isArray(messages) || messages.length === 0)
     return NextResponse.json({ error: 'messages[] required' }, { status: 400 })
 
@@ -43,7 +62,7 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     )
 
-  const { preamble, chat_history } = toCohere(messages)
+  const { systemPrompt, contents } = toGemma(messages)
   const systemBits: string[] = []
   systemBits.push(
     'You are MedPrep Tutor, a friendly medical explainer. Be concise, accurate, and supportive.',
@@ -63,33 +82,74 @@ export async function POST(req: NextRequest) {
   if (subject) systemBits.push(`Subject context: ${subject}`)
   if (topic) systemBits.push(`Topic context: ${topic}`)
 
+  const fullSystemPrompt = [systemBits.join(' '), systemPrompt]
+    .filter(Boolean)
+    .join('\n\n')
+
+  // Prepend system prompt to first user message if exists
+  if (fullSystemPrompt && contents.length > 0) {
+    contents[0].parts[0].text =
+      fullSystemPrompt + '\n\n' + contents[0].parts[0].text
+  }
+
   const payload = {
-    model: 'command-r',
-    message: last.content,
-    chat_history,
-    preamble: [systemBits.join(' '), preamble].filter(Boolean).join('\n\n'),
-    max_tokens: 600,
-    temperature: 0.3,
-  }
-
-  const resp = await fetch(COHERE_API, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
+    contents,
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 600,
+      topP: 0.95,
+      topK: 40,
     },
-    body: JSON.stringify(payload),
-  })
-
-  if (!resp.ok) {
-    const text = await resp.text()
-    return NextResponse.json(
-      { error: 'Cohere error', details: text },
-      { status: 500 },
-    )
   }
-  const data = await resp.json()
-  // Cohere returns { text } for chat completion
-  const text = data?.text ?? data?.response ?? ''
-  return NextResponse.json({ reply: text })
+
+  // Try each API key in order until one succeeds
+  let lastError = ''
+  for (let i = 0; i < apiKeys.length; i++) {
+    const apiKey = apiKeys[i]
+    console.log(`[tutor] Trying Gemini API key ${i + 1}/${apiKeys.length}`)
+
+    try {
+      const resp = await fetch(`${GOOGLE_AI_API}?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!resp.ok) {
+        const text = await resp.text()
+        lastError = `Key ${i + 1} failed: ${resp.status} ${text}`
+        console.warn(lastError)
+
+        // If rate limited (429), try next key immediately
+        if (resp.status === 429) continue
+
+        // For other errors, also try next key
+        continue
+      }
+
+      const data = await resp.json()
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+
+      if (!text) {
+        lastError = `Key ${i + 1}: No text in response`
+        console.warn(lastError)
+        continue
+      }
+
+      console.log(`[tutor] Success with API key ${i + 1}`)
+      return NextResponse.json({ reply: text })
+    } catch (err: any) {
+      lastError = `Key ${i + 1} exception: ${err.message}`
+      console.error(lastError)
+      continue
+    }
+  }
+
+  // All keys failed
+  return NextResponse.json(
+    { error: 'All API keys exhausted', details: lastError },
+    { status: 500 },
+  )
 }

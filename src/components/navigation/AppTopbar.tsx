@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useProfile } from '@/hooks/useProfile'
-import { useSupabaseUser } from '@/hooks/useSupabaseUser' // <-- added
+import { useSupabaseUser } from '@/hooks/useSupabaseUser'
 import { Loader2, LogOut, User } from 'lucide-react'
 import {
   DropdownMenu,
@@ -246,6 +246,10 @@ function TopbarLink({
   onLockedClick?: () => void
 }) {
   function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
+    // TODO: REMOVE BEFORE PUSHPING TO GITHUB
+    const isDev = process.env.NODE_ENV === 'development'
+    if (isDev) return false // bypass all restrictions in dev mode
+
     if (gTitle === 'AI') return true
     if (gTitle === 'Lookup')
       return !['Glossary', 'Medicine Directory'].includes(itemLabel)
@@ -309,6 +313,10 @@ function TopbarDropdown({
   onLockedClick?: () => void
 }) {
   function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
+    // TODO: REMOVE BEFORE PUSHING TO GITHUB
+    const isDev = process.env.NODE_ENV === 'development'
+    if (isDev) return false // bypass all restrictions in dev mode
+
     if (gTitle === 'AI') return true
     if (gTitle === 'Lookup')
       return !['Glossary', 'Medicine Directory'].includes(itemLabel)

@@ -1,98 +1,115 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const COHERE_API = 'https://api.cohere.com/v1/chat'
+// Gemma 3 27B Instruct via Google AI Studio
+const GOOGLE_AI_API =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent'
 
-type Msg = { role: 'user' | 'assistant' | 'system'; content: string }
-
-function toCohere(history: Msg[]) {
-  const preambles: string[] = []
-  const chat_history: Array<{ role: 'USER' | 'CHATBOT'; message: string }> = []
-  for (const m of history) {
-    if (m.role === 'system') preambles.push(m.content)
-    else
-      chat_history.push({
-        role: m.role === 'user' ? 'USER' : 'CHATBOT',
-        message: m.content,
-      })
-  }
-  return { preamble: preambles.join('\n\n'), chat_history }
+// Parse multiple API keys from env (comma-separated)
+function getApiKeys(): string[] {
+  const keys = process.env.GEMINI_API_KEY || ''
+  return keys
+    .split(',')
+    .map((k) => k.trim())
+    .filter(Boolean)
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.COHERE_API_KEY
-  if (!apiKey)
+  const apiKeys = getApiKeys()
+  if (apiKeys.length === 0) {
     return NextResponse.json(
-      { error: 'Missing COHERE_API_KEY' },
+      { error: 'Missing GEMINI_API_KEY (comma-separated for multiple keys)' },
       { status: 500 },
     )
+  }
 
   const body = await req.json().catch(() => ({}))
-  const { messages, disease, attempts } = body as {
-    messages: Msg[]
-    disease?: string
-    attempts?: number
-  }
-  if (!Array.isArray(messages) || messages.length === 0)
-    return NextResponse.json({ error: 'messages[] required' }, { status: 400 })
+  const { symptoms } = body as { symptoms?: string }
 
-  const revealAt = Math.max(3, Math.min(6, attempts ?? 3))
-
-  // System prompt: patient simulator
-  const baseSystem = [
-    'You are simulating a patient in a medical OSCE-style interview.',
-    'Stay in character: reply in first person as the patient describing symptoms.',
-    'Only reveal information when asked; avoid giving the diagnosis directly early on.',
-    'Provide realistic symptom details: onset, duration, severity, associated and relieving factors, relevant negatives.',
-  ]
-  if (disease)
-    baseSystem.push(
-      `Your underlying (hidden) diagnosis is: ${disease}. Reflect appropriate symptoms.`,
-    )
-
-  // If user has asked 3-4 meaningful questions, reveal diagnosis gently
-  const askedCount = messages.filter((m) => m.role === 'user').length
-  if (askedCount >= revealAt) {
-    baseSystem.push(
-      'The interviewer has asked enough questions. Now, gently reveal the likely diagnosis and a brief rationale.',
-    )
-  } else {
-    baseSystem.push(
-      'Do NOT reveal the exact diagnosis yet. Let them probe further.',
+  if (!symptoms || !symptoms.trim()) {
+    return NextResponse.json(
+      { error: 'symptoms field required' },
+      { status: 400 },
     )
   }
 
-  const last = messages[messages.length - 1]
-  const { preamble, chat_history } = toCohere([
-    { role: 'system', content: baseSystem.join(' ') },
-    ...messages,
-  ])
+  const prompt = `You are a medical diagnostic assistant. A patient describes the following symptoms:
+
+${symptoms}
+
+Based on these symptoms, provide:
+1. **Most Likely Diagnosis** (1-2 conditions)
+2. **Differential Diagnoses** (2-3 other possibilities)
+3. **Recommended Tests** (3-5 diagnostic tests to confirm)
+4. **Immediate Actions** (what the patient should do now)
+5. **Red Flags** (warning signs that require immediate medical attention)
+
+Be concise, clear, and evidence-based. Format your response with clear headings. Limit to 400-500 words.
+
+**Important:** This is for educational purposes only. Always advise seeking professional medical care.`
 
   const payload = {
-    model: 'command-r',
-    message: last.content,
-    chat_history,
-    preamble,
-    max_tokens: 400,
-    temperature: 0.5,
-  }
-
-  const resp = await fetch(COHERE_API, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: prompt }],
+      },
+    ],
+    generationConfig: {
+      temperature: 0.4,
+      maxOutputTokens: 800,
+      topP: 0.95,
+      topK: 40,
     },
-    body: JSON.stringify(payload),
-  })
-
-  if (!resp.ok) {
-    const text = await resp.text()
-    return NextResponse.json(
-      { error: 'Cohere error', details: text },
-      { status: 500 },
-    )
   }
-  const data = await resp.json()
-  const text = data?.text ?? data?.response ?? ''
-  return NextResponse.json({ reply: text, revealed: askedCount >= revealAt })
+
+  // Try each API key in order until one succeeds
+  let lastError = ''
+  for (let i = 0; i < apiKeys.length; i++) {
+    const apiKey = apiKeys[i]
+    console.log(`[diagnose] Trying Gemini API key ${i + 1}/${apiKeys.length}`)
+
+    try {
+      const resp = await fetch(`${GOOGLE_AI_API}?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!resp.ok) {
+        const text = await resp.text()
+        lastError = `Key ${i + 1} failed: ${resp.status} ${text}`
+        console.warn(lastError)
+
+        // If rate limited (429), try next key immediately
+        if (resp.status === 429) continue
+
+        // For other errors, also try next key
+        continue
+      }
+
+      const data = await resp.json()
+      const diagnosis = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+
+      if (!diagnosis) {
+        lastError = `Key ${i + 1}: No diagnosis in response`
+        console.warn(lastError)
+        continue
+      }
+
+      console.log(`[diagnose] Success with API key ${i + 1}`)
+      return NextResponse.json({ diagnosis })
+    } catch (err: any) {
+      lastError = `Key ${i + 1} exception: ${err.message}`
+      console.error(lastError)
+      continue
+    }
+  }
+
+  // All keys failed
+  return NextResponse.json(
+    { error: 'All API keys exhausted', details: lastError },
+    { status: 500 },
+  )
 }
