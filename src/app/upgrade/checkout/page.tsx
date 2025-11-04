@@ -1,7 +1,9 @@
+'use client'
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function CheckoutPage() {
+function CheckoutInner() {
   const params = useSearchParams()
   const plan = params?.get('plan') ?? 'monthly'
   const title = plan === 'yearly' ? 'Yearly — ₹2,999' : 'Monthly — ₹299'
@@ -29,5 +31,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutInner />
+    </Suspense>
   )
 }

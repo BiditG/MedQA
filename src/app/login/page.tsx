@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import SupaGoogleSignIn from '@/components/SupaGoogleSignIn'
 import SupaFacebookSignIn from '@/components/SupaFacebookSignIn'
@@ -19,7 +19,7 @@ async function postJson(url: string, body: any) {
   }
 }
 
-export default function Login() {
+function LoginInner() {
   const router = useRouter()
   const search = useSearchParams()
   const [loading, setLoading] = useState(false)
@@ -237,5 +237,13 @@ export default function Login() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={null}>
+      <LoginInner />
+    </Suspense>
   )
 }

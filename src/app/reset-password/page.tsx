@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { createBrowserClient } from '@/utils/supabase-browser'
 
-export default function ResetPasswordPage() {
+function ResetPasswordInner() {
   const params = useSearchParams()
   const router = useRouter()
   const [password, setPassword] = useState('')
@@ -83,5 +83,13 @@ export default function ResetPasswordPage() {
         )}
       </form>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordInner />
+    </Suspense>
   )
 }
