@@ -3,12 +3,8 @@ import { createMiddlewareClient } from '@/utils/supabase-server'
 
 export async function middleware(request: NextRequest) {
   try {
-    // This `try/catch` block is only here for the interactive tutorial.
-    // Feel free to remove once you have Supabase connected.
     const { supabase, response } = createMiddlewareClient(request)
 
-    // Refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-session-with-middleware
     const {
       data: { session },
     } = await supabase.auth.getSession()
@@ -17,7 +13,6 @@ export async function middleware(request: NextRequest) {
     const pathname = url.pathname
 
     // Early allow for static assets and Next internals
-    // This replicates the previous matcher exclusions without using capture groups
     const skipPrefixes = [
       '/_next/static',
       '/_next/image',
@@ -45,17 +40,15 @@ export async function middleware(request: NextRequest) {
     )
 
     if (!session && !isPublic) {
-      const redirectUrl = new URL('/', request.url)
+      // Redirect to login with a message and return URL
+      const redirectUrl = new URL('/login', request.url)
+      redirectUrl.searchParams.set('message', 'Please sign in to continue')
+      redirectUrl.searchParams.set('redirectTo', pathname)
       return NextResponse.redirect(redirectUrl)
     }
 
-    // Subscriptions removed: do not block routes based on premium status
-
     return response
   } catch (e) {
-    // If you are here, a Supabase client could not be created!
-    // This is likely because you have not set up environment variables.
-    // Check out http://localhost:3000 for Next Steps.
     return NextResponse.next({
       request: { headers: request.headers },
     })
@@ -63,6 +56,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all routes and handle exclusions inside the middleware function.
   matcher: ['/:path*'],
 }

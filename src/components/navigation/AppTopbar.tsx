@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useProfile } from '@/hooks/useProfile'
-import { useSupabaseUser } from '@/hooks/useSupabaseUser'
+import { useSupabaseUser } from '@/hooks/useSupabaseUser' // <-- added
 import { Loader2, LogOut, User } from 'lucide-react'
 import {
   DropdownMenu,
@@ -32,6 +32,16 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
   const { user, loading: userLoading } = useSupabaseUser() // <-- added
   const [authOpen, setAuthOpen] = useState(false)
   const [subOpen, setSubOpen] = useState(false)
+
+  const handleSubscribeClick = () => {
+    // Option 1: Close modal and redirect to payment page
+    setSubOpen(false)
+    window.location.href = '/pricing'
+
+    // Option 2: Or use Next.js router (import { useRouter } from 'next/navigation')
+    // const router = useRouter()
+    // router.push('/pricing')
+  }
 
   const loading = profileLoading || userLoading // <-- combined loading state
 
@@ -224,7 +234,11 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             )}
           </div>
         </div>
-        <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
+        <SubscriptionModal
+          open={subOpen}
+          onClose={() => setSubOpen(false)}
+          onSubscribe={handleSubscribeClick} // <-- pass handler
+        />
       </div>
     </header>
   )
@@ -246,10 +260,6 @@ function TopbarLink({
   onLockedClick?: () => void
 }) {
   function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
-    // TODO: REMOVE BEFORE PUSHPING TO GITHUB
-    const isDev = process.env.NODE_ENV === 'development'
-    if (isDev) return false // bypass all restrictions in dev mode
-
     if (gTitle === 'AI') return true
     if (gTitle === 'Lookup')
       return !['Glossary', 'Medicine Directory'].includes(itemLabel)
@@ -313,10 +323,6 @@ function TopbarDropdown({
   onLockedClick?: () => void
 }) {
   function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
-    // TODO: REMOVE BEFORE PUSHING TO GITHUB
-    const isDev = process.env.NODE_ENV === 'development'
-    if (isDev) return false // bypass all restrictions in dev mode
-
     if (gTitle === 'AI') return true
     if (gTitle === 'Lookup')
       return !['Glossary', 'Medicine Directory'].includes(itemLabel)

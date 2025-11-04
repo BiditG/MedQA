@@ -28,6 +28,9 @@ export default function Login() {
   )
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
 
+  // Add this line to get redirectTo
+  const redirectTo = search?.get('redirectTo') || '/'
+
   const onSignIn: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
     setMessage(null)
@@ -44,7 +47,8 @@ export default function Login() {
     try {
       router.refresh()
     } catch {}
-    router.push('/?message=Signed%20in%20successfully')
+    // Change this line to use redirectTo
+    router.push(redirectTo)
   }
 
   const onSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -102,10 +106,10 @@ export default function Login() {
                 Use your email and password to sign in.
               </p>
 
-              {/* Social sign-in buttons */}
+              {/* Social sign-in buttons - pass redirectTo */}
               <div className="mb-4 space-y-2">
-                <SupaGoogleSignIn />
-                <SupaFacebookSignIn />
+                <SupaGoogleSignIn redirectTo={redirectTo} />
+                <SupaFacebookSignIn redirectTo={redirectTo} />
               </div>
 
               {/* Divider */}
@@ -140,7 +144,7 @@ export default function Login() {
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300"
                   type="password"
                   name="password"
-                  placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+                  placeholder="••••••••"
                   required
                   aria-required="true"
                 />
@@ -150,7 +154,7 @@ export default function Login() {
                     disabled={loading}
                     className="w-full rounded-md bg-green-700 px-4 py-2 text-foreground sm:w-auto"
                   >
-                    {loading ? 'Signing in\u2026' : 'Sign In'}
+                    {loading ? 'Signing in…' : 'Sign In'}
                   </button>
                   <Link
                     href="/forgot-password"
@@ -174,10 +178,10 @@ export default function Login() {
                 Sign up to get started.
               </p>
 
-              {/* Social sign-in for signup too */}
+              {/* Social sign-in for signup too - pass redirectTo */}
               <div className="mb-4 space-y-2">
-                <SupaGoogleSignIn />
-                <SupaFacebookSignIn />
+                <SupaGoogleSignIn redirectTo={redirectTo} />
+                <SupaFacebookSignIn redirectTo={redirectTo} />
               </div>
 
               <div className="relative my-4">
@@ -220,7 +224,7 @@ export default function Login() {
                   disabled={loading}
                   className="w-full rounded-md border border-foreground/20 px-4 py-2"
                 >
-                  {loading ? 'Creating\u2026' : 'Create account'}
+                  {loading ? 'Creating…' : 'Create account'}
                 </button>
                 {message && (
                   <p className="mt-2 rounded-md bg-foreground/5 p-2 text-sm text-foreground">

@@ -6,9 +6,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useReducedMotion } from 'framer-motion'
 import { createBrowserClient } from '@/utils/supabase-browser'
 
-const supabase = createBrowserClient()
-
 async function fetchCount() {
+  const supabase = createBrowserClient()
   const res = await supabase
     .from('mcqs')
     .select('*', { head: true, count: 'exact' })

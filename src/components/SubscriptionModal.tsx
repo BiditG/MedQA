@@ -6,9 +6,11 @@ import { createPortal } from 'react-dom'
 export default function SubscriptionModal({
   open,
   onClose,
+  onSubscribe, // <-- add this prop
 }: {
   open: boolean
   onClose: () => void
+  onSubscribe?: () => void // <-- add this to the type
 }) {
   const [container] = useState(() =>
     typeof document !== 'undefined' ? document.createElement('div') : null,
@@ -27,7 +29,10 @@ export default function SubscriptionModal({
   const modal = (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-2xl rounded-2xl bg-gradient-to-br from-white to-slate-50 p-6 shadow-2xl ring-1 ring-black/5">
+      <div
+        className="relative z-10 w-full max-w-2xl rounded-2xl bg-gradient-to-br from-white to-slate-50 p-6 shadow-2xl ring-1 ring-black/5"
+        onClick={(e) => e.stopPropagation()} // <-- Add this to prevent clicks inside modal from bubbling
+      >
         <div className="flex items-start gap-6">
           <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <svg
@@ -87,7 +92,19 @@ export default function SubscriptionModal({
               </div>
 
               <div className="flex items-center justify-end">
-                <button className="rounded-full bg-primary px-6 py-3 text-white shadow hover:brightness-95">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    console.log('Subscribe button clicked!')
+                    onClose()
+                    setTimeout(() => {
+                      console.log('Redirecting to /pricing')
+                      window.location.href = '/pricing'
+                    }, 100)
+                  }}
+                  className="rounded-full bg-primary px-6 py-3 text-white shadow hover:brightness-95"
+                >
                   Subscribe — रु 299 / month
                 </button>
               </div>

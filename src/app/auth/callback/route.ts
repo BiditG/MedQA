@@ -4,6 +4,7 @@ import { createRouteHandlerServerClient } from '@/utils/supabase-server'
 export async function GET(req: Request) {
   const url = new URL(req.url)
   const code = url.searchParams.get('code')
+  const redirectTo = url.searchParams.get('redirectTo') || '/'
 
   if (!code) {
     return NextResponse.redirect(
@@ -11,7 +12,7 @@ export async function GET(req: Request) {
     )
   }
 
-  const res = NextResponse.redirect(new URL('/', url.origin))
+  const res = NextResponse.redirect(new URL(redirectTo, url.origin))
   const supabase = createRouteHandlerServerClient(res)
 
   const { error } = await supabase.auth.exchangeCodeForSession(code)
@@ -23,8 +24,23 @@ export async function GET(req: Request) {
     )
   }
 
-  // Optional: ensure profile exists (same logic as signin route)
-  // ...existing code from your signin route to upsert profile...
+  // Optional: ensure profile exists
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (user) {
+    await supabase.from('profiles').upsert(
+      {
+        id: user.id,
+        email: user.email,
+        full_name: user.user_metadata?.full_name || user.user_metadata?.name,
+        avatar_url:
+          user.user_metadata?.avatar_url || user.user_metadata?.picture,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'id' },
+    )
+  }
 
   return res
 }
