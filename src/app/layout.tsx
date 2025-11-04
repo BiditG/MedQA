@@ -6,6 +6,7 @@ import './globals.css'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import { AppShell } from '@/components/navigation/AppShell'
+import Footer from '@/components/Footer'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -80,7 +81,8 @@ export default function RootLayout({
         >
           <ReactQueryProvider>
             <AppShell>
-              {children}
+              <main>{children}</main>
+              <Footer />
               <Analytics />{' '}
               {/* ^^ remove this if you are not deploying to vercel. See more at https://vercel.com/docs/analytics  */}
             </AppShell>
