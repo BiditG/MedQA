@@ -25,8 +25,10 @@ import {
 } from 'lucide-react'
 import { useId } from 'react'
 import SubscriptionModal from '@/components/SubscriptionModal'
+import { useRouter } from 'next/navigation'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
+  const router = useRouter()
   const brandId = useId()
   const { profile, loading: profileLoading } = useProfile()
   const { user, loading: userLoading } = useSupabaseUser() // <-- added
@@ -195,30 +197,43 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
                     )}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
+                <DropdownMenuContent align="end">
+                  {/* Replace Link with onSelect navigation */}
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      router.push('/profile')
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <User className="h-4 w-4" /> Profile
+                    </span>
                   </DropdownMenuItem>
+
                   {profile?.role === 'admin' && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin">Admin</Link>
+                    <DropdownMenuItem
+                      onSelect={(e) => {
+                        e.preventDefault()
+                        router.push('/admin')
+                      }}
+                    >
+                      Admin
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem asChild>
-                    <button
-                      onClick={async () => {
-                        const supabase = (
-                          await import('@/utils/supabase-browser')
-                        ).createBrowserClient()
-                        await supabase.auth.signOut()
-                        window.location.href = '/'
-                      }}
-                      className="w-full"
-                    >
-                      <span className="flex items-center gap-2">
-                        <LogOut className="h-4 w-4" /> Sign out
-                      </span>
-                    </button>
+
+                  <DropdownMenuItem
+                    onSelect={async (e) => {
+                      e.preventDefault()
+                      const supabase = (
+                        await import('@/utils/supabase-browser')
+                      ).createBrowserClient()
+                      await supabase.auth.signOut()
+                      window.location.href = '/'
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <LogOut className="h-4 w-4" /> Sign out
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

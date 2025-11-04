@@ -12,7 +12,6 @@ export async function middleware(request: NextRequest) {
     const url = new URL(request.url)
     const pathname = url.pathname
 
-    // Early allow for static assets and Next internals
     const skipPrefixes = [
       '/_next/static',
       '/_next/image',
@@ -27,12 +26,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
-    // Require login for all app routes except public ones
+    // make callback public so cookies can be set
     const publicPaths = new Set([
       '/',
       '/login',
       '/forgot-password',
       '/reset-password',
+      '/auth/callback', // <-- important
       '/api/auth/callback',
     ])
     const isPublic = Array.from(publicPaths).some(

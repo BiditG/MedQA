@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { createBrowserClient } from '@/utils/supabase-browser'
 import { useProfile } from '@/hooks/useProfile'
+import { useUserStats } from '@/hooks/useUserStats'
 
 function formatDateMaybe(d?: string | null) {
   if (!d) return '—'
@@ -24,6 +25,7 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState('')
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const { stats, loading: statsLoading, error: statsError } = useUserStats()
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault()
@@ -123,6 +125,46 @@ export default function ProfilePage() {
                   >
                     Sign out
                   </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-4">
+              {statsError ? (
+                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  Failed to load stats: {statsError}
+                </div>
+              ) : null}
+
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div className="rounded-md border bg-card p-4">
+                  <div className="text-xs text-muted-foreground">
+                    Total MCQs
+                  </div>
+                  <div className="mt-1 text-2xl font-semibold">
+                    {statsLoading ? '—' : stats?.total_mcqs ?? 0}
+                  </div>
+                </div>
+                <div className="rounded-md border bg-card p-4">
+                  <div className="text-xs text-muted-foreground">
+                    Correct MCQs
+                  </div>
+                  <div className="mt-1 text-2xl font-semibold">
+                    {statsLoading ? '—' : stats?.total_correct ?? 0}
+                  </div>
+                </div>
+                <div className="rounded-md border bg-card p-4">
+                  <div className="text-xs text-muted-foreground">XP</div>
+                  <div className="mt-1 text-2xl font-semibold">
+                    {statsLoading ? '—' : stats?.xp ?? 0}
+                  </div>
+                </div>
+                <div className="rounded-md border bg-card p-4">
+                  <div className="text-xs text-muted-foreground">Rank</div>
+                  <div className="mt-1 text-2xl font-semibold">
+                    {statsLoading ? '—' : stats?.rank ?? '—'}
+                  </div>
                 </div>
               </div>
             </div>
