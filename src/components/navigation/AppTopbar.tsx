@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useProfile } from '@/hooks/useProfile'
-import { useSupabaseUser } from '@/hooks/useSupabaseUser' // <-- added
+import { useSupabaseUser } from '@/hooks/useSupabaseUser'
 import { Loader2, LogOut, User } from 'lucide-react'
 import {
   DropdownMenu,
@@ -25,27 +25,16 @@ import {
 } from 'lucide-react'
 import { useId } from 'react'
 import SubscriptionModal from '@/components/SubscriptionModal'
-import { useRouter } from 'next/navigation'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
-  const router = useRouter()
   const brandId = useId()
   const { profile, loading: profileLoading } = useProfile()
-  const { user, loading: userLoading } = useSupabaseUser() // <-- added
+  const { user, loading: userLoading } = useSupabaseUser()
   const [authOpen, setAuthOpen] = useState(false)
   const [subOpen, setSubOpen] = useState(false)
 
-  const handleSubscribeClick = () => {
-    // Option 1: Close modal and redirect to payment page
-    setSubOpen(false)
-    window.location.href = '/pricing'
-
-    // Option 2: Or use Next.js router (import { useRouter } from 'next/navigation')
-    // const router = useRouter()
-    // router.push('/pricing')
-  }
-
-  const loading = profileLoading || userLoading // <-- combined loading state
+  const loading = profileLoading || userLoading
+  const isAuthed = !!user
 
   // Merge user metadata with profile
   const displayName =
@@ -88,7 +77,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
           aria-label="Primary"
           className="ml-2 hidden items-center gap-1 md:flex"
         >
-          {/* Lookup dropdown: drugs & devices */}
+          {/* Lookup */}
           <TopbarDropdown
             label="Lookup"
             Icon={Pill}
@@ -97,11 +86,12 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               { href: '/devices', label: 'Device Lookup' },
             ]}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
           />
 
-          {/* Checks dropdown: clinical/check quizzes */}
+          {/* Checks */}
           <TopbarDropdown
             label="Checks"
             Icon={Activity}
@@ -113,11 +103,12 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               { href: '/mri-check', label: 'Tumour Check' },
             ]}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
           />
 
-          {/* AI dropdown: AI tools */}
+          {/* AI */}
           <TopbarDropdown
             label="AI"
             Icon={Brain}
@@ -127,17 +118,9 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               { href: '/diagnose', label: 'Diagnose' },
             ]}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
-          />
-
-          {/* Weekly Exam (public, access-code gated) */}
-          <TopbarLink
-            href="/weekly-exam"
-            label="Weekly Exam"
-            Icon={Brain}
-            profile={profile}
-            loading={false}
           />
 
           <TopbarLink
@@ -145,6 +128,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             label="Practice"
             Icon={Brain}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
           />
@@ -153,6 +137,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             label="CEE Practice"
             Icon={Brain}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
           />
@@ -161,6 +146,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             label="3D Viz"
             Icon={Box}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
           />
@@ -169,6 +155,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             label="Glossary"
             Icon={FileText}
             profile={profile}
+            isAuthed={isAuthed}
             loading={loading}
             onLockedClick={() => setSubOpen(true)}
           />
@@ -206,43 +193,30 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
                     )}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {/* Replace Link with onSelect navigation */}
-                  <DropdownMenuItem
-                    onSelect={(e) => {
-                      e.preventDefault()
-                      router.push('/profile')
-                    }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <User className="h-4 w-4" /> Profile
-                    </span>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
-
                   {profile?.role === 'admin' && (
-                    <DropdownMenuItem
-                      onSelect={(e) => {
-                        e.preventDefault()
-                        router.push('/admin')
-                      }}
-                    >
-                      Admin
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin</Link>
                     </DropdownMenuItem>
                   )}
-
-                  <DropdownMenuItem
-                    onSelect={async (e) => {
-                      e.preventDefault()
-                      const supabase = (
-                        await import('@/utils/supabase-browser')
-                      ).createBrowserClient()
-                      await supabase.auth.signOut()
-                      window.location.href = '/'
-                    }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <LogOut className="h-4 w-4" /> Sign out
-                    </span>
+                  <DropdownMenuItem asChild>
+                    <button
+                      onClick={async () => {
+                        const supabase = (
+                          await import('@/utils/supabase-browser')
+                        ).createBrowserClient()
+                        await supabase.auth.signOut()
+                        window.location.href = '/'
+                      }}
+                      className="w-full"
+                    >
+                      <span className="flex items-center gap-2">
+                        <LogOut className="h-4 w-4" /> Sign out
+                      </span>
+                    </button>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -258,11 +232,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             )}
           </div>
         </div>
-        <SubscriptionModal
-          open={subOpen}
-          onClose={() => setSubOpen(false)}
-          onSubscribe={handleSubscribeClick} // <-- pass handler
-        />
+        <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
       </div>
     </header>
   )
@@ -273,6 +243,7 @@ function TopbarLink({
   label,
   Icon,
   profile,
+  isAuthed,
   loading,
   onLockedClick,
 }: {
@@ -280,6 +251,7 @@ function TopbarLink({
   label: string
   Icon: React.ComponentType<{ className?: string }>
   profile?: any
+  isAuthed?: boolean
   loading?: boolean
   onLockedClick?: () => void
 }) {
@@ -291,7 +263,6 @@ function TopbarLink({
     return false
   }
 
-  // Derive restricted by mapping label/href into the same rules used by sidebar
   const restricted = isRestricted(
     label === 'Practice'
       ? 'Practice'
@@ -303,10 +274,13 @@ function TopbarLink({
     href,
     label,
   )
-  const disabled =
-    !loading && restricted && !(profile?.premium || profile?.role === 'admin')
 
-  if (disabled) {
+  // Require auth AND premium/admin
+  const hasPremium = !!profile?.premium || profile?.role === 'admin'
+  const hasAccess = !!isAuthed && hasPremium
+  const disabled = restricted && !hasAccess
+
+  if (disabled || loading) {
     return (
       <button
         onClick={() => onLockedClick?.()}
@@ -336,6 +310,7 @@ function TopbarDropdown({
   Icon,
   items,
   profile,
+  isAuthed,
   loading,
   onLockedClick,
 }: {
@@ -343,6 +318,7 @@ function TopbarDropdown({
   Icon: React.ComponentType<{ className?: string }>
   items: { href: string; label: string }[]
   profile?: any
+  isAuthed?: boolean
   loading?: boolean
   onLockedClick?: () => void
 }) {
@@ -360,11 +336,12 @@ function TopbarDropdown({
   const allRestricted = items.every((it) =>
     isRestricted(label, it.href, it.label),
   )
-  const hasAccess = loading || profile?.premium || profile?.role === 'admin'
 
-  // If entire group is restricted and the user lacks access, render a Subscribe
-  // button instead of the dropdown to avoid exposing the menu.
-  if (allRestricted && !hasAccess) {
+  // Require auth AND premium/admin
+  const hasPremium = !!profile?.premium || profile?.role === 'admin'
+  const hasAccess = !!isAuthed && hasPremium
+
+  if ((allRestricted && !hasAccess) || (loading && allRestricted)) {
     return (
       <Button
         variant="ghost"
@@ -387,7 +364,6 @@ function TopbarDropdown({
         >
           <Icon className="h-4 w-4" />
           <span className="hidden sm:inline">{label}</span>
-          {/* If any child is restricted and user lacks access, show lock indicator */}
           {!hasAccess && anyRestricted ? (
             <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
           ) : null}
@@ -396,11 +372,8 @@ function TopbarDropdown({
       <DropdownMenuContent>
         {items.map((it) => {
           const restricted = isRestricted(label, it.href, it.label)
-          const disabled =
-            !loading &&
-            restricted &&
-            !(profile?.premium || profile?.role === 'admin')
-          if (disabled) {
+          const disabled = restricted && !hasAccess
+          if (disabled || loading) {
             return (
               <DropdownMenuItem key={it.href}>
                 <button
