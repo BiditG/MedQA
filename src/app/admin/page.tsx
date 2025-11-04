@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { requireAdmin } from '@/utils/auth'
 import AdminPremiumToggle from '@/components/AdminPremiumToggle'
 import { revalidatePath } from 'next/cache'
+import WeeklyExamConfig from '@/components/WeeklyExamConfig'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,6 +41,41 @@ export async function setPremiumAction(formData: FormData) {
   return null
 }
 
+// Server action: toggle active status of a weekly code
+export async function toggleWeeklyCodeAction(formData: FormData) {
+  'use server'
+  try {
+    const id = String(formData.get('id') || '')
+    const active = String(formData.get('active') || 'true') === 'true'
+    if (!id) return null
+    const svc = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE)
+    await svc.from('weekly_codes').update({ active }).eq('id', id)
+    try {
+      revalidatePath('/admin')
+    } catch {}
+  } catch (e) {
+    console.error('[admin][toggleWeeklyCodeAction] unexpected', e)
+  }
+  return null
+}
+
+// Server action: delete a weekly code
+export async function deleteWeeklyCodeAction(formData: FormData) {
+  'use server'
+  try {
+    const id = String(formData.get('id') || '')
+    if (!id) return null
+    const svc = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE)
+    await svc.from('weekly_codes').delete().eq('id', id)
+    try {
+      revalidatePath('/admin')
+    } catch {}
+  } catch (e) {
+    console.error('[admin][deleteWeeklyCodeAction] unexpected', e)
+  }
+  return null
+}
+
 export default async function AdminPage() {
   const admin = await requireAdmin()
   if (!admin) return redirect('/')
@@ -47,6 +83,12 @@ export default async function AdminPage() {
   const supabase = await getServiceClient()
   const { data: profiles } = await supabase
     .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  // Fetch weekly exam codes
+  const { data: weeklyCodes } = await supabase
+    .from('weekly_codes')
     .select('*')
     .order('created_at', { ascending: false })
 
@@ -62,6 +104,79 @@ export default async function AdminPage() {
       <p className="mt-2 text-sm text-muted-foreground">
         Manage user subscriptions and profiles.
       </p>
+
+      {/* Weekly Exam settings */}
+      <div className="mt-6">
+        <WeeklyExamConfig />
+      </div>
+
+      {/* Weekly Exam codes list */}
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold">Weekly Exam Codes</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Toggle codes on/off or delete them. Expired codes are treated as
+          invalid.
+        </p>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full table-auto border-collapse">
+            <thead>
+              <tr className="text-left">
+                <th className="px-3 py-2">Code</th>
+                <th className="px-3 py-2">Active</th>
+                <th className="px-3 py-2">Expires</th>
+                <th className="px-3 py-2">Created</th>
+                <th className="px-3 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {weeklyCodes?.map((c: any) => {
+                const expired =
+                  c.expires_at && new Date(c.expires_at).getTime() <= Date.now()
+                return (
+                  <tr key={c.id} className="border-t">
+                    <td className="px-3 py-2 font-mono text-sm">{c.code}</td>
+                    <td className="px-3 py-2 text-sm">
+                      {c.active ? 'yes' : 'no'}
+                      {expired ? ' (expired)' : ''}
+                    </td>
+                    <td className="px-3 py-2 text-sm">
+                      {c.expires_at
+                        ? new Date(c.expires_at).toLocaleString()
+                        : '—'}
+                    </td>
+                    <td className="px-3 py-2 text-sm">
+                      {c.created_at
+                        ? new Date(c.created_at).toLocaleString()
+                        : '—'}
+                    </td>
+                    <td className="px-3 py-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <form action={toggleWeeklyCodeAction}>
+                          <input type="hidden" name="id" value={c.id} />
+                          <input
+                            type="hidden"
+                            name="active"
+                            value={(!c.active).toString()}
+                          />
+                          <button className="rounded border px-2 py-1 text-xs">
+                            {c.active ? 'Disable' : 'Enable'}
+                          </button>
+                        </form>
+                        <form action={deleteWeeklyCodeAction}>
+                          <input type="hidden" name="id" value={c.id} />
+                          <button className="rounded border px-2 py-1 text-xs text-red-600">
+                            Delete
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div className="mt-6">
         {/* Desktop / large screens: table */}

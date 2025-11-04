@@ -6,7 +6,10 @@ declare global {
   }
 }
 
-export function createBrowserClient(): SupabaseClient {
+// Narrow generics to avoid deep type instantiation
+type AnyClient = SupabaseClient<any, 'public', any>
+
+export function createBrowserClient(): AnyClient {
   if (typeof window === 'undefined') {
     throw new Error(
       'createBrowserClient must be called in the browser (client component or inside useEffect).',
@@ -24,12 +27,14 @@ export function createBrowserClient(): SupabaseClient {
 
   if (!window.__supabase_client__) {
     console.debug('[supabase] creating browser client for', url)
-    window.__supabase_client__ = createClient(url, key, {
+    // Cast to a lightweight client type to prevent TS2589 deep instantiation
+    // @ts-expect-error: supabase-js generic types can cause deep instantiation; casting to AnyClient is safe here.
+    window.__supabase_client__ = (createClient as any)(url, key, {
       auth: { persistSession: true },
-    })
+    }) as AnyClient
   } else {
     console.debug('[supabase] reusing existing browser client for', url)
   }
 
-  return window.__supabase_client__!
+  return window.__supabase_client__ as AnyClient
 }

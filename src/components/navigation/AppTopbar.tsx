@@ -131,6 +131,15 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             onLockedClick={() => setSubOpen(true)}
           />
 
+          {/* Weekly Exam (public, access-code gated) */}
+          <TopbarLink
+            href="/weekly-exam"
+            label="Weekly Exam"
+            Icon={Brain}
+            profile={profile}
+            loading={false}
+          />
+
           <TopbarLink
             href="/quiz"
             label="Practice"

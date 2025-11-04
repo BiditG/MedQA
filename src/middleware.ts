@@ -34,9 +34,16 @@ export async function middleware(request: NextRequest) {
       '/reset-password',
       '/auth/callback', // <-- important
       '/api/auth/callback',
+      '/weekly-exam',
+      '/weekly-exam/exam',
+      '/api/weekly-exam',
     ])
     const isPublic = Array.from(publicPaths).some(
-      (p) => pathname === p || pathname.startsWith('/api/auth'),
+      (p) =>
+        pathname === p ||
+        pathname.startsWith('/api/auth') ||
+        pathname.startsWith('/api/weekly-exam') ||
+        pathname.startsWith('/weekly-exam'),
     )
 
     if (!session && !isPublic) {

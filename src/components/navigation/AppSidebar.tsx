@@ -30,6 +30,10 @@ export function AppSidebar({
 }) {
   const groups = [
     {
+      title: 'Weekly Exam',
+      items: [{ href: '/weekly-exam', label: 'Weekly Exam', icon: Brain }],
+    },
+    {
       title: 'Practice',
       items: [
         { href: '/quiz', label: 'AIIMS/NEET PG MCQs', icon: Brain },
@@ -91,6 +95,7 @@ export function AppSidebar({
     // - AI group: all items locked
     // - Lookup: all locked except Glossary and Medicine Directory
     // - Practice: all locked except CEE Practice (/cee-practice)
+    if (gTitle === 'Weekly Exam') return false
     if (gTitle === 'AI') return true
     if (gTitle === 'Lookup')
       return !['Glossary', 'Medicine Directory'].includes(itemLabel)
