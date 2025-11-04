@@ -326,7 +326,6 @@ export default function CeePracticePage() {
         },
       }
       const res = await fetch('/api/cee-feedback', {
-        // <-- changed from /api/cee-feedback
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
