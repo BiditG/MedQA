@@ -1,9 +1,15 @@
+// src/app/api/auth/signout/route.ts
 import { NextResponse } from 'next/server'
-import { createRouteHandlerServerClient } from '@/utils/supabase-server'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
-export async function POST() {
-  const res = NextResponse.json({ ok: true })
-  const supabase = createRouteHandlerServerClient(res)
+export async function GET() {
+  // Create Supabase client for server-side with App Router
+  const supabase = createRouteHandlerClient({ cookies })
+
+  // Sign out and clear cookies
   await supabase.auth.signOut()
-  return res
+
+  // Redirect user to home page after sign-out
+  return NextResponse.redirect('/')
 }
