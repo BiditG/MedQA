@@ -103,20 +103,23 @@ export default function SubscriptionModal({
                     // Close modal promptly for snappy UX
                     onClose()
 
-                    // Determine auth state: prefer prop, fallback to Supabase
+                    // Determine auth state: prefer prop (treat truthy values as authed), fallback to Supabase
                     let authed =
-                      typeof isAuthed === 'boolean' ? isAuthed : undefined
+                      typeof isAuthed !== 'undefined'
+                        ? Boolean(isAuthed)
+                        : undefined
                     if (authed === undefined) {
                       try {
                         const supabase = createBrowserClient()
-                        const { data, error } = await supabase.auth.getUser()
+                        // use getSession which is more reliable for client session presence
+                        const { data, error } = await supabase.auth.getSession()
                         if (error) {
                           console.debug(
-                            '[subscribe] getUser error',
+                            '[subscribe] getSession error',
                             error.message,
                           )
                         }
-                        authed = !!data?.user
+                        authed = !!data?.session?.user
                       } catch (err) {
                         console.debug('[subscribe] supabase client error', err)
                         authed = false
