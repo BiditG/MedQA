@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Check, ExternalLink } from 'lucide-react'
+import { Check, ExternalLink, Star } from 'lucide-react'
 
 export default function PricingPage() {
   const features = [
@@ -57,295 +58,342 @@ export default function PricingPage() {
   const fmt = (n: number) => `रु ${n.toLocaleString('en-IN')}`
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted px-4 py-16">
-      <div className="mx-auto max-w-4xl">
-        {/* Discount banner (top, no borders) */}
-        <section className="relative mb-8 overflow-hidden bg-gradient-to-r from-amber-50 to-pink-50 p-4 text-center">
-          <p className="text-base font-semibold">
-            We have discounts right now — save money on your purchase
-            <span className="ml-2 inline-block animate-pulse">🎉</span>
-          </p>
+    <div className="fixed inset-0 z-[60] flex items-start justify-center px-4 py-6 sm:items-center">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <span
-              className="confetti"
-              style={{
-                left: '8%',
-                background: '#F59E0B',
-                animationDuration: '2.2s',
-                animationDelay: '0s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '16%',
-                background: '#10B981',
-                animationDuration: '2.6s',
-                animationDelay: '.1s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '24%',
-                background: '#3B82F6',
-                animationDuration: '2.0s',
-                animationDelay: '.2s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '32%',
-                background: '#EC4899',
-                animationDuration: '2.4s',
-                animationDelay: '.05s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '40%',
-                background: '#F59E0B',
-                animationDuration: '2.1s',
-                animationDelay: '.15s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '48%',
-                background: '#10B981',
-                animationDuration: '2.7s',
-                animationDelay: '.3s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '56%',
-                background: '#3B82F6',
-                animationDuration: '2.3s',
-                animationDelay: '.12s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '64%',
-                background: '#EC4899',
-                animationDuration: '2.8s',
-                animationDelay: '.25s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '72%',
-                background: '#F59E0B',
-                animationDuration: '2.5s',
-                animationDelay: '.18s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '80%',
-                background: '#10B981',
-                animationDuration: '2.2s',
-                animationDelay: '.28s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '88%',
-                background: '#3B82F6',
-                animationDuration: '2.9s',
-                animationDelay: '.08s',
-              }}
-            />
-            <span
-              className="confetti"
-              style={{
-                left: '94%',
-                background: '#EC4899',
-                animationDuration: '2.4s',
-                animationDelay: '.22s',
-              }}
-            />
+      {/* Modal Card */}
+      <div className="relative z-10 mx-auto max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border bg-gradient-to-b from-white to-slate-50 shadow-2xl ring-1 ring-black/5">
+        {/* Close */}
+        <div className="flex items-center justify-between border-b bg-white/70 px-4 py-3 backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="currentColor"
+                aria-hidden
+              >
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM7 12h10M12 7v10" />
+              </svg>
+            </span>
+            <h2 className="text-sm font-semibold">Premium Subscription</h2>
           </div>
-
-          <style jsx>{`
-            @keyframes confetti-fall {
-              0% {
-                transform: translateY(-120%) rotate(0deg);
-                opacity: 0;
-              }
-              10% {
-                opacity: 0.95;
-              }
-              100% {
-                transform: translateY(140%) rotate(540deg);
-                opacity: 0.95;
-              }
+          <button
+            onClick={() =>
+              history.length > 1 ? history.back() : (window.location.href = '/')
             }
-            .confetti {
-              position: absolute;
-              top: -10%;
-              width: 8px;
-              height: 14px;
-              border-radius: 2px;
-              opacity: 0.9;
-              animation-name: confetti-fall;
-              animation-timing-function: linear;
-              animation-iteration-count: infinite;
-            }
-          `}</style>
-        </section>
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold">Premium Subscription</h1>
-          <p className="text-lg text-muted-foreground">
-            Unlock all premium features and supercharge your medical learning
-          </p>
+            aria-label="Close pricing"
+            className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-accent/50"
+          >
+            Close
+          </button>
         </div>
-        {/* Premium features (hover to reveal description) */}
-        <section className="mb-8">
-          <h3 className="mb-4 text-xl font-bold">Premium features</h3>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {features.map((f) => (
-              <li
-                key={f.title}
-                className="group rounded-lg border bg-card p-4 transition focus-within:bg-accent/40 hover:bg-accent/40"
-              >
-                <button
-                  type="button"
-                  className="w-full text-left font-medium outline-none"
-                >
-                  <span className="mr-2" aria-hidden>
-                    {f.emoji}
-                  </span>
-                  {f.title}
-                </button>
-                <p className="mt-2 max-h-0 overflow-hidden text-sm text-muted-foreground opacity-0 transition-all duration-200 ease-out group-focus-within:max-h-24 group-focus-within:opacity-100 group-hover:max-h-24 group-hover:opacity-100">
-                  {f.desc}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-        {/* Plans row */}
-        <section className="mb-8">
-          <h3 className="mb-4 text-2xl font-bold">Plans</h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {plans.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setSelected(p)} // keeps amount updating
-                className="rounded-lg border p-4 text-left hover:shadow-sm focus:outline-none" // removed active ring styling
-              >
-                <div className="flex items-baseline justify-between">
-                  <div className="text-lg font-semibold">{p.name}</div>
-                  <div className="text-right">
-                    <div className="text-sm text-muted-foreground line-through">
-                      {fmt(p.original)}
-                    </div>
-                    <div className="text-2xl font-bold">{fmt(p.price)}</div>
-                    <div className="text-xs text-green-600">
-                      Save {p.save.toLocaleString('en-IN')}
-                    </div>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>{' '}
-        {/* end of Plans row */}
-        {/* Payment Instructions (below banner) */}
-        <section className="rounded-lg border bg-card p-6">
-          <h3 className="mb-4 text-xl font-bold">Payment Instructions</h3>
 
-          {/* QR Code */}
-          <div className="mb-6">
-            <p className="mb-3 text-sm text-muted-foreground">
-              Scan this QR code to pay via UPI:
+        <div className="px-4 py-6 sm:px-6">
+          {/* Discount banner (top, no borders) */}
+          <section className="relative mb-6 overflow-hidden rounded-lg bg-gradient-to-r from-blue-50 via-sky-50 to-indigo-50 p-4 text-center">
+            <p className="text-base font-semibold">
+              We have discounts right now — save money on your purchase
+              <span className="ml-2 inline-block animate-pulse">🎉</span>
             </p>
-            <div className="flex justify-center rounded-lg border bg-white p-4">
-              <Image
-                src="/payment-qr.png"
-                alt="Payment QR Code"
-                width={200}
-                height={200}
-                className="rounded"
+
+            <div aria-hidden className="pointer-events-none absolute inset-0">
+              <span
+                className="confetti"
+                style={{
+                  left: '8%',
+                  background: '#2563EB',
+                  animationDuration: '2.2s',
+                  animationDelay: '0s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '16%',
+                  background: '#06B6D4',
+                  animationDuration: '2.6s',
+                  animationDelay: '.1s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '24%',
+                  background: '#60A5FA',
+                  animationDuration: '2.0s',
+                  animationDelay: '.2s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '32%',
+                  background: '#7C3AED',
+                  animationDuration: '2.4s',
+                  animationDelay: '.05s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '40%',
+                  background: '#2563EB',
+                  animationDuration: '2.1s',
+                  animationDelay: '.15s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '48%',
+                  background: '#06B6D4',
+                  animationDuration: '2.7s',
+                  animationDelay: '.3s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '56%',
+                  background: '#60A5FA',
+                  animationDuration: '2.3s',
+                  animationDelay: '.12s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '64%',
+                  background: '#7C3AED',
+                  animationDuration: '2.8s',
+                  animationDelay: '.25s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '72%',
+                  background: '#2563EB',
+                  animationDuration: '2.5s',
+                  animationDelay: '.18s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '80%',
+                  background: '#06B6D4',
+                  animationDuration: '2.2s',
+                  animationDelay: '.28s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '88%',
+                  background: '#60A5FA',
+                  animationDuration: '2.9s',
+                  animationDelay: '.08s',
+                }}
+              />
+              <span
+                className="confetti"
+                style={{
+                  left: '94%',
+                  background: '#7C3AED',
+                  animationDuration: '2.4s',
+                  animationDelay: '.22s',
+                }}
               />
             </div>
-            <p className="mt-2 text-center font-mono text-sm">
-              UPI ID: your-upi@okaxis
+
+            <style jsx>{`
+              @keyframes confetti-fall {
+                0% {
+                  transform: translateY(-120%) rotate(0deg);
+                  opacity: 0;
+                }
+                10% {
+                  opacity: 0.95;
+                }
+                100% {
+                  transform: translateY(140%) rotate(540deg);
+                  opacity: 0.95;
+                }
+              }
+              .confetti {
+                position: absolute;
+                top: -10%;
+                width: 8px;
+                height: 14px;
+                border-radius: 2px;
+                opacity: 0.9;
+                animation-name: confetti-fall;
+                animation-timing-function: linear;
+                animation-iteration-count: infinite;
+              }
+            `}</style>
+          </section>
+          {/* Header */}
+          <div className="mb-8 text-center">
+            <h1 className="heading-gradient mb-2 text-3xl font-bold">
+              Premium Subscription
+            </h1>
+            <p className="text-base text-muted-foreground">
+              Unlock all premium features and supercharge your medical learning
             </p>
           </div>
+          {/* Premium features (hover to reveal description) */}
+          <section className="mb-6">
+            <h3 className="mb-4 text-xl font-bold">Premium features</h3>
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {features.map((f) => (
+                <li
+                  key={f.title}
+                  className="group rounded-lg border bg-card p-4 transition focus-within:bg-accent/40 hover:bg-accent/40"
+                >
+                  <button
+                    type="button"
+                    className="w-full text-left font-medium outline-none"
+                  >
+                    <span className="mr-2" aria-hidden>
+                      {f.emoji}
+                    </span>
+                    {f.title}
+                  </button>
+                  <p className="mt-2 max-h-0 overflow-hidden text-sm text-muted-foreground opacity-0 transition-all duration-200 ease-out group-focus-within:max-h-24 group-focus-within:opacity-100 group-hover:max-h-24 group-hover:opacity-100">
+                    {f.desc}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+          {/* Plans row */}
+          <section className="mb-6">
+            <h3 className="mb-4 text-2xl font-bold">Plans</h3>
+            <motion.div
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {plans.map((p, i) => (
+                <motion.button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setSelected(p)} // keeps amount updating
+                  className="card-accent relative rounded-lg border p-4 text-left shadow-sm transition hover:shadow-md focus:outline-none"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.28 }}
+                >
+                  {p.id === '1y' && (
+                    <span className="absolute -right-2 -top-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-indigo-600 to-sky-500 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+                      <Star className="h-3 w-3" /> Best Value
+                    </span>
+                  )}
+                  <div className="flex items-baseline justify-between">
+                    <div className="text-lg font-semibold">{p.name}</div>
+                    <div className="text-right">
+                      <div className="text-sm text-muted-foreground line-through">
+                        {fmt(p.original)}
+                      </div>
+                      <div className="text-2xl font-bold">{fmt(p.price)}</div>
+                      <div className="text-xs text-blue-600">
+                        Save {p.save.toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  </div>
+                </motion.button>
+              ))}
+            </motion.div>
+          </section>{' '}
+          {/* end of Plans row */}
+          {/* Payment Instructions (below banner) */}
+          <section className="rounded-lg border bg-card p-6">
+            <h3 className="mb-4 text-xl font-bold">Payment Instructions</h3>
 
-          {/* Payment Amount (from selected plan) */}
-          <div className="mb-6 rounded-lg bg-muted p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold">Amount to Pay:</span>
-              <span className="text-2xl font-bold text-primary">
-                {fmt(selected.price)}
-              </span>
+            {/* QR Code */}
+            <div className="mb-6">
+              <p className="mb-3 text-sm text-muted-foreground">
+                Scan this QR code to pay via UPI:
+              </p>
+              <div className="flex justify-center rounded-lg border bg-white p-4">
+                <Image
+                  src="/payment-qr.png"
+                  alt="Payment QR Code"
+                  width={200}
+                  height={200}
+                  className="rounded"
+                />
+              </div>
+              <p className="mt-2 text-center font-mono text-sm">
+                UPI ID: your-upi@okaxis
+              </p>
             </div>
+
+            {/* Payment Amount (from selected plan) */}
+            <div className="mb-6 rounded-lg bg-muted p-4">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold">Amount to Pay:</span>
+                <span className="text-2xl font-bold text-primary">
+                  {fmt(selected.price)}
+                </span>
+              </div>
+            </div>
+
+            {/* Steps */}
+            <div className="mb-6 space-y-3">
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                  1
+                </span>
+                <p className="text-sm">
+                  Scan the QR code or use the UPI ID above
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                  2
+                </span>
+                <p className="text-sm">
+                  Complete the payment of {fmt(selected.price)}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                  3
+                </span>
+                <p className="text-sm">
+                  Submit payment proof using the form below
+                </p>
+              </div>
+            </div>
+
+            {/* Google Form Button */}
+            <a
+              href="https://forms.gle/JPVGJtaC5Uj3zaep6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-semibold text-primary-foreground hover:brightness-95"
+            >
+              Submit Payment Proof
+              <ExternalLink className="h-4 w-4" />
+            </a>
+
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              Your subscription will be activated within 24 hours after
+              verification
+            </p>
+          </section>
+          {/* Footer */}
+          <div className="mt-8 text-center text-sm text-muted-foreground">
+            <p>
+              ✓ Secure payment • ✓ Cancel anytime • ✓ 7-day money-back guarantee
+            </p>
           </div>
-
-          {/* Steps */}
-          <div className="mb-6 space-y-3">
-            <div className="flex gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
-                1
-              </span>
-              <p className="text-sm">
-                Scan the QR code or use the UPI ID above
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
-                2
-              </span>
-              <p className="text-sm">
-                Complete the payment of {fmt(selected.price)}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
-                3
-              </span>
-              <p className="text-sm">
-                Submit payment proof using the form below
-              </p>
-            </div>
-          </div>
-
-          {/* Google Form Button */}
-          <a
-            href="https://forms.gle/JPVGJtaC5Uj3zaep6"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-semibold text-primary-foreground hover:brightness-95"
-          >
-            Submit Payment Proof
-            <ExternalLink className="h-4 w-4" />
-          </a>
-
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Your subscription will be activated within 24 hours after
-            verification
-          </p>
-        </section>
-        {/* Footer */}
-        <div className="mt-12 text-center text-sm text-muted-foreground">
-          <p>
-            ✓ Secure payment • ✓ Cancel anytime • ✓ 7-day money-back guarantee
-          </p>
         </div>
       </div>
     </div>

@@ -6,8 +6,8 @@ declare global {
   }
 }
 
-// Narrow generics to avoid deep type instantiation
-type AnyClient = SupabaseClient<any, 'public', any>
+// Use non-generic SupabaseClient to avoid excessive type-instantiation depth in TS
+type AnyClient = SupabaseClient
 
 export function createBrowserClient(): AnyClient {
   if (typeof window === 'undefined') {

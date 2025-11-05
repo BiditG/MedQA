@@ -6,17 +6,14 @@ export default function WeeklyExamAccess() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [hasAccess, setHasAccess] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    // If previously granted in this browser, let them in
-    if (
-      typeof window !== 'undefined' &&
-      localStorage.getItem('weekly_exam_access') === 'granted'
-    ) {
-      router.replace('/weekly-exam/exam')
-    }
-  }, [router])
+    if (typeof window === 'undefined') return
+    // Show a continue option instead of auto-redirecting to avoid skipping the code screen unexpectedly
+    setHasAccess(localStorage.getItem('weekly_exam_access') === 'granted')
+  }, [])
 
   async function verify() {
     setError(null)
@@ -66,6 +63,20 @@ export default function WeeklyExamAccess() {
           {loading ? 'Verifying…' : 'Enter Exam'}
         </button>
         {error && <div className="mt-2 text-sm text-red-600">{error}</div>}
+        {hasAccess && (
+          <div className="mt-4">
+            <button
+              onClick={() => router.replace('/weekly-exam/exam')}
+              className="w-full rounded-md border px-4 py-2 text-sm hover:bg-accent/50"
+            >
+              Continue without code
+            </button>
+            <p className="mt-2 text-xs text-muted-foreground">
+              You already unlocked this device. If you want to use a new code,
+              just enter it above.
+            </p>
+          </div>
+        )}
       </div>
       <div className="mt-4 text-xs text-muted-foreground">
         No account required. Code unlocks this device only.

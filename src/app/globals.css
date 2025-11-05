@@ -2,51 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.3rem;
-  }
+:root {
+  --background: 0 0% 100%;
+  --foreground: 220 15% 12%; /* slightly bluish text */
+  --card: 0 0% 100%;
+  --card-foreground: 220 15% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 15% 12%;
+  /* Soft light blue theme */
+  --primary: 210 80% 56%; /* soft bright blue */
+  --primary-2: 200 95% 70%; /* lighter sky for gradients */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 200 70% 96%; /* very light cyan */
+  --secondary-foreground: 210 20% 20%;
+  --muted: 210 24% 97%;
+  --muted-foreground: 220 8% 36%;
+  --accent: 200 90% 62%; /* sky/cyan accent */
+  --accent-foreground: 210 20% 15%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 210 20% 90%;
+  --input: 210 20% 92%;
+  --ring: 210 80% 56%;
+  --radius: 0.3rem;
+}
 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
+.dark {
+  --background: 220 12% 8%;
+  --foreground: 210 12% 96%;
+  --card: 220 12% 10%;
+  --card-foreground: 210 12% 96%;
+  --popover: 220 12% 10%;
+  --popover-foreground: 210 12% 96%;
+  --primary: 210 80% 60%;
+  --primary-2: 200 95% 72%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 16%;
+  --secondary-foreground: 0 0% 96%;
+  --muted: 220 12% 10%;
+  --muted-foreground: 210 12% 76%;
+  --accent: 200 90% 60%;
+  --accent-foreground: 0 0% 96%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 12% 14%;
+  --input: 220 12% 14%;
+  --ring: 210 80% 60%;
 }
 
 /* Custom scrollbar styling for desktop (WebKit and Firefox) */
@@ -98,9 +99,100 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(1200px 600px at 10% -10%, hsl(152 70% 15% / 0.25), transparent 60%),
-      radial-gradient(900px 480px at 90% 0%, hsl(260 70% 20% / 0.18), transparent 60%),
-      radial-gradient(700px 420px at 50% 100%, hsl(200 75% 20% / 0.12), transparent 60%);
+      radial-gradient(1200px 600px at 10% -10%, hsl(210 80% 60% / 0.14), transparent 60%),
+      radial-gradient(900px 480px at 90% 0%, hsl(200 90% 72% / 0.12), transparent 60%),
+      radial-gradient(700px 420px at 50% 100%, hsl(204 94% 68% / 0.06), transparent 60%);
     background-attachment: fixed;
+  }
+}
+
+/* Vibrant UI components and utilities */
+@layer components {
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .vibrant-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 12px 30px rgba(2,6,23,0.12);
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary-2)) );
+    background-size: 200% auto;
+    animation: gradientShift 6s linear infinite;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .vibrant-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.02);
+  }
+
+  .card-accent {
+    border-radius: 1rem;
+    box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+  .card-accent:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 50px rgba(16,24,40,0.12);
+  }
+
+  .heading-gradient {
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary-2)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .badge-accent {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, hsl(var(--accent)), hsl(30 90% 50%));
+    color: white;
+    font-weight: 700;
+    font-size: 0.625rem;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.08);
+  }
+
+  .accent-link {
+    color: hsl(var(--primary));
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  /* Animated underline that draws left→right on hover */
+  .underline-animate {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    transition: background-size 0.35s ease;
+  }
+  /* Hover via group parent or direct hover */
+  .group:hover .underline-animate,
+  .underline-animate:hover {
+    background-size: 100% 2px;
+  }
+  /* Force underline shown (useful for active state) */
+  .underline-animate--active {
+    background-size: 100% 2px;
   }
 }

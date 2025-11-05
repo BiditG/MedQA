@@ -15,8 +15,8 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      <p>Email: {user.email}</p>
+      <h1 className="heading-gradient text-3xl font-bold">Dashboard</h1>
+      <p className="mt-2">Email: {user.email}</p>
     </div>
   )
 }

@@ -30,13 +30,13 @@ export default function SubscriptionModal({
   if (!open || !container) return null
 
   const modal = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center px-4 py-6 sm:items-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div
-        className="relative z-10 w-full max-w-2xl rounded-2xl bg-gradient-to-br from-white to-slate-50 p-6 shadow-2xl ring-1 ring-black/5"
+        className="relative z-10 max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-gradient-to-br from-white to-slate-50 p-4 shadow-2xl ring-1 ring-black/5 sm:p-6"
         onClick={(e) => e.stopPropagation()} // <-- Add this to prevent clicks inside modal from bubbling
       >
-        <div className="flex items-start gap-6">
+        <div className="flex flex-col gap-4 gap-6 sm:flex-row sm:items-start">
           <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +72,7 @@ export default function SubscriptionModal({
               <div className="sm:col-span-2">
                 {/* Prices in one line */}
                 <div className="whitespace-nowrap text-xs font-semibold leading-tight tracking-tight sm:text-sm md:text-base">
-                  रु 1299/month, 2499/month, 9999/year
+                  रु 999 (1 month), रु 1499 (3 months), रु 4999 (1 year)
                 </div>
                 <div className="mt-2 text-sm text-muted-foreground">
                   Cancel anytime. Secure payment methods supported.
@@ -140,9 +140,9 @@ export default function SubscriptionModal({
                       }
                     }, 100)
                   }}
-                  className="rounded-full bg-primary px-6 py-3 text-white shadow hover:brightness-95"
+                  className="vibrant-btn"
                 >
-                  Subscribe — रु 299 / month
+                  Subscribe — plans from रु 999
                 </button>
               </div>
             </div>

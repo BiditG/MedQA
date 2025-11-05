@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { createBrowserClient } from '@/utils/supabase-browser'
 import { useProfile } from '@/hooks/useProfile'
 import { useUserStats } from '@/hooks/useUserStats'
@@ -60,9 +61,23 @@ export default function ProfilePage() {
     window.location.href = '/'
   }
 
+  const reduce = useReducedMotion()
+  const container = reduce
+    ? undefined
+    : {
+        hidden: {},
+        show: { transition: { staggerChildren: 0.06 } },
+      }
+  const item = reduce
+    ? undefined
+    : {
+        hidden: { opacity: 0, y: 6 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.28 } },
+      }
+
   return (
     <div className="mx-auto max-w-4xl p-6">
-      <h1 className="mb-6 text-2xl font-semibold">Profile</h1>
+      <h1 className="heading-gradient mb-6 text-2xl font-semibold">Profile</h1>
 
       {loading ? (
         <div className="rounded-md bg-card p-6">Loading profile…</div>
@@ -137,36 +152,33 @@ export default function ProfilePage() {
                 </div>
               ) : null}
 
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                <div className="rounded-md border bg-card p-4">
-                  <div className="text-xs text-muted-foreground">
-                    Total MCQs
-                  </div>
-                  <div className="mt-1 text-2xl font-semibold">
-                    {statsLoading ? '—' : stats?.total_mcqs ?? 0}
-                  </div>
-                </div>
-                <div className="rounded-md border bg-card p-4">
-                  <div className="text-xs text-muted-foreground">
-                    Correct MCQs
-                  </div>
-                  <div className="mt-1 text-2xl font-semibold">
-                    {statsLoading ? '—' : stats?.total_correct ?? 0}
-                  </div>
-                </div>
-                <div className="rounded-md border bg-card p-4">
-                  <div className="text-xs text-muted-foreground">XP</div>
-                  <div className="mt-1 text-2xl font-semibold">
-                    {statsLoading ? '—' : stats?.xp ?? 0}
-                  </div>
-                </div>
-                <div className="rounded-md border bg-card p-4">
-                  <div className="text-xs text-muted-foreground">Rank</div>
-                  <div className="mt-1 text-2xl font-semibold">
-                    {statsLoading ? '—' : stats?.rank ?? '—'}
-                  </div>
-                </div>
-              </div>
+              <motion.div
+                variants={container}
+                initial={reduce ? undefined : 'hidden'}
+                whileInView={reduce ? undefined : 'show'}
+                viewport={{ once: true, amount: 0.25 }}
+                className="grid grid-cols-2 gap-4 md:grid-cols-4"
+              >
+                {[
+                  { label: 'Total MCQs', value: stats?.total_mcqs ?? 0 },
+                  { label: 'Correct MCQs', value: stats?.total_correct ?? 0 },
+                  { label: 'XP', value: stats?.xp ?? 0 },
+                  { label: 'Rank', value: stats?.rank ?? '—' },
+                ].map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    variants={item}
+                    className="rounded-md border bg-card p-4"
+                  >
+                    <div className="text-xs text-muted-foreground">
+                      {s.label}
+                    </div>
+                    <div className="mt-1 text-2xl font-semibold">
+                      {statsLoading ? '—' : s.value}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </div>
 
             {profile?.role === 'admin' && (

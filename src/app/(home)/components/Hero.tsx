@@ -14,7 +14,7 @@ export function Hero({
     <section className="w-full border-b border-border/50">
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
         <div className="mx-auto max-w-2xl">
-          <h1 className="text-3xl font-semibold leading-tight sm:text-5xl">
+          <h1 className="heading-gradient text-3xl font-semibold leading-tight sm:text-5xl">
             All-in-one medical learning
           </h1>
           <p className="mx-auto mt-4 max-w-[70ch] text-base text-muted-foreground sm:text-lg">
@@ -24,7 +24,7 @@ export function Hero({
           <div className="mt-6 flex justify-center gap-3">
             <Link
               href="/quiz"
-              className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm"
+              className="vibrant-btn inline-flex items-center justify-center text-sm font-medium"
             >
               Start practice
             </Link>
@@ -39,9 +39,9 @@ export function Hero({
           <AvailableQuestions />
         </div>
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div className="group rounded-lg border p-3 text-sm">
+          <div className="card-accent group p-3 text-sm">
             <div className="flex items-start gap-3">
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-transparent text-primary transition-transform motion-safe:group-hover:-translate-y-1 motion-reduce:transition-none">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-primary/20 to-accent/20 text-primary transition-transform motion-safe:group-hover:-translate-y-1 motion-reduce:transition-none">
                 <ShieldCheck className="h-4 w-4" />
               </div>
               <div>
@@ -53,9 +53,9 @@ export function Hero({
             </div>
           </div>
 
-          <div className="group rounded-lg border p-3 text-sm">
+          <div className="card-accent group p-3 text-sm">
             <div className="flex items-start gap-3">
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-transparent text-primary transition-transform motion-safe:group-hover:-translate-y-1 motion-reduce:transition-none">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-primary/20 to-accent/20 text-primary transition-transform motion-safe:group-hover:-translate-y-1 motion-reduce:transition-none">
                 <Cpu className="h-4 w-4" />
               </div>
               <div>
@@ -69,9 +69,9 @@ export function Hero({
             </div>
           </div>
 
-          <div className="group rounded-lg border p-3 text-sm">
+          <div className="card-accent group p-3 text-sm">
             <div className="flex items-start gap-3">
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-transparent text-primary transition-transform motion-safe:group-hover:-translate-y-1 motion-reduce:transition-none">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-primary/20 to-accent/20 text-primary transition-transform motion-safe:group-hover:-translate-y-1 motion-reduce:transition-none">
                 <BookOpen className="h-4 w-4" />
               </div>
               <div>

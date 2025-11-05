@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="mx-auto max-w-4xl space-y-8">
         {/* About */}
         <section className="rounded-lg bg-card p-6">
-          <h2 className="mb-2 text-sm font-semibold tracking-wide">
+          <h2 className="heading-gradient mb-2 text-sm font-semibold tracking-wide">
             About MEDQAS
           </h2>
           <div className="space-y-2 text-xs leading-6 text-muted-foreground">
@@ -39,7 +39,7 @@ export default function Footer() {
 
         {/* Contact */}
         <section className="rounded-lg bg-card p-6">
-          <h2 className="mb-3 text-sm font-semibold tracking-wide">
+          <h2 className="heading-gradient mb-3 text-sm font-semibold tracking-wide">
             Get in Touch
           </h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
@@ -80,11 +80,11 @@ export default function Footer() {
 
         {/* Social */}
         <section className="rounded-lg bg-card p-6">
-          <h2 className="mb-3 text-sm font-semibold tracking-wide">
+          <h2 className="heading-gradient mb-3 text-sm font-semibold tracking-wide">
             Follow Us
           </h2>
           <Link
-            className="inline-flex items-center gap-2 text-sm text-foreground underline"
+            className="accent-link inline-flex items-center gap-2 text-sm"
             href="https://www.instagram.com/medqas.np?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
             target="_blank"
             rel="noopener noreferrer"

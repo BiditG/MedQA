@@ -170,9 +170,9 @@ function WhatWeOffer() {
         {cards.map(({ href, title, desc, Icon }) => (
           <motion.div key={href} variants={item}>
             <Link href={href} className="group outline-none">
-              <Card className="h-full transition-transform duration-200 group-hover:-translate-y-0.5">
+              <Card className="card-accent h-full transition-transform duration-200 group-hover:-translate-y-0.5">
                 <CardHeader className="flex-row items-center gap-3">
-                  <div className="bg-primary/15 inline-flex h-10 w-10 items-center justify-center rounded-lg text-primary">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 text-primary">
                     <Icon className="h-5 w-5" aria-hidden />
                   </div>
                   <CardTitle className="text-base sm:text-lg">

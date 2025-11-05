@@ -78,7 +78,50 @@ export async function deleteWeeklyCodeAction(formData: FormData) {
 
 export default async function AdminPage() {
   const admin = await requireAdmin()
-  if (!admin) return redirect('/')
+  if (!admin) {
+    // If the server-side check fails, render a helpful message instead of redirecting.
+    // This surfaces the reason to the user (missing session or missing admin role) and
+    // avoids an immediate client-side navigation to the homepage so you can debug.
+    return (
+      <main className="mx-auto max-w-4xl px-4 py-10">
+        <h1 className="text-2xl font-semibold">Admin access required</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          You do not have admin access on this session. Common causes:
+        </p>
+        <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground">
+          <li>You are not signed in (server session cookie missing).</li>
+          <li>Your profile in the database does not have the admin role.</li>
+          <li>
+            Server-side session detection failed due to cookie/domain
+            configuration.
+          </li>
+        </ul>
+        <div className="mt-4 flex gap-3">
+          <Link href="/login" className="vibrant-btn">
+            Sign in
+          </Link>
+          <Link
+            href="/profile"
+            className="inline-flex items-center rounded-md px-3 py-2 text-sm"
+          >
+            Profile
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center rounded-md px-3 py-2 text-sm"
+          >
+            Home
+          </Link>
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">
+          If you believe this is an error, ensure your account has the admin
+          role in the <code>profiles</code> table and that you are signed in.
+          For debugging, open DevTools → Application → Cookies and check the
+          Supabase auth cookie.
+        </p>
+      </main>
+    )
+  }
 
   const supabase = await getServiceClient()
   const { data: profiles } = await supabase

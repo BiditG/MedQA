@@ -25,7 +25,7 @@ export function NavLink({
     'group flex items-center justify-between gap-3 rounded-xl border border-transparent px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50',
     active
       ? 'border-primary/20 bg-primary/10 text-primary'
-      : 'text-muted-foreground hover:bg-accent/40 hover:text-foreground',
+      : 'text-muted-foreground hover:text-foreground hover:bg-primary/5',
     disabled ? 'opacity-60' : '',
   )
 
@@ -35,15 +35,31 @@ export function NavLink({
         <button onClick={onClick} className={baseClass} aria-disabled>
           <div className="flex items-center gap-3">
             {Icon ? (
-              <Icon
+              <span
                 className={cn(
-                  'h-4 w-4',
-                  active ? 'text-primary' : 'text-foreground/70',
+                  'inline-flex h-6 w-6 items-center justify-center rounded-md p-1',
+                  active
+                    ? 'bg-gradient-to-br from-primary/30 to-accent/30'
+                    : 'bg-primary/10',
                 )}
-                aria-hidden
-              />
+              >
+                <Icon
+                  className={cn(
+                    'h-4 w-4',
+                    active ? 'text-primary' : 'text-foreground/70',
+                  )}
+                  aria-hidden
+                />
+              </span>
             ) : null}
-            <span className="truncate">{label}</span>
+            <span
+              className={cn(
+                'underline-animate truncate',
+                active && 'underline-animate--active',
+              )}
+            >
+              {label}
+            </span>
           </div>
           {trailing && <div className="ml-3">{trailing}</div>}
         </button>
@@ -71,7 +87,14 @@ export function NavLink({
               aria-hidden
             />
           ) : null}
-          <span className="truncate">{label}</span>
+          <span
+            className={cn(
+              'underline-animate truncate',
+              active && 'underline-animate--active',
+            )}
+          >
+            {label}
+          </span>
         </div>
         {trailing && <div className="ml-3">{trailing}</div>}
       </Link>

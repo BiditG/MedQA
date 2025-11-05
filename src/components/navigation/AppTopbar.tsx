@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import ThemeToggle from '@/components/ThemeToggle'
 import { useProfile } from '@/hooks/useProfile'
 import { useSupabaseUser } from '@/hooks/useSupabaseUser'
 import { Loader2, LogOut, User } from 'lucide-react'
@@ -161,13 +160,22 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
           />
         </nav>
 
-        <div className="ml-auto flex items-center gap-3">
-          <ThemeToggle />
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setSubOpen(true)}
-            className="hidden items-center gap-2 rounded-lg bg-gradient-to-r from-primary to-amber-500 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:brightness-95 md:inline-flex"
+            aria-label="Subscribe"
+            className="vibrant-btn inline-flex items-center gap-2 ring-1 ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70"
           >
-            Subscribe
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-4 w-4"
+              aria-hidden
+            >
+              <path d="M8.5 3.5l1.2 2.9 2.9 1.2-2.9 1.2-1.2 2.9-1.2-2.9L4.4 7.6l2.9-1.2 1.2-2.9zM17 6l.9 2.1L20 9l-2.1.9L17 12l-.9-2.1L14 9l2.1-.9L17 6zM16 14.5l1.4 3.3 3.3 1.4-3.3 1.4L16 24l-1.4-3.3L11.3 19l3.3-1.4L16 14.5z" />
+            </svg>
+            <span className="hidden sm:inline">Subscribe</span>
           </button>
           <div>
             {loading ? (
@@ -256,10 +264,11 @@ function TopbarLink({
   onLockedClick?: () => void
 }) {
   function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
+    // Lock rules: AI, Lookup, Practice, and Checks groups are premium-only
     if (gTitle === 'AI') return true
-    if (gTitle === 'Lookup')
-      return !['Glossary', 'Medicine Directory'].includes(itemLabel)
-    if (gTitle === 'Practice') return itemHref !== '/cee-practice'
+    if (gTitle === 'Lookup') return true
+    if (gTitle === 'Practice') return true
+    if (gTitle === 'Checks') return true
     return false
   }
 
@@ -284,11 +293,10 @@ function TopbarLink({
     return (
       <button
         onClick={() => onLockedClick?.()}
-        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+        className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary/5"
       >
         <Icon className="h-4 w-4" aria-hidden />
-        <span className="hidden sm:inline">{label}</span>
-        <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
+        <span className="underline-animate hidden sm:inline">{label}</span>
       </button>
     )
   }
@@ -296,10 +304,10 @@ function TopbarLink({
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+      className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
     >
       <Icon className="h-4 w-4" aria-hidden />
-      <span className="hidden sm:inline">{label}</span>
+      <span className="underline-animate hidden sm:inline">{label}</span>
       <span className="sr-only">{label}</span>
     </Link>
   )
@@ -346,11 +354,10 @@ function TopbarDropdown({
       <Button
         variant="ghost"
         onClick={() => onLockedClick?.()}
-        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+        className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary/5 hover:text-foreground"
       >
         <Icon className="h-4 w-4" />
-        <span className="hidden sm:inline">{label}</span>
-        <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
+        <span className="underline-animate hidden sm:inline">{label}</span>
       </Button>
     )
   }
@@ -360,13 +367,10 @@ function TopbarDropdown({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+          className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary/5 hover:text-foreground"
         >
           <Icon className="h-4 w-4" />
-          <span className="hidden sm:inline">{label}</span>
-          {!hasAccess && anyRestricted ? (
-            <Lock className="ml-1 h-4 w-4 text-muted-foreground" />
-          ) : null}
+          <span className="underline-animate hidden sm:inline">{label}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

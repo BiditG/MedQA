@@ -6,6 +6,7 @@ import {
   Bot,
   Box,
   Brain,
+  Crown,
   FileUp,
   Home,
   Image as ImageIcon,
@@ -29,6 +30,10 @@ export function AppSidebar({
   onLockedClick?: () => void
 }) {
   const groups = [
+    {
+      title: 'Upgrade',
+      items: [{ href: '/pricing', label: 'Subscribe', icon: Crown }],
+    },
     {
       title: 'Weekly Exam',
       items: [{ href: '/weekly-exam', label: 'Weekly Exam', icon: Brain }],
@@ -93,13 +98,14 @@ export function AppSidebar({
   function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
     // Lock rules for regular users (non-premium, non-admin)
     // - AI group: all items locked
-    // - Lookup: all locked except Glossary and Medicine Directory
-    // - Practice: all locked except CEE Practice (/cee-practice)
+    // - Lookup: all locked
+    // - Practice: all locked
+    // - Checks: all locked
     if (gTitle === 'Weekly Exam') return false
     if (gTitle === 'AI') return true
-    if (gTitle === 'Lookup')
-      return !['Glossary', 'Medicine Directory'].includes(itemLabel)
-    if (gTitle === 'Practice') return itemHref !== '/cee-practice'
+    if (gTitle === 'Lookup') return true
+    if (gTitle === 'Practice') return true
+    if (gTitle === 'Checks') return true
     return false
   }
 
@@ -134,6 +140,31 @@ export function AppSidebar({
                       !loading &&
                       restricted &&
                       !(profile?.premium || profile?.role === 'admin')
+
+                    // Render a prominent Subscribe CTA for the Upgrade group
+                    if (l.href === '/pricing' || g.title === 'Upgrade') {
+                      return (
+                        <li key={l.href}>
+                          <Link
+                            href={l.href}
+                            className="vibrant-btn inline-flex w-full items-center justify-between gap-3 px-3 py-2 text-sm"
+                          >
+                            <div className="flex items-center gap-3">
+                              {l.icon ? (
+                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/20">
+                                  <l.icon className="h-4 w-4 text-primary" />
+                                </span>
+                              ) : null}
+                              <span className="truncate font-medium">
+                                {l.label}
+                              </span>
+                            </div>
+                            {/* keep space for trailing visuals if needed */}
+                          </Link>
+                        </li>
+                      )
+                    }
+
                     return (
                       <NavLink
                         key={l.href}
@@ -144,7 +175,7 @@ export function AppSidebar({
                         disabled={disabled}
                         trailing={
                           disabled ? (
-                            <Lock className="h-4 w-4 text-muted-foreground" />
+                            <Lock className="h-4 w-4 text-foreground/70" />
                           ) : null
                         }
                       />
@@ -209,6 +240,30 @@ export function AppSidebar({
                         !loading &&
                         restricted &&
                         !(profile?.premium || profile?.role === 'admin')
+
+                      if (l.href === '/pricing' || g.title === 'Upgrade') {
+                        return (
+                          <li key={l.href}>
+                            <Link
+                              href={l.href}
+                              onClick={onClose}
+                              className="vibrant-btn inline-flex w-full items-center justify-between gap-3 px-3 py-2 text-sm"
+                            >
+                              <div className="flex items-center gap-3">
+                                {l.icon ? (
+                                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/20">
+                                    <l.icon className="h-4 w-4 text-primary" />
+                                  </span>
+                                ) : null}
+                                <span className="truncate font-medium">
+                                  {l.label}
+                                </span>
+                              </div>
+                            </Link>
+                          </li>
+                        )
+                      }
+
                       return (
                         <NavLink
                           key={l.href}
@@ -219,7 +274,7 @@ export function AppSidebar({
                           disabled={disabled}
                           trailing={
                             disabled ? (
-                              <Lock className="h-4 w-4 text-muted-foreground" />
+                              <Lock className="h-4 w-4 text-foreground/70" />
                             ) : null
                           }
                         />
