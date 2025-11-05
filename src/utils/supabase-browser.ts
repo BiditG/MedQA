@@ -26,10 +26,21 @@ export function createBrowserClient(): AnyClient {
   }
 
   if (!window.__supabase_client__) {
-    console.debug('[supabase] creating browser client for', url)
+    // minimal debug (do NOT log the key)
+    console.debug(
+      '[supabase] creating browser client for',
+      url,
+      'origin=',
+      window.location.origin,
+    )
     // Cast to a lightweight client type to prevent TS2589 deep instantiation
+    // Add explicit auth options to avoid unexpected redirect/session handling differences in prod
     window.__supabase_client__ = (createClient as any)(url, key, {
-      auth: { persistSession: true },
+      auth: {
+        persistSession: true,
+        // detectSessionInUrl parses auth callback params automatically; set to false if you handle callback manually
+        detectSessionInUrl: true,
+      },
     }) as any
   } else {
     console.debug('[supabase] reusing existing browser client for', url)
