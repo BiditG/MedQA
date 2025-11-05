@@ -48,29 +48,25 @@ export async function POST(req: Request) {
             .maybeSingle()
           if (existing) {
             // preserve whatever role/premium already exists
-            const { error: upErr } = await svc
-              .from('profiles')
-              .upsert(
-                {
-                  id: user.id,
-                  email: user.email,
-                  role: existing.role,
-                  premium: existing.premium ?? false,
-                },
-                { onConflict: 'id' },
-              )
+            const { error: upErr } = await svc.from('profiles').upsert(
+              {
+                id: user.id,
+                email: user.email,
+                role: existing.role,
+                premium: existing.premium ?? false,
+              },
+              { onConflict: 'id' },
+            )
             if (upErr)
               console.log('[api/auth/signin] profile upsert error', upErr)
           } else {
             // insert new profile as a new user
-            const { error: insErr } = await svc
-              .from('profiles')
-              .insert({
-                id: user.id,
-                email: user.email,
-                role: 'user',
-                premium: false,
-              })
+            const { error: insErr } = await svc.from('profiles').insert({
+              id: user.id,
+              email: user.email,
+              role: 'user',
+              premium: false,
+            })
             if (insErr)
               console.log('[api/auth/signin] profile insert error', insErr)
           }
@@ -83,14 +79,12 @@ export async function POST(req: Request) {
               .eq('id', user.id)
               .maybeSingle()
             if (!existing) {
-              const { error: insErr } = await supabase
-                .from('profiles')
-                .insert({
-                  id: user.id,
-                  email: user.email,
-                  role: 'user',
-                  premium: false,
-                })
+              const { error: insErr } = await supabase.from('profiles').insert({
+                id: user.id,
+                email: user.email,
+                role: 'user',
+                premium: false,
+              })
               if (insErr)
                 console.log(
                   '[api/auth/signin] fallback profile insert error',
@@ -109,7 +103,11 @@ export async function POST(req: Request) {
       }
     }
 
-    return res
+    return NextResponse.json({
+      ok: true,
+      message: 'Signed in successfully',
+      session: data.session, // include access_token & refresh_token
+    })
   } catch (e: any) {
     console.error(e)
     return NextResponse.json({ error: String(e.message || e) }, { status: 500 })

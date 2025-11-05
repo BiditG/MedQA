@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { createBrowserClient } from '@/utils/supabase-browser'
 
 export default function SubscriptionModal({
   open,
   onClose,
   onSubscribe, // <-- add this prop
+  isAuthed,
 }: {
   open: boolean
   onClose: () => void
   onSubscribe?: () => void // <-- add this to the type
+  isAuthed?: boolean
 }) {
   const [container] = useState(() =>
     typeof document !== 'undefined' ? document.createElement('div') : null,
@@ -62,18 +65,17 @@ export default function SubscriptionModal({
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Unlock advanced AI tutor, PDF → MCQ, visualization and diagnostic
-              tools. One subscription covers everything.
+              tools and many more. One subscription covers everything.
             </p>
 
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:items-end">
               <div className="sm:col-span-2">
-                <div className="flex items-baseline gap-2">
-                  <div className="text-3xl font-extrabold">रु 299</div>
-                  <div className="text-sm text-muted-foreground">/ month</div>
+                {/* Prices in one line */}
+                <div className="whitespace-nowrap text-xs font-semibold leading-tight tracking-tight sm:text-sm md:text-base">
+                  रु 1299/month, 2499/month, 9999/year
                 </div>
                 <div className="mt-2 text-sm text-muted-foreground">
-                  Billed monthly. Cancel anytime. Secure payment methods
-                  supported.
+                  Cancel anytime. Secure payment methods supported.
                 </div>
                 <ul className="mt-4 space-y-2 text-sm">
                   <li className="flex items-center gap-2">
@@ -93,14 +95,46 @@ export default function SubscriptionModal({
 
               <div className="flex items-center justify-end">
                 <button
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    console.log('Subscribe button clicked!')
+                    onSubscribe?.()
+
+                    // Close modal promptly for snappy UX
                     onClose()
+
+                    // Determine auth state: prefer prop, fallback to Supabase
+                    let authed =
+                      typeof isAuthed === 'boolean' ? isAuthed : undefined
+                    if (authed === undefined) {
+                      try {
+                        const supabase = createBrowserClient()
+                        const { data, error } = await supabase.auth.getUser()
+                        if (error) {
+                          console.debug(
+                            '[subscribe] getUser error',
+                            error.message,
+                          )
+                        }
+                        authed = !!data?.user
+                      } catch (err) {
+                        console.debug('[subscribe] supabase client error', err)
+                        authed = false
+                      }
+                    }
+
+                    const redirectTo = encodeURIComponent('/pricing')
+                    const loginMsg = encodeURIComponent(
+                      'Please sign in to subscribe',
+                    )
+
+                    // Small delay to allow modal close animation before navigation
                     setTimeout(() => {
-                      console.log('Redirecting to /pricing')
-                      window.location.href = '/pricing'
+                      if (authed) {
+                        window.location.href = '/pricing'
+                      } else {
+                        window.location.href = `/login?message=${loginMsg}&redirectTo=${redirectTo}`
+                      }
                     }, 100)
                   }}
                   className="rounded-full bg-primary px-6 py-3 text-white shadow hover:brightness-95"

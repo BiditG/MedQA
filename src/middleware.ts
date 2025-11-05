@@ -30,13 +30,9 @@ export async function middleware(request: NextRequest) {
     const publicPaths = new Set([
       '/',
       '/login',
-      '/forgot-password',
       '/reset-password',
       '/auth/callback', // <-- important
-      '/api/auth/callback',
-      '/weekly-exam',
-      '/weekly-exam/exam',
-      '/api/weekly-exam',
+      '/api/auth/signin', // allow credentials sign-in
     ])
     const isPublic = Array.from(publicPaths).some(
       (p) =>

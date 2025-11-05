@@ -5,6 +5,7 @@ import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import SupaGoogleSignIn from '@/components/SupaGoogleSignIn'
 import SupaFacebookSignIn from '@/components/SupaFacebookSignIn'
+import { createBrowserClient } from '@/utils/supabase-browser'
 
 async function postJson(url: string, body: any) {
   const res = await fetch(url, {
@@ -43,6 +44,13 @@ function LoginInner() {
     if (res?.error) {
       setMessage(res.error || 'Failed to sign in')
       return
+    }
+    const supabase = createBrowserClient()
+    if (res.session?.access_token && res.session?.refresh_token) {
+      await supabase.auth.setSession({
+        access_token: res.session.access_token,
+        refresh_token: res.session.refresh_token,
+      })
     }
     try {
       router.refresh()
