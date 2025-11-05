@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const COHERE_API = 'https://api.cohere.com/v1/chat'
+import { getGeminiKeys, callGeminiWithKey } from '@/utils/ai-providers'
 
 type Msg = { role: 'user' | 'assistant' | 'system'; content: string }
 
-function toCohere(history: Msg[]) {
+function toPreamble(history: Msg[]) {
   const preambles: string[] = []
   const chat_history: Array<{ role: 'USER' | 'CHATBOT'; message: string }> = []
   for (const m of history) {
@@ -19,13 +18,6 @@ function toCohere(history: Msg[]) {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.COHERE_API_KEY
-  if (!apiKey)
-    return NextResponse.json(
-      { error: 'Missing COHERE_API_KEY' },
-      { status: 500 },
-    )
-
   const body = await req.json().catch(() => ({}))
   const { messages, style, subject, topic } = body as {
     messages: Msg[]
@@ -43,7 +35,7 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     )
 
-  const { preamble, chat_history } = toCohere(messages)
+  const { preamble, chat_history } = toPreamble(messages)
   const systemBits: string[] = []
   systemBits.push(
     'You are MedPrep Tutor, a friendly medical explainer. Be concise, accurate, and supportive.',
@@ -64,7 +56,6 @@ export async function POST(req: NextRequest) {
   if (topic) systemBits.push(`Topic context: ${topic}`)
 
   const payload = {
-    model: 'command-r',
     message: last.content,
     chat_history,
     preamble: [systemBits.join(' '), preamble].filter(Boolean).join('\n\n'),
@@ -72,24 +63,46 @@ export async function POST(req: NextRequest) {
     temperature: 0.3,
   }
 
-  const resp = await fetch(COHERE_API, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(payload),
-  })
-
-  if (!resp.ok) {
-    const text = await resp.text()
+  const gKeys = getGeminiKeys()
+  if (!gKeys.length)
     return NextResponse.json(
-      { error: 'Cohere error', details: text },
+      { error: 'No Gemini API key configured' },
       { status: 500 },
     )
+
+  const prompt = [payload.preamble, payload.message]
+    .filter(Boolean)
+    .join('\n\n')
+  let lastDetails: string | undefined
+  const debugMode = new URL(req.url).searchParams.get('debug') === '1'
+
+  for (const key of gKeys) {
+    try {
+      const r = await callGeminiWithKey(
+        key,
+        prompt,
+        payload.temperature ?? 0.3,
+        payload.max_tokens ?? 600,
+      )
+      if (r.ok) {
+        const used =
+          (r as any).usedModel ?? process.env.GEMINI_MODEL ?? 'unknown'
+        const base = { reply: r.text, provider: 'gemini', model: used }
+        if (debugMode)
+          return NextResponse.json({
+            ...base,
+            debug: { raw: (r as any).raw ?? null },
+          })
+        return NextResponse.json(base)
+      }
+      lastDetails = r.details
+    } catch (e: any) {
+      lastDetails = String(e)
+    }
   }
-  const data = await resp.json()
-  // Cohere returns { text } for chat completion
-  const text = data?.text ?? data?.response ?? ''
-  return NextResponse.json({ reply: text })
+
+  return NextResponse.json(
+    { error: 'All AI providers failed', details: lastDetails ?? 'no details' },
+    { status: 502 },
+  )
 }

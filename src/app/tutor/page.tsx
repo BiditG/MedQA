@@ -51,8 +51,20 @@ export default function TutorPage() {
         body: JSON.stringify({ messages: next, style }),
       })
       const data = await res.json()
-      if (data?.reply)
+      if (data?.error) {
+        console.error('[tutor] API error:', data)
+        setMessages((m) => [
+          ...m,
+          {
+            role: 'assistant',
+            content:
+              `AI service error: ${data.error}` +
+              (data.details ? ` — ${data.details}` : ''),
+          },
+        ])
+      } else if (data?.reply) {
         setMessages((m) => [...m, { role: 'assistant', content: data.reply }])
+      }
     } catch (e) {
       setMessages((m) => [
         ...m,

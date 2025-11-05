@@ -19,7 +19,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 
-type ChatMsg = { role: 'user' | 'assistant'; content: string }
+type ChatMsg = { role: 'user' | 'assistant'; content: string; typing?: boolean }
 
 export default function DiagnosePage() {
   const [messages, setMessages] = useState<ChatMsg[]>([])
@@ -45,28 +45,84 @@ export default function DiagnosePage() {
   )
 
   async function callDiagnoseAPI(msgs: ChatMsg[]) {
+    return callDiagnoseAPIWithOptions(msgs, {})
+  }
+
+  async function callDiagnoseAPIWithOptions(
+    msgs: ChatMsg[],
+    opts: { reveal?: boolean } = {},
+  ) {
     setLoading(true)
     try {
+      const body = {
+        messages: msgs,
+        disease: disease || undefined,
+        attempts: revealAfter,
+        reveal: opts.reveal ? true : undefined,
+      }
       const res = await fetch('/api/ai/diagnose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: msgs,
-          disease: disease || undefined,
-          attempts: revealAfter,
-        }),
+        body: JSON.stringify(body),
       })
       const data = await res.json()
-      if (data?.reply)
-        setMessages((m) => [...m, { role: 'assistant', content: data.reply }])
+      if (data?.reply) {
+        // Insert a placeholder assistant message with typing state, then animate text
+        setMessages((m) => [
+          ...m,
+          { role: 'assistant', content: '', typing: true },
+        ])
+        // wait a tick for state to apply
+        await new Promise((r) => setTimeout(r, 50))
+        // animate the reply into the last message
+        animateAssistantText(data.reply)
+      }
       if (typeof data?.revealed === 'boolean')
         setRevealed(Boolean(data.revealed))
+      return data
     } catch (e) {
       // TODO: optional toast
       console.error(e)
+      return null
     } finally {
       setLoading(false)
     }
+  }
+
+  // Animate assistant reply text into the last assistant message (typewriter effect)
+  function animateAssistantText(fullText: string) {
+    const speed = 16 // ms per char
+    setMessages((prev) => {
+      // ensure there is an assistant placeholder
+      const next = [...prev]
+      const idx = next.length - 1
+      if (idx < 0) return prev
+      next[idx] = { ...next[idx], content: '', typing: true }
+      return next
+    })
+
+    let i = 0
+    const interval = setInterval(() => {
+      i++
+      setMessages((prev) => {
+        const next = [...prev]
+        const idx = next.length - 1
+        if (idx < 0) return prev
+        next[idx] = { ...next[idx], content: fullText.slice(0, i) }
+        return next
+      })
+      if (i >= fullText.length) {
+        clearInterval(interval)
+        // clear typing flag
+        setMessages((prev) => {
+          const next = [...prev]
+          const idx = next.length - 1
+          if (idx < 0) return prev
+          next[idx] = { ...next[idx], typing: false }
+          return next
+        })
+      }
+    }, speed)
   }
 
   async function startSession() {
@@ -135,6 +191,21 @@ export default function DiagnosePage() {
     'What worsens or relieves it?',
   ]
 
+  // Small medicine-themed loader component (pill + bouncing dot)
+  function MedicineLoader({ className }: { className?: string }) {
+    return (
+      <div className={className ?? 'inline-flex items-center'} aria-hidden>
+        <div className="relative flex h-6 w-10 items-center justify-center">
+          <div className="absolute left-0 top-0 h-6 w-6 -translate-x-1/4 transform rounded-full bg-rose-500/90" />
+          <div className="absolute right-0 top-0 h-6 w-6 translate-x-1/4 transform rounded-full bg-emerald-400/90" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <span className="inline-block h-2 w-2 animate-bounce rounded-full bg-white" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full">
       {/* Decorative backdrop */}
@@ -175,9 +246,9 @@ export default function DiagnosePage() {
         </div>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-5">
         {/* Left: Chat + Progress */}
-        <div className="md:col-span-3">
+        <div className="md:col-span-3 lg:col-span-4">
           <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-3">
               <span className="font-medium text-foreground">Progress</span>
@@ -237,6 +308,7 @@ export default function DiagnosePage() {
                         <div key={i} className="group">
                           <ChatBubble
                             role={m.role === 'assistant' ? 'patient' : 'user'}
+                            typing={Boolean(m.typing)}
                           >
                             {m.content}
                           </ChatBubble>
@@ -339,15 +411,16 @@ export default function DiagnosePage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <Button
                         onClick={send}
                         disabled={!started || loading || !input.trim()}
                         className="h-10"
                       >
                         {loading ? (
-                          <span className="inline-flex items-center gap-1">
-                            <Spinner /> Sending…
+                          <span className="inline-flex items-center gap-2">
+                            <MedicineLoader />
+                            <span>Sending…</span>
                           </span>
                         ) : (
                           'Send'
@@ -380,6 +453,29 @@ export default function DiagnosePage() {
                           >
                             <X className="mr-2 h-4 w-4" /> End
                           </Button>
+                          {/* Reveal button: full-width on small screens to avoid overflow */}
+                          {started && !revealed && (
+                            <Button
+                              variant="default"
+                              onClick={async () => {
+                                // prompt the LLM to reveal the diagnosis regardless of question count
+                                await callDiagnoseAPIWithOptions(messages, {
+                                  reveal: true,
+                                })
+                              }}
+                              disabled={loading || askedCount < 3}
+                              title={
+                                askedCount < 3
+                                  ? `Ask ${
+                                      3 - askedCount
+                                    } more question(s) to enable Reveal`
+                                  : 'Reveal the diagnosis'
+                              }
+                              className="mt-2 h-10 w-full sm:mt-0 sm:w-auto"
+                            >
+                              Reveal diagnosis
+                            </Button>
+                          )}
                         </>
                       )}
                     </div>

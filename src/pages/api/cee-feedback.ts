@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getGeminiKeys, callGeminiWithKey } from '@/utils/ai-providers'
 
 type Req = {
   questions: Array<any>
@@ -16,10 +17,11 @@ export default async function handler(
   if (!body || !Array.isArray(body.questions))
     return res.status(400).json({ error: 'Invalid payload' })
 
-  const key = process.env.COHERE_API_KEY
-  if (!key) return res.status(500).json({ error: 'Cohere key not configured' })
+  const orKeys = []
 
-  const systemPrompt = `You are an exam coach. Provide a concise study plan and feedback based on the user's answers. Focus on topics to improve, common mistakes, and suggested study resources. Keep the response to 4 short bullet points.`
+  const systemPrompt = `You are an exam coach. Return concise, actionable feedback in short bullet points only. Do NOT produce long paragraphs. Format:
+1) A one-line summary sentence (very short).
+2) Then 3 brief bullet points (each one line) that: a) state the topic/area to improve, b) give a one-line focused study tip, and c) recommend 1-2 short resources or keywords (book titles, high-yield topics or concise URLs).\n\nRespond exactly in plain text with bullets (use '-', '*' or numbered list). Keep everything short and to the point.`
   const userPromptLines: string[] = []
   userPromptLines.push(
     `Score: ${body.summary?.score ?? 0} / ${body.summary?.total ?? 0}`,
@@ -33,11 +35,11 @@ export default async function handler(
     )
   }
   userPromptLines.push(
-    '\nList the top 3 topics the user should focus on and a one-line study tip for each.',
+    '\nList the top 3 topics the user should focus on and a one-line study tip for each, including 1-2 resource keywords or titles per topic.',
   )
 
   const payload = {
-    model: 'command-r',
+    model: 'command-light',
     message: userPromptLines.join('\n'),
     preamble: systemPrompt,
     max_tokens: 300,
@@ -45,26 +47,34 @@ export default async function handler(
   }
 
   try {
-    const r = await fetch('https://api.cohere.com/v1/chat', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${key}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-    if (!r.ok) {
-      const txt = await r.text()
-      return res.status(502).json({ error: `Cohere error: ${r.status} ${txt}` })
+    // Use Gemini-only rotation
+    let lastDetails: string | undefined
+    const gKeys = getGeminiKeys()
+    if (gKeys.length) {
+      const gemPrompt = [systemPrompt, userPromptLines.join('\n')]
+        .filter(Boolean)
+        .join('\n\n')
+      for (const key of gKeys) {
+        try {
+          const r = await callGeminiWithKey(key, gemPrompt, 0.2, 300)
+          if (r.ok)
+            return res.status(200).json({ feedback: String(r.text).trim() })
+          lastDetails = r.details
+        } catch (e: any) {
+          lastDetails = String(e)
+        }
+      }
+    } else {
+      return res.status(500).json({ error: 'No Gemini API key configured' })
     }
-    const data = await r.json()
-    // Compatible with other chat endpoints in repo: text may be in data.text
-    const output =
-      data?.text ??
-      data?.reply ??
-      (data?.generations && data.generations[0]?.text) ??
-      ''
-    return res.status(200).json({ feedback: (output || '').trim() })
+
+    // If no provider produced answers, return error with last details
+    return res
+      .status(500)
+      .json({
+        error: 'All Gemini requests failed',
+        details: lastDetails ?? 'no details',
+      })
   } catch (e: any) {
     return res.status(500).json({ error: String(e) })
   }

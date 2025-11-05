@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getGeminiKeys, callGeminiWithKey } from '@/utils/ai-providers'
 import fs from 'fs'
 import path from 'path'
 
-type CohereResponse = {
-  text: string
-}
+// (OpenRouter-only flow below)
 
 function parseCsv(content: string) {
   const lines: string[] = []
@@ -64,12 +63,16 @@ export async function GET(request: NextRequest) {
     topic = topic.replace(/^the\s+/i, '').trim()
 
     // Try direct page summary first
-    const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`
+    const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+      topic,
+    )}`
     let response = await fetch(summaryUrl)
 
     // If direct summary not found, use the search API to find a closest page
     if (!response.ok) {
-      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(topic)}&format=json&origin=*`
+      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+        topic,
+      )}&format=json&origin=*`
       const sres = await fetch(searchUrl)
       if (!sres.ok) throw new Error('Wikipedia search failed')
       const sjson = await sres.json()
@@ -82,7 +85,9 @@ export async function GET(request: NextRequest) {
       }
       const best = hits[0].title
       response = await fetch(
-        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(best)}`,
+        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+          best,
+        )}`,
       )
     }
 
@@ -145,13 +150,14 @@ export async function GET(request: NextRequest) {
       console.error('CSV lookup failed', e)
     }
 
-    // If a Cohere API key is available, try LLM synthesis for a better structured output
-    const COHERE_API_KEY =
-      process.env.COHERE_API_KEY || process.env.NEXT_PUBLIC_COHERE_API_KEY
-    if (COHERE_API_KEY) {
+    // If Gemini keys are available, try LLM synthesis for a better structured output
+    const gKeys = getGeminiKeys()
+    if (gKeys.length) {
       try {
         // Fetch page content sections to provide context (mobile-sections endpoint)
-        const sectionsUrl = `https://en.wikipedia.org/api/rest_v1/page/mobile-sections/${encodeURIComponent(topic)}`
+        const sectionsUrl = `https://en.wikipedia.org/api/rest_v1/page/mobile-sections/${encodeURIComponent(
+          topic,
+        )}`
         const sres = await fetch(sectionsUrl)
         const sjson = await sres.json().catch(() => null)
         const pageText = [] as string[]
@@ -172,57 +178,62 @@ export async function GET(request: NextRequest) {
         // Tailored prompt: strict JSON output with steps and mermaid graph only
         const prompt = `You are a medical educator. From the article text below, extract a clear pathogenesis flow for the topic '${topic}'. Return STRICT JSON only with keys: steps (an array of 4-8 short labels), mermaid (a single string with a 'graph TD' flow connecting the steps). Do not include any additional commentary. Article text:\n${context}`
 
-        const cohereRes = await fetch('https://api.cohere.com/v1/generate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${COHERE_API_KEY}`,
+        const orMessages = [
+          {
+            role: 'system',
+            content:
+              'You are a medical educator. Return STRICT JSON with keys steps and mermaid only.',
           },
-          body: JSON.stringify({
-            model: 'command-xlarge-nightly',
-            prompt,
-            max_tokens: 600,
-            temperature: 0.1,
-          }),
-        })
-
-        if (cohereRes.ok) {
-          const jr: any = await cohereRes.json()
-          const text = (jr?.generations?.[0]?.text || jr?.text || '') as string
-          // Attempt to parse JSON from model output
-          let parsed: any = null
+          { role: 'user', content: prompt },
+        ]
+        const orModel = process.env.OPENROUTER_MODEL || 'gpt-4o-mini'
+        let lastDetails: string | undefined
+        for (const key of gKeys) {
           try {
-            parsed = JSON.parse(text)
-          } catch (e) {
-            // try to find a JSON block
+            const r = await callGeminiWithKey(key, prompt, 0.1, 600)
+            if (!r.ok) {
+              lastDetails = r.details
+              continue
+            }
+            const text = r.text || ''
+            // Attempt to parse JSON from model output
+            let parsed: any = null
             try {
-              const start = text.indexOf('{')
-              const end = text.lastIndexOf('}')
-              if (start >= 0 && end > start) {
-                parsed = JSON.parse(text.slice(start, end + 1))
-              }
-            } catch (e) {}
-          }
+              parsed = JSON.parse(text)
+            } catch (e) {
+              // try to find a JSON block
+              try {
+                const start = text.indexOf('{')
+                const end = text.lastIndexOf('}')
+                if (start >= 0 && end > start) {
+                  parsed = JSON.parse(text.slice(start, end + 1))
+                }
+              } catch (e) {}
+            }
 
-          if (parsed && parsed.mermaid && parsed.steps) {
+            if (parsed && parsed.mermaid && parsed.steps) {
+              return NextResponse.json({
+                title: topic,
+                steps: parsed.steps,
+                mermaid: parsed.mermaid,
+                notes: parsed.notes || '',
+                source: data?.title || topic,
+                llm: true,
+              })
+            }
+
             return NextResponse.json({
-              title: topic,
-              steps: parsed.steps,
-              mermaid: parsed.mermaid,
-              notes: parsed.notes || '',
+              extract: extract || topic,
+              llm_text: text,
               source: data?.title || topic,
-              llm: true,
             })
+          } catch (e) {
+            // try next key
           }
-
-          return NextResponse.json({
-            extract: extract || topic,
-            llm_text: text,
-            source: data?.title || topic,
-          })
         }
+        // (no additional Gemini fallback — we already used Gemini keys above)
       } catch (e) {
-        console.error('Cohere call failed', e)
+        console.error('OpenRouter call failed', e)
       }
     }
 

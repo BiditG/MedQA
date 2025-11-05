@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const COHERE_API = 'https://api.cohere.com/v1/chat'
+import { getGeminiKeys, callGeminiWithKey } from '@/utils/ai-providers'
 
 type Msg = { role: 'user' | 'assistant' | 'system'; content: string }
 
-function toCohere(history: Msg[]) {
+function toPreamble(history: Msg[]) {
   const preambles: string[] = []
   const chat_history: Array<{ role: 'USER' | 'CHATBOT'; message: string }> = []
   for (const m of history) {
@@ -19,18 +18,12 @@ function toCohere(history: Msg[]) {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.COHERE_API_KEY
-  if (!apiKey)
-    return NextResponse.json(
-      { error: 'Missing COHERE_API_KEY' },
-      { status: 500 },
-    )
-
   const body = await req.json().catch(() => ({}))
-  const { messages, disease, attempts } = body as {
+  const { messages, disease, attempts, reveal } = body as {
     messages: Msg[]
     disease?: string
     attempts?: number
+    reveal?: boolean
   }
   if (!Array.isArray(messages) || messages.length === 0)
     return NextResponse.json({ error: 'messages[] required' }, { status: 400 })
@@ -51,9 +44,16 @@ export async function POST(req: NextRequest) {
 
   // If user has asked 3-4 meaningful questions, reveal diagnosis gently
   const askedCount = messages.filter((m) => m.role === 'user').length
-  if (askedCount >= revealAt) {
+  if (reveal) {
+    // Explicit reveal requested by client/button: override and ask to reveal now.
+    // In this mode the model must ONLY state the diagnosis with no justification.
     baseSystem.push(
-      'The interviewer has asked enough questions. Now, gently reveal the likely diagnosis and a brief rationale.',
+      'The interviewer requested a reveal. ONLY reply with a single short sentence in the exact format:\n"My diagnosis is <DIAGNOSIS>." Do NOT provide any explanation, justification, or additional commentary.',
+    )
+  } else if (askedCount >= revealAt) {
+    // Regular reveal after sufficient questions: also return only the diagnosis sentence.
+    baseSystem.push(
+      'The interviewer has asked enough questions. ONLY reply with a single short sentence in the exact format:\n"My diagnosis is <DIAGNOSIS>." Do NOT provide any explanation, justification, or additional commentary.',
     )
   } else {
     baseSystem.push(
@@ -62,13 +62,12 @@ export async function POST(req: NextRequest) {
   }
 
   const last = messages[messages.length - 1]
-  const { preamble, chat_history } = toCohere([
+  const { preamble, chat_history } = toPreamble([
     { role: 'system', content: baseSystem.join(' ') },
     ...messages,
   ])
 
   const payload = {
-    model: 'command-r',
     message: last.content,
     chat_history,
     preamble,
@@ -76,23 +75,38 @@ export async function POST(req: NextRequest) {
     temperature: 0.5,
   }
 
-  const resp = await fetch(COHERE_API, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(payload),
-  })
-
-  if (!resp.ok) {
-    const text = await resp.text()
+  const gKeys = getGeminiKeys()
+  if (!gKeys.length)
     return NextResponse.json(
-      { error: 'Cohere error', details: text },
+      { error: 'No Gemini API key configured' },
       { status: 500 },
     )
+
+  const prompt = [payload.preamble, payload.message]
+    .filter(Boolean)
+    .join('\n\n')
+  let lastDetails: string | undefined
+  for (const key of gKeys) {
+    try {
+      const r = await callGeminiWithKey(
+        key,
+        prompt,
+        payload.temperature ?? 0.5,
+        payload.max_tokens ?? 400,
+      )
+      if (r.ok)
+        return NextResponse.json({
+          reply: r.text,
+          revealed: Boolean(reveal) || askedCount >= revealAt,
+        })
+      lastDetails = r.details
+    } catch (e: any) {
+      lastDetails = String(e)
+    }
   }
-  const data = await resp.json()
-  const text = data?.text ?? data?.response ?? ''
-  return NextResponse.json({ reply: text, revealed: askedCount >= revealAt })
+
+  return NextResponse.json(
+    { error: 'All AI providers failed', details: lastDetails ?? 'no details' },
+    { status: 502 },
+  )
 }

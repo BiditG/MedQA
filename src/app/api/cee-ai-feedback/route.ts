@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getGeminiKeys, callGeminiWithKey } from '@/utils/ai-providers'
 
 type ReqBody = {
   questions: Array<{
@@ -40,44 +41,26 @@ export async function POST(req: Request) {
       topic ?? 'Mixed'
     }.\n\nHere are a subset of attempted questions:\n\n${rows}\n\nPlease: 1) Give an overall score interpretation in one sentence. 2) List 3 focused study tips based on observed mistakes. 3) Provide 3 references or keywords the student should review. Keep the response short and actionable.`
 
-    const COHERE_KEY = process.env.COHERE_API_KEY
-    if (!COHERE_KEY) {
-      // Fallback mock response when key is missing
-      const mock = `No AI key available. Example feedback:\nOverall: Good attempt — focus on topics you missed.\nTips: 1) Review anatomy basics; 2) Practice problem-solving for applied questions; 3) Time management.\nReferences: "Gray's Anatomy", "Robbins Pathology", "First Aid"`
-      return NextResponse.json({ text: mock })
+    const gKeys = getGeminiKeys()
+    let lastDetails: string | undefined
+    if (gKeys.length) {
+      const geminiPrompt = prompt
+      for (const key of gKeys) {
+        try {
+          const r = await callGeminiWithKey(key, geminiPrompt, 0.6, 250)
+          if (r.ok) return NextResponse.json({ text: r.text })
+          lastDetails = r.details
+        } catch (e: any) {
+          lastDetails = String(e)
+        }
+      }
+    } else {
+      lastDetails = 'No Gemini API key configured'
     }
 
-    // Call Cohere Generate API
-    const resp = await fetch('https://api.cohere.ai/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${COHERE_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'command-xlarge-nightly',
-        prompt,
-        max_tokens: 250,
-        temperature: 0.6,
-        k: 0,
-      }),
-    })
-
-    if (!resp.ok) {
-      const txt = await resp.text()
-      return NextResponse.json(
-        { error: `AI request failed: ${resp.status} ${txt}` },
-        { status: 502 },
-      )
-    }
-
-    const data = await resp.json()
-    // Cohere returns generations[0].text typically
-    const out =
-      (data?.generations && data.generations[0]?.text) ||
-      data?.text ||
-      JSON.stringify(data)
-    return NextResponse.json({ text: out })
+    // If OpenRouter + Gemini attempts all failed, include last details to help debug
+    const mock = `No AI key available. Example feedback:\nOverall: Good attempt — focus on topics you missed.\nTips: 1) Review anatomy basics; 2) Practice problem-solving for applied questions; 3) Time management.\nReferences: \"Gray's Anatomy\", \"Robbins Pathology\", \"First Aid\"`
+    return NextResponse.json({ text: mock, debug: lastDetails ?? 'no details' })
   } catch (err: any) {
     return NextResponse.json({ error: String(err) }, { status: 500 })
   }

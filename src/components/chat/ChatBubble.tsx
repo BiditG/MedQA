@@ -52,7 +52,7 @@ export function ChatBubble({
         </div>
       )}
 
-      <div className="relative max-w-[85%]">
+      <div className="relative max-w-[95%] lg:max-w-[80%]">
         <div
           className={cn(
             'break-words rounded-2xl border px-4 py-3 text-sm leading-relaxed shadow-sm',

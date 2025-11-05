@@ -564,7 +564,7 @@ export default function CeePracticePage() {
               </div>
             </div>
 
-            <div className="mt-4 flex gap-2">
+            <div className="mt-4 flex flex-wrap items-center gap-2">
               <Button
                 onClick={() => {
                   setStarted(false)
@@ -587,8 +587,12 @@ export default function CeePracticePage() {
               >
                 Retry
               </Button>
-              <div className="ml-auto">
-                <Button onClick={requestAiFeedback} disabled={aiLoading}>
+              <div className="ml-auto w-full sm:w-auto">
+                <Button
+                  onClick={requestAiFeedback}
+                  disabled={aiLoading}
+                  className="w-full sm:w-auto"
+                >
                   {aiLoading ? 'Thinking…' : 'Get AI feedback'}
                 </Button>
               </div>
