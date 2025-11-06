@@ -114,9 +114,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>
-          MEDQAS — CEE MCQs, AIIMS, NEET PG, Entrance Prep, Free MCQs
-        </title>
+        <title>MEDQAS: AI‑Powered All‑in‑One Medical Learning Platform</title>
         <meta
           name="description"
           content="Practice CEE questions, AIIMS/NEET PG MCQs, and entrance exam prep for Nepali medical students. Free MCQs, clinical reasoning, and more on MEDQAS."
@@ -127,7 +125,7 @@ export default function Home() {
         />
         <meta
           property="og:title"
-          content="MEDQAS — CEE MCQs, AIIMS, NEET PG, Entrance Prep"
+          content="MEDQAS: AI‑Powered All‑in‑One Medical Learning Platform"
         />
         <meta
           property="og:description"
@@ -138,7 +136,7 @@ export default function Home() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="MEDQAS — CEE MCQs, AIIMS, NEET PG, Entrance Prep"
+          content="MEDQAS: AI‑Powered All‑in‑One Medical Learning Platform"
         />
         <meta
           name="twitter:description"

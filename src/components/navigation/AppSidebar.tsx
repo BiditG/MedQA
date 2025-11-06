@@ -197,7 +197,7 @@ export function AppSidebar({
         <div className="absolute inset-0 bg-black/40" onClick={onClose} />
         <div
           className={cn(
-            'absolute inset-y-0 left-0 w-72 border-r bg-muted/30 shadow-xl transition-transform',
+            'absolute inset-y-0 left-0 w-72 border-r bg-muted shadow-xl transition-transform',
             open ? 'translate-x-0' : '-translate-x-full',
           )}
           onClick={(e) => e.stopPropagation()}

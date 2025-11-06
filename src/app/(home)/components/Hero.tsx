@@ -13,8 +13,7 @@ export function Hero() {
         <div className="mx-auto max-w-2xl lg:max-w-4xl">
           <h1 className="mb-4 flex min-h-[80px] items-center justify-center text-2xl font-extrabold leading-tight sm:min-h-[90px] sm:text-3xl md:min-h-[110px] md:text-4xl lg:min-h-[120px] lg:text-5xl">
             <span className="subtle-hover heading-gradient">
-              MEDQAS: The AI-Driven Medical Learning Platform with Smart MCQs
-              for NEET, AIIMS & CEE Aspirants
+              MEDQAS: AI‑Powered All‑in‑One Medical Learning Platform
             </span>
             <style>{`
               .subtle-hover {
