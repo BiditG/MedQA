@@ -17,7 +17,6 @@ import {
   Activity,
 } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { PremiumGuard } from '@/components/PremiumGuard'
 
 function HomeInner() {
   const params = useSearchParams()
@@ -49,9 +48,7 @@ export default function Home() {
     <Suspense
       fallback={<div className="w-full max-w-6xl px-4 py-8">Loading…</div>}
     >
-      <PremiumGuard>
-        <HomeInner />
-      </PremiumGuard>
+      <HomeInner />
     </Suspense>
   )
 }
