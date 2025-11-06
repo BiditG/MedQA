@@ -3,22 +3,10 @@ import { NextResponse } from 'next/server'
 export async function GET() {
   try {
     const { createClient } = await import('@supabase/supabase-js')
-    const fs = await import('fs')
-    const path = await import('path')
-
-    // Read env vars
-    const envPath = path.resolve(process.cwd(), '.env.local')
-    const envContent = fs.readFileSync(envPath, 'utf8')
-    const env: Record<string, string> = {}
-    envContent.split('\n').forEach((line) => {
-      const [key, value] = line.split('=')
-      if (key && value)
-        env[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '')
-    })
 
     const supabase = createClient(
-      env.NEXT_PUBLIC_SUPABASE_URL!,
-      env.SUPABASE_SERVICE_ROLE_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     )
 
     const { count, error } = await supabase

@@ -4,22 +4,10 @@ import { fetchNeetPgMcqs } from '@/utils/supabase-data'
 async function getSubjectsFromSupabase() {
   try {
     const { createClient } = await import('@supabase/supabase-js')
-    const fs = await import('fs')
-    const path = await import('path')
-
-    // Read env vars
-    const envPath = path.resolve(process.cwd(), '.env.local')
-    const envContent = fs.readFileSync(envPath, 'utf8')
-    const env: Record<string, string> = {}
-    envContent.split('\n').forEach((line) => {
-      const [key, value] = line.split('=')
-      if (key && value)
-        env[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '')
-    })
 
     const supabase = createClient(
-      env.NEXT_PUBLIC_SUPABASE_URL!,
-      env.SUPABASE_SERVICE_ROLE_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     )
 
     const { data, error } = await supabase
@@ -42,22 +30,10 @@ async function getSubjectsFromSupabase() {
 async function getTopicsFromSupabase(subject?: string) {
   try {
     const { createClient } = await import('@supabase/supabase-js')
-    const fs = await import('fs')
-    const path = await import('path')
-
-    // Read env vars
-    const envPath = path.resolve(process.cwd(), '.env.local')
-    const envContent = fs.readFileSync(envPath, 'utf8')
-    const env: Record<string, string> = {}
-    envContent.split('\n').forEach((line) => {
-      const [key, value] = line.split('=')
-      if (key && value)
-        env[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '')
-    })
 
     const supabase = createClient(
-      env.NEXT_PUBLIC_SUPABASE_URL!,
-      env.SUPABASE_SERVICE_ROLE_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     )
 
     let query = supabase.from('mcqs').select('topic').not('topic', 'is', null)
