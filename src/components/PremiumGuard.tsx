@@ -42,9 +42,10 @@ export function PremiumGuard({ children }: { children: React.ReactNode }) {
   if (!allowed)
     return (
       <div className="p-6 text-sm">
-        This feature is for signed-in users.{' '}
-        <Link href="/login" className="underline">
-          Sign in
+        To access this feature, you need to purchase a package. After purchase,
+        login credentials will be provided by the admin.{' '}
+        <Link href="/pricing" className="underline">
+          View Plans
         </Link>
       </div>
     )
