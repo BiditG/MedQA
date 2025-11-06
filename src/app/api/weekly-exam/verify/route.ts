@@ -1,52 +1,45 @@
 import { NextResponse } from 'next/server'
-import { getServiceClient } from '@/utils/supabase-server'
+import { verifyExamCode } from '@/lib/examCodes'
+import { signExamToken } from '@/lib/examAuth'
 
-const ENV_CODE = process.env.WEEKLY_EXAM_CODE
-
-async function validateWithWeeklyCodesSupabase(code: string): Promise<boolean> {
-  try {
-    const svc = getServiceClient()
-    const { data, error } = await svc
-      .from('weekly_codes')
-      .select('active,expires_at')
-      .eq('code', code)
-      .maybeSingle()
-    if (error || !data) return false
-    if (data.active === false) return false
-    if (data.expires_at && new Date(data.expires_at).getTime() <= Date.now())
-      return false
-    return true
-  } catch {
-    return false
-  }
-}
+export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json().catch(() => ({}))
-    const code = String(body?.code || '')
-    if (!code)
-      return NextResponse.json(
-        { ok: false, error: 'Missing code' },
-        { status: 400 },
-      )
+    const { code } = await req.json()
+    const res = await verifyExamCode(code)
+    if (!res.ok || !res.code) {
+      return NextResponse.json({ ok: false, error: res.error }, { status: 401 })
+    }
 
-    // 1) Prefer Supabase table if available
-    if (await validateWithWeeklyCodesSupabase(code))
-      return NextResponse.json({ ok: true })
+    // Token expiry = min(code expiry, 24h from now)
+    const now = Date.now()
+    const ttlMs = 24 * 60 * 60 * 1000
+    const candidate = now + ttlMs
+    const expMs = res.code.expiresAt
+      ? Math.min(candidate, Date.parse(res.code.expiresAt))
+      : candidate
+    const token = signExamToken({
+      code: res.code.code,
+      exp: Math.floor(expMs / 1000),
+    })
 
-    // 3) Fallback to env var
-    if (ENV_CODE && ENV_CODE.trim() === code.trim())
-      return NextResponse.json({ ok: true })
-
+    const resp = NextResponse.json({
+      ok: true,
+      exp: new Date(expMs).toISOString(),
+    })
+    resp.cookies.set('weekly_exam_token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      expires: new Date(expMs),
+    })
+    return resp
+  } catch {
     return NextResponse.json(
-      { ok: false, error: 'Invalid or expired code' },
-      { status: 401 },
-    )
-  } catch (e: any) {
-    return NextResponse.json(
-      { ok: false, error: e.message || String(e) },
-      { status: 500 },
+      { ok: false, error: 'Bad request' },
+      { status: 400 },
     )
   }
 }

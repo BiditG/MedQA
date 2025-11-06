@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import useUser from '@/hooks/useUser'
+import Link from 'next/link'
 
 type UserRow = {
   id: string
@@ -125,7 +126,17 @@ export default function AdminUsers() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-xl font-semibold">Admin — Users</h1>
+      <div className="mb-2 flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Admin — Users</h1>
+        <nav className="text-sm">
+          <Link className="btn-ghost mr-2" href="/admin/users">
+            Users
+          </Link>
+          <Link className="btn-ghost" href="/admin/exam-codes">
+            Exam Codes
+          </Link>
+        </nav>
+      </div>
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
         <form
           onSubmit={onCreate}

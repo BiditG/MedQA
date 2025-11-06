@@ -1,19 +1,13 @@
 'use client'
+
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 
 export default function WeeklyExamAccess() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [hasAccess, setHasAccess] = useState(false)
   const router = useRouter()
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    // Show a continue option instead of auto-redirecting to avoid skipping the code screen unexpectedly
-    setHasAccess(localStorage.getItem('weekly_exam_access') === 'granted')
-  }, [])
 
   async function verify() {
     setError(null)
@@ -29,7 +23,7 @@ export default function WeeklyExamAccess() {
         setError(json?.error || 'Invalid code')
         return
       }
-      localStorage.setItem('weekly_exam_access', 'granted')
+      // Cookie is set by the API; no localStorage needed.
       router.replace('/weekly-exam/exam')
     } catch (e: any) {
       setError(e.message || String(e))
@@ -44,6 +38,7 @@ export default function WeeklyExamAccess() {
       <p className="mt-2 text-sm text-muted-foreground">
         Enter the access code provided by the administrator.
       </p>
+
       <div className="mt-6 w-full rounded-lg border bg-card p-4 shadow-sm">
         <label htmlFor="code" className="text-sm">
           Access code
@@ -54,30 +49,20 @@ export default function WeeklyExamAccess() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="Enter code"
+          autoComplete="one-time-code"
         />
+        {error && (
+          <div className="mt-2 text-left text-sm text-red-600">{error}</div>
+        )}
         <button
           onClick={verify}
-          disabled={loading || !code}
-          className="mt-4 w-full rounded-md bg-primary px-4 py-2 text-white disabled:opacity-50"
+          disabled={loading || !code.trim()}
+          className="mt-4 w-full rounded bg-primary px-3 py-2 text-white disabled:opacity-50"
         >
           {loading ? 'Verifying…' : 'Enter Exam'}
         </button>
-        {error && <div className="mt-2 text-sm text-red-600">{error}</div>}
-        {hasAccess && (
-          <div className="mt-4">
-            <button
-              onClick={() => router.replace('/weekly-exam/exam')}
-              className="w-full rounded-md border px-4 py-2 text-sm hover:bg-accent/50"
-            >
-              Continue without code
-            </button>
-            <p className="mt-2 text-xs text-muted-foreground">
-              You already unlocked this device. If you want to use a new code,
-              just enter it above.
-            </p>
-          </div>
-        )}
       </div>
+
       <div className="mt-4 text-xs text-muted-foreground">
         No account required. Code unlocks this device only.
       </div>

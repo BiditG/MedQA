@@ -1,5 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { endExamSession } from '@/lib/examClient'
 
 // Minimal duplication of CeeExam with title tweaks for Weekly Exam
 // Uses same CSV (public/data/ceemcq.csv) and syllabus file.
@@ -82,6 +84,7 @@ function shuffle<T>(arr: T[]) {
 }
 
 export default function WeeklyExam() {
+  const router = useRouter()
   const [items, setItems] = useState<MCQ[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -98,10 +101,46 @@ export default function WeeklyExam() {
   // exam state
   const [examQuestions, setExamQuestions] = useState<MCQ[]>([])
   const [answers, setAnswers] = useState<Record<string, string>>({})
+  // Timer + flow state
+  const [secondsLeft, setSecondsLeft] = useState<number>(durationMin * 60)
   const [index, setIndex] = useState(0)
   const [started, setStarted] = useState(false)
   const [finished, setFinished] = useState(false)
-  const [secondsLeft, setSecondsLeft] = useState<number>(0)
+  // Per-question choice
+  const [choice, setChoice] = useState<string | null>(null)
+
+  // Optional helper to format time (mm:ss)
+  function formatTime(total: number) {
+    const m = Math.floor(total / 60)
+    const s = total % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  // Reset selection when moving to a new question
+  useEffect(() => {
+    setChoice(null)
+  }, [index])
+
+  // Start/restart timer when exam starts
+  useEffect(() => {
+    if (started) setSecondsLeft(durationMin * 60)
+  }, [started, durationMin])
+
+  // Ticking timer
+  useEffect(() => {
+    if (!started || finished) return
+    const id = setInterval(() => {
+      setSecondsLeft((s: number) => {
+        const next = s - 1
+        if (next <= 0) {
+          clearInterval(id)
+          return 0
+        }
+        return next
+      })
+    }, 1000)
+    return () => clearInterval(id)
+  }, [started, finished])
 
   useEffect(() => {
     let cancelled = false
@@ -143,37 +182,22 @@ export default function WeeklyExam() {
   }, [])
 
   useEffect(() => {
-    let iv: any = null
-    if (started && !finished) {
-      iv = setInterval(
-        () =>
-          setSecondsLeft((s) => {
-            if (s <= 1) {
-              clearInterval(iv)
-              setFinished(true)
-              return 0
-            }
-            return s - 1
-          }),
-        1000,
-      )
-    }
-    return () => {
-      if (iv) clearInterval(iv)
-    }
-  }, [started, finished])
-
-  useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (!started || finished) return
+      const tgt = e.target as HTMLElement | null
+      const tag = tgt?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tgt?.isContentEditable)
+        return
+
       const k = e.key.toUpperCase()
-      if (['A', 'B', 'C', 'D'].includes(k)) selectOptionForCurrent(k)
-      else if (k === 'ARROWLEFT') goPrev()
-      else if (k === 'ARROWRIGHT') goNext()
+      if (['A', 'B', 'C', 'D'].includes(k)) {
+        selectOptionForCurrent(k) // select only; no submit on keys
+      }
+      // Removed Enter/ArrowRight submission
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [started, finished, examQuestions, index, answers])
+  }, [started, finished, examQuestions, index, answers, choice])
 
   const progress = useMemo(() => {
     if (!examQuestions.length) return 0
@@ -206,15 +230,39 @@ export default function WeeklyExam() {
     setSecondsLeft(durationMin * 60)
   }
 
-  function selectOptionForCurrent(opt: string) {
-    if (!started || finished) return
+  // Provide this for any existing callers in your JSX
+  function selectOptionForCurrent(s: string) {
+    setChoice(s)
+  }
+
+  async function submitCurrent() {
     const q = examQuestions[index]
-    if (!q) return
-    const qid = q.id
-    if (answers[qid]) return // locked after answer
-    setAnswers((a) => ({ ...a, [qid]: opt }))
-    if (index < examQuestions.length - 1)
-      setIndex((i) => Math.min(examQuestions.length - 1, i + 1))
+    if (!q || !choice) return
+    setAnswers((prev) => ({ ...prev, [q.id]: choice }))
+    const next = index + 1
+    if (next < examQuestions.length) {
+      setIndex(next)
+    } else {
+      setFinished(true)
+      // Delete the cookie immediately on the final submit
+      try {
+        await endExamSession()
+      } catch {}
+    }
+  }
+
+  // NEW: skip without answering
+  async function skipCurrent() {
+    const next = index + 1
+    if (next < examQuestions.length) {
+      setIndex(next)
+    } else {
+      setFinished(true)
+      // Delete the cookie immediately on the final skip
+      try {
+        await endExamSession()
+      } catch {}
+    }
   }
 
   function submitExam() {
@@ -261,6 +309,11 @@ export default function WeeklyExam() {
       }
     }
     return res
+  }
+
+  async function onExitEarly() {
+    // Just navigate home after exam completion
+    router.replace('/')
   }
 
   if (loading) return <div className="p-4">Loading exam...</div>
@@ -346,22 +399,25 @@ export default function WeeklyExam() {
           </div>
           <div className="mt-4 grid grid-cols-1 gap-3">
             {['A', 'B', 'C', 'D'].map((k) => {
-              const txt =
-                (examQuestions[index]
-                  ? (examQuestions[index] as any)[`option${k}`]
-                  : '') || ''
+              const q = examQuestions[index]
+              if (!q) return null
+              const txt = (q as any)[`option${k}`] || ''
               if (!txt) return null
-              const selected = answers[examQuestions[index].id] === k
+              const currentId = q.id
+              // Use in-progress selection if present, else locked answer
+              const isSelected = (choice ?? answers[currentId]) === k
+              const isLocked = !!answers[currentId]
               const base =
                 'text-left p-4 rounded border transition-colors duration-150 ease-in-out w-full text-sm sm:text-base'
-              const cls = selected
-                ? 'bg-blue-50 border-blue-300'
-                : 'bg-white hover:bg-slate-50'
+              const cls = isSelected
+                ? 'border-2 border-blue-500 bg-blue-50'
+                : 'bg-white hover:border-gray-300'
               return (
                 <button
                   key={k}
                   className={`${base} ${cls}`}
                   onClick={() => selectOptionForCurrent(k)}
+                  disabled={isLocked} // prevent changing after locked
                 >
                   <div className="mr-2 inline-block font-semibold">{k}</div>
                   <span className="text-sm">{txt}</span>
@@ -369,26 +425,25 @@ export default function WeeklyExam() {
               )
             })}
           </div>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <button
-              disabled
-              className="w-full rounded border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-            >
-              Previous
-            </button>
-            <button
-              onClick={goNext}
-              className="w-full rounded border px-3 py-2 sm:w-auto"
-            >
-              Next
-            </button>
-            <div className="ml-0 flex w-full items-center gap-3 sm:ml-auto sm:w-auto">
+
+          {/* Actions row: Progress + Skip + Submit (Submit on the far right) */}
+          <div className="mt-4 flex items-center">
+            <div className="ml-auto flex items-center gap-3">
               <div className="text-sm">Progress: {progress}%</div>
               <button
-                onClick={submitExam}
-                className="w-full rounded bg-green-600 px-3 py-2 text-white sm:w-auto"
+                type="button"
+                onClick={skipCurrent}
+                className="rounded border px-4 py-2 hover:bg-muted"
               >
-                Submit Exam
+                Skip
+              </button>
+              <button
+                type="button"
+                onClick={submitCurrent}
+                disabled={!choice}
+                className="rounded bg-primary px-4 py-2 text-white disabled:opacity-50"
+              >
+                Submit answer
               </button>
             </div>
           </div>
@@ -441,6 +496,14 @@ export default function WeeklyExam() {
                 })}
               </div>
             </div>
+          </div>
+          <div className="mt-4">
+            <button
+              className="rounded bg-primary px-3 py-2 text-white"
+              onClick={onExitEarly}
+            >
+              Exit
+            </button>
           </div>
         </div>
       )}
