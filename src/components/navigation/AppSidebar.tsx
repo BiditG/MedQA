@@ -8,9 +8,7 @@ import {
   Brain,
   Crown,
   FileUp,
-  Home,
   Image as ImageIcon,
-  Settings,
   Stethoscope,
   Pill,
 } from 'lucide-react'
@@ -79,8 +77,6 @@ export function AppSidebar({
 
   const { profile, loading } = useProfile()
 
-  const [authOpen, setAuthOpen] = useState(false)
-
   // Prevent body from scrolling when mobile sidebar is open so touch scroll stays within the sidebar
   useEffect(() => {
     const prevOverflow = document.body.style.overflow
@@ -95,17 +91,20 @@ export function AppSidebar({
     }
   }, [open])
 
-  function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
-    // Lock rules for regular users (non-premium, non-admin)
-    // - AI group: all items locked
-    // - Lookup: all locked
-    // - Practice: all locked
-    // - Checks: all locked
-    if (gTitle === 'Weekly Exam') return false
-    if (gTitle === 'AI') return true
-    if (gTitle === 'Lookup') return true
-    if (gTitle === 'Practice') return true
-    if (gTitle === 'Checks') return true
+  function isRestricted(
+    _gTitle: string,
+    _itemHref: string,
+    _itemLabel: string,
+  ) {
+    // Non-logged-in users: lock everything except the weekly exam and pricing/subscribe
+    // If profile is null (not signed in) then restrict unless the item is allowed publicly.
+    const publicPaths = ['/weekly-exam', '/pricing', '/']
+    if (loading) return false
+    if (!profile) {
+      return !publicPaths.some(
+        (p) => _itemHref === p || _itemHref.startsWith(p),
+      )
+    }
     return false
   }
 
@@ -136,10 +135,8 @@ export function AppSidebar({
                 <ul className="space-y-1">
                   {g.items.map((l) => {
                     const restricted = isRestricted(g.title, l.href, l.label)
-                    const disabled =
-                      !loading &&
-                      restricted &&
-                      !(profile?.premium || profile?.role === 'admin')
+                    // Disabled flag controls UI lock state for links
+                    const disabled = Boolean(restricted)
 
                     // Render a prominent Subscribe CTA for the Upgrade group
                     if (l.href === '/pricing' || g.title === 'Upgrade') {
@@ -236,10 +233,7 @@ export function AppSidebar({
                   <ul className="space-y-1">
                     {g.items.map((l) => {
                       const restricted = isRestricted(g.title, l.href, l.label)
-                      const disabled =
-                        !loading &&
-                        restricted &&
-                        !(profile?.premium || profile?.role === 'admin')
+                      const disabled = Boolean(restricted)
 
                       if (l.href === '/pricing' || g.title === 'Upgrade') {
                         return (
@@ -270,7 +264,7 @@ export function AppSidebar({
                           href={l.href}
                           icon={l.icon}
                           label={l.label}
-                          onClick={onClose}
+                          onClick={disabled ? onLockedClick : onClose}
                           disabled={disabled}
                           trailing={
                             disabled ? (

@@ -1,13 +1,14 @@
-import MRIQuiz from '@/components/MRIQuiz'
+'use client'
 
-export const metadata = {
-  title: 'Tumour Check',
-}
+import MRIQuiz from '@/components/MRIQuiz'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="p-6">
-      <MRIQuiz />
-    </main>
+    <PremiumGuard>
+      <main className="p-6">
+        <MRIQuiz />
+      </main>
+    </PremiumGuard>
   )
 }

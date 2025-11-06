@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-// PremiumGuard removed; access control handled in middleware
+import { PremiumGuard } from '@/components/PremiumGuard'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -280,7 +280,7 @@ export default function PathogenesisPage() {
     if (steps.length > 0 && !flowchart) {
       setFlowchart(buildMermaidFromSteps(steps, topic))
     }
-  }, [steps])
+  }, [steps, flowchart, topic])
 
   useEffect(() => {
     if (!flowchart || !mermaidRef.current) return
@@ -650,7 +650,7 @@ export default function PathogenesisPage() {
     return () => {
       cancelled = true
     }
-  }, [flowchart])
+  }, [flowchart, steps])
 
   const copyMermaid = async () => {
     try {
@@ -809,6 +809,7 @@ export default function PathogenesisPage() {
         const img = new Image()
         img.onload = () => {
           const pdfW = doc.internal.pageSize.getWidth()
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const pdfH = doc.internal.pageSize.getHeight()
           // fit image to page width
           doc.addImage(png, 'PNG', 0, 0, pdfW, (img.height / img.width) * pdfW)
@@ -888,258 +889,262 @@ export default function PathogenesisPage() {
   }
 
   return (
-    <>
-      <div className="container mx-auto p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Pathogenesis Maker</h1>
-          <div className="flex items-center gap-2">
-            {source && <Badge>{source}</Badge>}
-            {warning && (
-              <Badge className="bg-yellow-200 text-yellow-900">Warning</Badge>
-            )}
+    <PremiumGuard>
+      <>
+        <div className="container mx-auto p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h1 className="text-2xl font-bold">Pathogenesis Maker</h1>
+            <div className="flex items-center gap-2">
+              {source && <Badge>{source}</Badge>}
+              {warning && (
+                <Badge className="bg-yellow-200 text-yellow-900">Warning</Badge>
+              )}
+            </div>
           </div>
-        </div>
 
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle>Generate a flowchart</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1">
-                <Input
-                  placeholder="e.g. Tuberculosis"
-                  value={topic}
-                  onChange={(e) => {
-                    setTopic(e.target.value)
-                    updateSuggestions(e.target.value)
-                  }}
-                  onKeyDown={onInputKeyDown}
-                  onFocus={() => updateSuggestions(topic)}
-                />
-                {showSuggestions && (
-                  <ul className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded border border-slate-200 bg-white shadow-sm">
-                    {suggestions.map((s, idx) => (
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle>Generate a flowchart</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <div className="relative flex-1">
+                  <Input
+                    placeholder="e.g. Tuberculosis"
+                    value={topic}
+                    onChange={(e) => {
+                      setTopic(e.target.value)
+                      updateSuggestions(e.target.value)
+                    }}
+                    onKeyDown={onInputKeyDown}
+                    onFocus={() => updateSuggestions(topic)}
+                  />
+                  {showSuggestions && (
+                    <ul className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded border border-slate-200 bg-white shadow-sm">
+                      {suggestions.map((s, idx) => (
+                        <li
+                          key={s}
+                          className={`cursor-pointer px-3 py-2 hover:bg-slate-100 ${
+                            highlightIndex === idx ? 'bg-slate-100' : ''
+                          }`}
+                          onMouseDown={(ev) => {
+                            ev.preventDefault()
+                            setTopic(s)
+                            setShowSuggestions(false)
+                            setSuggestions([])
+                            setHighlightIndex(-1)
+                            setTimeout(() => generate(), 0)
+                          }}
+                          onMouseEnter={() => setHighlightIndex(idx)}
+                        >
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    onClick={generate}
+                    disabled={loading}
+                    className="whitespace-nowrap"
+                  >
+                    {loading ? 'Generating...' : 'Generate'}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={clear}
+                    className="whitespace-nowrap"
+                  >
+                    Clear
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setEditMode((m) => !m)}
+                    className="whitespace-nowrap"
+                  >
+                    {editMode ? 'Exit edit' : 'Edit'}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  onClick={copyMermaid}
+                  disabled={!flowchart}
+                  className="whitespace-nowrap"
+                >
+                  Copy Mermaid
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={exportSvg}
+                  disabled={!flowchart}
+                  className="whitespace-nowrap"
+                >
+                  Export SVG
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={exportPng}
+                  disabled={!flowchart}
+                  className="whitespace-nowrap"
+                >
+                  Export PNG
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={exportJpg}
+                  disabled={!flowchart}
+                  className="whitespace-nowrap"
+                >
+                  Export JPG
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={exportPdf}
+                  disabled={!flowchart}
+                  className="whitespace-nowrap"
+                >
+                  Export PDF
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="md:sticky md:top-24 md:col-span-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Steps</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {steps.length === 0 && (
+                    <div className="text-sm text-muted-foreground">
+                      No steps yet. Generate a flowchart.
+                    </div>
+                  )}
+                  <ol className="list-decimal space-y-2 pl-5">
+                    {steps.map((s, i) => (
                       <li
-                        key={s}
-                        className={`cursor-pointer px-3 py-2 hover:bg-slate-100 ${
-                          highlightIndex === idx ? 'bg-slate-100' : ''
+                        key={i}
+                        className={`cursor-pointer rounded p-2 ${
+                          activeStep === i ? 'bg-slate-200' : ''
                         }`}
-                        onMouseDown={(ev) => {
-                          ev.preventDefault()
-                          setTopic(s)
-                          setShowSuggestions(false)
-                          setSuggestions([])
-                          setHighlightIndex(-1)
-                          setTimeout(() => generate(), 0)
-                        }}
-                        onMouseEnter={() => setHighlightIndex(idx)}
+                        onClick={() => onStepClick(i)}
                       >
                         {s}
                       </li>
                     ))}
-                  </ul>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  onClick={generate}
-                  disabled={loading}
-                  className="whitespace-nowrap"
-                >
-                  {loading ? 'Generating...' : 'Generate'}
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={clear}
-                  className="whitespace-nowrap"
-                >
-                  Clear
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setEditMode((m) => !m)}
-                  className="whitespace-nowrap"
-                >
-                  {editMode ? 'Exit edit' : 'Edit'}
-                </Button>
-              </div>
+                  </ol>
+                  {warning && (
+                    <div className="mt-2 text-sm text-yellow-700">
+                      {warning}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                onClick={copyMermaid}
-                disabled={!flowchart}
-                className="whitespace-nowrap"
-              >
-                Copy Mermaid
-              </Button>
-              <Button
-                variant="outline"
-                onClick={exportSvg}
-                disabled={!flowchart}
-                className="whitespace-nowrap"
-              >
-                Export SVG
-              </Button>
-              <Button
-                variant="outline"
-                onClick={exportPng}
-                disabled={!flowchart}
-                className="whitespace-nowrap"
-              >
-                Export PNG
-              </Button>
-              <Button
-                variant="outline"
-                onClick={exportJpg}
-                disabled={!flowchart}
-                className="whitespace-nowrap"
-              >
-                Export JPG
-              </Button>
-              <Button
-                variant="outline"
-                onClick={exportPdf}
-                disabled={!flowchart}
-                className="whitespace-nowrap"
-              >
-                Export PDF
-              </Button>
+            <div className="md:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Flowchart</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div
+                    ref={mermaidRef}
+                    className="h-[50vh] min-h-[360px] overflow-auto rounded bg-gray-50 md:h-[60vh]"
+                  />
+                  {!flowchart && (
+                    <div className="text-sm text-muted-foreground">
+                      No diagram yet.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="md:sticky md:top-24 md:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Steps</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {steps.length === 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    No steps yet. Generate a flowchart.
-                  </div>
-                )}
-                <ol className="list-decimal space-y-2 pl-5">
-                  {steps.map((s, i) => (
-                    <li
-                      key={i}
-                      className={`cursor-pointer rounded p-2 ${
-                        activeStep === i ? 'bg-slate-200' : ''
-                      }`}
-                      onClick={() => onStepClick(i)}
-                    >
-                      {s}
-                    </li>
-                  ))}
-                </ol>
-                {warning && (
-                  <div className="mt-2 text-sm text-yellow-700">{warning}</div>
-                )}
-              </CardContent>
-            </Card>
           </div>
-
-          <div className="md:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Flowchart</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div
-                  ref={mermaidRef}
-                  className="h-[50vh] min-h-[360px] overflow-auto rounded bg-gray-50 md:h-[60vh]"
-                />
-                {!flowchart && (
-                  <div className="text-sm text-muted-foreground">
-                    No diagram yet.
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-        {/* Edit modal */}
-        {showEditModal && editingIndex !== null && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-              className="absolute inset-0 z-40 bg-black/40"
-              onClick={() => setShowEditModal(false)}
-            />
-            <div className="z-50 w-11/12 max-w-2xl rounded bg-white p-4 shadow-lg">
-              <h3 className="mb-2 text-lg font-semibold">Edit step</h3>
-              <textarea
-                ref={editTextareaRef}
-                className="min-h-[120px] w-full rounded border p-2"
-                value={editingText}
-                onChange={(e) => setEditingText(e.target.value)}
+          {/* Edit modal */}
+          {showEditModal && editingIndex !== null && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div
+                className="absolute inset-0 z-40 bg-black/40"
+                onClick={() => setShowEditModal(false)}
               />
-              <div className="mt-3 flex justify-end gap-2">
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setShowEditModal(false)
-                    setEditingIndex(null)
-                    setEditingText('')
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    const idx = editingIndex
-                    const updated = editingText
-                    setSteps((prev) => {
-                      const copy = [...prev]
-                      copy[idx] = updated
-                      setFlowchart(buildMermaidFromSteps(copy, topic))
-                      return copy
-                    })
-                    // update Cytoscape node if exists
-                    try {
-                      const cy = cyRef.current
-                      if (cy && typeof cy.getElementById === 'function') {
-                        const node = cy.getElementById(`S${idx}`)
-                        if (node && typeof node.data === 'function')
-                          node.data('label', updated)
-                      }
-                    } catch (e) {}
-                    // trigger UI feedback
-                    setShowEditModal(false)
-                    setEditingIndex(null)
-                    setEditingText('')
-                    showToast('Saved changes')
-                    if (typeof idx === 'number' && idx !== null)
-                      triggerPulse(idx)
-                  }}
-                >
-                  Save
-                </Button>
+              <div className="z-50 w-11/12 max-w-2xl rounded bg-white p-4 shadow-lg">
+                <h3 className="mb-2 text-lg font-semibold">Edit step</h3>
+                <textarea
+                  ref={editTextareaRef}
+                  className="min-h-[120px] w-full rounded border p-2"
+                  value={editingText}
+                  onChange={(e) => setEditingText(e.target.value)}
+                />
+                <div className="mt-3 flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setShowEditModal(false)
+                      setEditingIndex(null)
+                      setEditingText('')
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const idx = editingIndex
+                      const updated = editingText
+                      setSteps((prev) => {
+                        const copy = [...prev]
+                        copy[idx] = updated
+                        setFlowchart(buildMermaidFromSteps(copy, topic))
+                        return copy
+                      })
+                      // update Cytoscape node if exists
+                      try {
+                        const cy = cyRef.current
+                        if (cy && typeof cy.getElementById === 'function') {
+                          const node = cy.getElementById(`S${idx}`)
+                          if (node && typeof node.data === 'function')
+                            node.data('label', updated)
+                        }
+                      } catch (e) {}
+                      // trigger UI feedback
+                      setShowEditModal(false)
+                      setEditingIndex(null)
+                      setEditingText('')
+                      showToast('Saved changes')
+                      if (typeof idx === 'number' && idx !== null)
+                        triggerPulse(idx)
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        {/* Toast */}
-        {toastMessage && (
-          <div className="fixed bottom-6 left-4 z-[9999]">
-            <div className="animate-fade-in rounded bg-slate-900 px-4 py-2 text-white shadow-lg">
-              {toastMessage}
+          )}
+          {/* Toast */}
+          {toastMessage && (
+            <div className="fixed bottom-6 left-4 z-[9999]">
+              <div className="animate-fade-in rounded bg-slate-900 px-4 py-2 text-white shadow-lg">
+                {toastMessage}
+              </div>
             </div>
-          </div>
-        )}
-        <style>{`
+          )}
+          <style>{`
         .flow-node.pulse rect { transform-origin: center; transition: transform 240ms ease; transform: scale(1.04); }
         svg .pulse rect { transform-origin: center; transition: transform 240ms ease; transform: scale(1.04); }
         svg .pulse { transition: transform 240ms ease; transform-origin: center; }
         @keyframes toastIn { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: translateY(0) } }
         .animate-fade-in { animation: toastIn 220ms ease both }
       `}</style>
-      </div>
-    </>
+        </div>
+      </>
+    </PremiumGuard>
   )
 }
 

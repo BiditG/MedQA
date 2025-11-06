@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createBrowserClient } from '@/utils/supabase-browser'
 
 export type UserStats = {
   user_id: string
@@ -20,39 +19,28 @@ export function useUserStats() {
     let mounted = true
     ;(async () => {
       try {
-        const supabase = createBrowserClient()
-        const { data: u } = await supabase.auth.getUser()
-        const userId = u?.user?.id
+        // For now, our app does not have a stats endpoint. Use /api/auth/me to
+        // detect signed-in user and return default stats until a proper API is
+        // implemented.
+        const res = await fetch('/api/auth/me')
+        if (!mounted) return
+        if (!res.ok) {
+          setStats(null)
+          return
+        }
+        const json = await res.json()
+        const userId = json?.user?.id
         if (!userId) {
           setStats(null)
           return
         }
-        const { data, error } = await supabase
-          .from('profiles') // view/table with pre-aggregated stats
-          .select(
-            `
-            user_id:id,
-            total_mcqs:mcqs_solved_total,
-            total_correct:mcqs_solved_correct,
-            xp:xp,
-            rank:rank
-            `,
-          )
-          .eq('id', userId)
-          .maybeSingle()
-
-        if (error) throw error
-        if (!mounted) return
-
-        setStats(
-          data ?? {
-            user_id: userId,
-            total_mcqs: 0,
-            total_correct: 0,
-            xp: 0,
-            rank: null,
-          },
-        )
+        setStats({
+          user_id: userId,
+          total_mcqs: 0,
+          total_correct: 0,
+          xp: 0,
+          rank: null,
+        })
       } catch (e: any) {
         if (!mounted) return
         setError(e?.message || 'Failed to load stats')

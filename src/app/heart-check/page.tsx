@@ -1,13 +1,14 @@
-import HeartReport from '@/components/HeartReport'
+'use client'
 
-export const metadata = {
-  title: 'Heart Check — MEDQAS',
-}
+import HeartReport from '@/components/HeartReport'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="p-6">
-      <HeartReport />
-    </main>
+    <PremiumGuard>
+      <main className="p-6">
+        <HeartReport />
+      </main>
+    </PremiumGuard>
   )
 }

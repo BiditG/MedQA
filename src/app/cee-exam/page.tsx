@@ -1,9 +1,14 @@
+'use client'
+
 import CeeExam from '@/components/CeeExam'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="p-4">
-      <CeeExam />
-    </main>
+    <PremiumGuard>
+      <main className="p-4">
+        <CeeExam />
+      </main>
+    </PremiumGuard>
   )
 }

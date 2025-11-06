@@ -4,44 +4,39 @@ import Code from '@/components/Code'
 
 const create = `
 create table notes (
-  id serial primary key,
+  id text primary key,
   title text
 );
-
-insert into notes(title)
-values
-  ('Today I created a Supabase project.'),
-  ('I added some data and queried it from Next.js.'),
-  ('It was awesome!');
 `.trim()
 
 const server = `
-import { createServerClient } from '@/utils/supabase-server'
-import { cookies } from 'next/headers'
+// Server-side example: use Supabase client to query data in an Async
+// Server Component.
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export default async function Page() {
-  const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
-  const { data: notes } = await supabase.from('notes').select()
-
-  return <pre>{JSON.stringify(notes, null, 2)}</pre>
+  const { data: user } = await supabase.from('profiles').select('*').eq('id', 'some-user-id').single()
+  return <pre>{JSON.stringify(user, null, 2)}</pre>
 }
 `.trim()
 
 const client = `
 'use client'
 
-import { createBrowserClient } from '@/utils/supabase-browser'
+// Client-side example: call your API routes. For example, fetch notes from
+// a simple API endpoint.
 import { useEffect, useState } from 'react'
 
 export default function Page() {
   const [notes, setNotes] = useState<any[] | null>(null)
-  const supabase = createBrowserClient()
 
   useEffect(() => {
     const getData = async () => {
-      const { data } = await supabase.from('notes').select()
-      setNotes(data)
+      const res = await fetch('/api/mcqs')
+      const data = await res.json()
+      setNotes(data?.rows || [])
     }
     getData()
   }, [])
@@ -53,17 +48,19 @@ export default function Page() {
 export default function SignUpUserSteps() {
   return (
     <ol className="flex flex-col gap-6">
-      <Step title="Sign up your first user">
+      <Step title="Create your first user (admin)">
         <p>
-          Head over to the{' '}
+          This project uses an admin-managed user model. Visit the{' '}
           <Link
-            href="/login"
+            href="/admin/users"
             className="font-bold text-foreground/80 hover:underline"
           >
-            Login
+            Admin → Users
           </Link>{' '}
-          page and sign up your first user. It&apos;s okay if this is just you
-          for now. Your awesome idea will have plenty of users later!
+          page to create your first user. Alternatively, run the seed script:
+          <Code
+            code={`ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=secret node scripts/seed-admin.js`}
+          />
         </p>
       </Step>
 
@@ -96,15 +93,12 @@ export default function SignUpUserSteps() {
 
       <Step title="Query Supabase data from Next.js">
         <p>
-          To create a Supabase client and query data from an Async Server
-          Component, create a new page.tsx file at{' '}
-          <span className="rounded-md bg-foreground/20 px-2 py-1 text-foreground/80">
-            /app/notes/page.tsx
-          </span>{' '}
-          and add the following.
+          To query data from the server, prefer using the database helpers or
+          the provided API routes. Below are short examples for server and
+          client usage.
         </p>
         <Code code={server} />
-        <p>Alternatively, you can use a Client Component.</p>
+        <p>Client example (calls an API route):</p>
         <Code code={client} />
       </Step>
 

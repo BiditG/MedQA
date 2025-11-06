@@ -1,5 +1,8 @@
+'use client'
+
 import dynamic from 'next/dynamic'
 import { PageHeader } from '@/components/PageHeader'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 const MedicineSearch = dynamic(() => import('@/components/MedicineSearch'), {
   ssr: false,
@@ -7,14 +10,16 @@ const MedicineSearch = dynamic(() => import('@/components/MedicineSearch'), {
 
 export default function MedicinesPage() {
   return (
-    <div className="p-6">
-      <PageHeader
-        title="Medicines"
-        subtitle="Browse medicine details parsed from CSV"
-      />
-      <div className="mt-6">
-        <MedicineSearch />
+    <PremiumGuard>
+      <div className="p-6">
+        <PageHeader
+          title="Medicines"
+          subtitle="Browse medicine details parsed from CSV"
+        />
+        <div className="mt-6">
+          <MedicineSearch />
+        </div>
       </div>
-    </div>
+    </PremiumGuard>
   )
 }

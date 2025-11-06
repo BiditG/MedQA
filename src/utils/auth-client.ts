@@ -1,29 +1,32 @@
-import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
-
-const supabase = createBrowserSupabaseClient()
-
+// Lightweight client-side auth helper that calls our JWT login endpoint.
 export async function signInAndPersist(email: string, password: string) {
-  // sign in on client
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  } as any)
-
-  if (error) throw error
-  const session = (data as any)?.session
-
-  // post session tokens to server route to set HttpOnly cookies
-  await fetch('/api/auth/set-session', {
+  const resp = await fetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      access_token: session?.access_token,
-      refresh_token: session?.refresh_token,
-      expires_at: session?.expires_at,
-    }),
+    body: JSON.stringify({ email, password }),
   })
-
+  const data = await resp.json().catch(() => ({}))
+  if (!resp.ok) throw new Error(data?.error || 'Failed to sign in')
+  // We use HttpOnly cookies; notify listeners only
+  try {
+    window.dispatchEvent(
+      new CustomEvent('auth:change', { detail: { access_token: true } }),
+    )
+  } catch {}
   return data
 }
 
 export default signInAndPersist
+
+export function signOut() {
+  try {
+    fetch('/api/auth/signout', { method: 'POST' }).catch(() => {})
+    try {
+      window.dispatchEvent(
+        new CustomEvent('auth:change', { detail: { access_token: null } }),
+      )
+    } catch {}
+  } catch (e) {
+    // ignore
+  }
+}

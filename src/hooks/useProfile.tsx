@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createBrowserClient } from '@/utils/supabase-browser'
 
 export function useProfile() {
   const [profile, setProfile] = useState<any | null>(null)
@@ -12,68 +11,45 @@ export function useProfile() {
 
     const fetchMe = async () => {
       try {
-        const res = await fetch('/api/auth/me')
+        const headers: any = { 'Content-Type': 'application/json' }
+        if (typeof window !== 'undefined') {
+          const token = localStorage.getItem('token')
+          if (token) headers['Authorization'] = `Bearer ${token}`
+        }
+        const res = await fetch('/api/auth/me', { headers })
         if (!mounted) return
         if (!res.ok) {
-          // server returned an error (500) or unauthenticated
+          // If unauthorized, just clear profile quietly; otherwise log for debugging
+          if (res.status === 401) {
+            setProfile(null)
+            return
+          }
           const json = await res.json().catch(() => ({}))
-          console.error('[useProfile] /api/auth/me error', json)
+          console.debug('[useProfile] /api/auth/me error', json)
+          setProfile(null)
           return
         }
         const json = await res.json()
-        if (mounted && json?.profile) setProfile(json.profile)
+        if (!mounted) return
+        setProfile(json?.user || null)
       } catch (err) {
-        console.error('[useProfile] fetch /api/auth/me failed', err)
+        console.debug('[useProfile] fetch /api/auth/me failed', err)
       } finally {
         if (mounted) setLoading(false)
       }
     }
 
-    // Fast path: use RLS via browser client to fetch own profile quickly for UI
-    const fastMe = async () => {
-      try {
-        const supabase = createBrowserClient()
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-        if (!mounted) return
-        if (user?.id) {
-          const { data } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .maybeSingle()
-          if (!mounted) return
-          if (data) setProfile((prev: any) => prev ?? data)
-        }
-      } catch (e) {
-        // ignore
-      }
-    }
-
-    // Kick off both in parallel
-    fastMe()
     fetchMe()
 
-    // also subscribe to auth changes using the browser client so UI responds immediately
-    const supabase = createBrowserClient()
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'SIGNED_OUT') {
-          if (mounted) setProfile(null)
-        } else if (session?.user?.id) {
-          // fast update first, then confirm via server
-          fastMe()
-          fetchMe()
-        }
-      },
-    )
+    // listen for auth changes from our client shim
+    function onAuth() {
+      fetchMe()
+    }
+    window.addEventListener('auth:change', onAuth as EventListener)
 
     return () => {
       mounted = false
-      try {
-        listener?.subscription?.unsubscribe()
-      } catch {}
+      window.removeEventListener('auth:change', onAuth as EventListener)
     }
   }, [])
 

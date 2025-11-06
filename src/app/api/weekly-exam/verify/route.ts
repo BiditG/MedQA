@@ -1,42 +1,21 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { getServiceClient } from '@/utils/supabase-server'
 
-const URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SVC = process.env.SUPABASE_SERVICE_ROLE_KEY
 const ENV_CODE = process.env.WEEKLY_EXAM_CODE
 
-async function validateWithWeeklyCodes(code: string): Promise<boolean> {
-  if (!URL || !SVC) return false
+async function validateWithWeeklyCodesSupabase(code: string): Promise<boolean> {
   try {
-    const svc = createClient(URL, SVC, { auth: { persistSession: false } })
+    const svc = getServiceClient()
     const { data, error } = await svc
       .from('weekly_codes')
-      .select('id, active, expires_at')
+      .select('active,expires_at')
       .eq('code', code)
       .maybeSingle()
-    if (error) return false
-    if (!data) return false
+    if (error || !data) return false
     if (data.active === false) return false
     if (data.expires_at && new Date(data.expires_at).getTime() <= Date.now())
       return false
     return true
-  } catch {
-    return false
-  }
-}
-
-async function validateWithAppSettings(code: string): Promise<boolean> {
-  if (!URL || !SVC) return false
-  try {
-    const svc = createClient(URL, SVC, { auth: { persistSession: false } })
-    const { data, error } = await svc
-      .from('app_settings')
-      .select('value')
-      .eq('key', 'weekly_exam_code')
-      .maybeSingle()
-    if (error) return false
-    const expected = String(data?.value || '')
-    return !!expected && expected.trim() === code.trim()
   } catch {
     return false
   }
@@ -52,12 +31,8 @@ export async function POST(req: Request) {
         { status: 400 },
       )
 
-    // 1) Prefer weekly_codes table
-    if (await validateWithWeeklyCodes(code))
-      return NextResponse.json({ ok: true })
-
-    // 2) Fallback to app_settings key
-    if (await validateWithAppSettings(code))
+    // 1) Prefer Supabase table if available
+    if (await validateWithWeeklyCodesSupabase(code))
       return NextResponse.json({ ok: true })
 
     // 3) Fallback to env var

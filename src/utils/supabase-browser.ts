@@ -1,50 +1,87 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+// Minimal auth shim to replace Supabase browser client for JWT-backed auth.
+// This provides a tiny subset of the supabase client methods used by the UI:
+// - auth.getUser(), auth.getSession()
+// - auth.signOut()
+// - auth.onAuthStateChange(handler)
 
 declare global {
   interface Window {
-    __supabase_client__?: SupabaseClient
+    __medqa_auth_token__?: string | null
   }
 }
 
-// Use non-generic SupabaseClient to avoid excessive type-instantiation depth in TS
-type AnyClient = SupabaseClient
-
-export function createBrowserClient(): AnyClient {
-  if (typeof window === 'undefined') {
-    throw new Error(
-      'createBrowserClient must be called in the browser (client component or inside useEffect).',
+function parseJwt(token: string | null) {
+  if (!token) return null
+  try {
+    const parts = token.split('.')
+    if (parts.length < 2) return null
+    const payload = parts[1]
+    const b64 = payload.replace(/-/g, '+').replace(/_/g, '/')
+    const json = decodeURIComponent(
+      atob(b64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        })
+        .join(''),
     )
+    return JSON.parse(json)
+  } catch (e) {
+    return null
+  }
+}
+
+export function createBrowserClient() {
+  if (typeof window === 'undefined')
+    throw new Error('createBrowserClient must be called in browser')
+
+  function getToken() {
+    return window.__medqa_auth_token__ || localStorage.getItem('token') || null
   }
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!url || !key) {
-    throw new Error(
-      'Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local and restart dev server.',
-    )
+  function emitChange(eventName = 'auth:change', session: any = null) {
+    try {
+      window.dispatchEvent(new CustomEvent(eventName, { detail: session }))
+    } catch {}
   }
 
-  if (!window.__supabase_client__) {
-    // minimal debug (do NOT log the key)
-    console.debug(
-      '[supabase] creating browser client for',
-      url,
-      'origin=',
-      window.location.origin,
-    )
-    // Cast to a lightweight client type to prevent TS2589 deep instantiation
-    // Add explicit auth options to avoid unexpected redirect/session handling differences in prod
-    window.__supabase_client__ = (createClient as any)(url, key, {
-      auth: {
-        persistSession: true,
-        // detectSessionInUrl parses auth callback params automatically; set to false if you handle callback manually
-        detectSessionInUrl: true,
+  const client = {
+    auth: {
+      async getSession() {
+        const token = getToken()
+        const user = parseJwt(token)
+        return {
+          data: { session: token ? { access_token: token, user } : null },
+        }
       },
-    }) as any
-  } else {
-    console.debug('[supabase] reusing existing browser client for', url)
+      async getUser() {
+        const token = getToken()
+        const user = parseJwt(token)
+        return { data: { user } }
+      },
+      async signOut() {
+        localStorage.removeItem('token')
+        window.__medqa_auth_token__ = null
+        emitChange('auth:change', null)
+        return { error: null }
+      },
+      onAuthStateChange(cb: (event: string, session: any) => void) {
+        const handler = (e: any) => cb('SIGNED_IN', e.detail)
+        window.addEventListener('auth:change', handler as EventListener)
+        return {
+          data: {
+            subscription: {
+              unsubscribe: () =>
+                window.removeEventListener(
+                  'auth:change',
+                  handler as EventListener,
+                ),
+            },
+          },
+        }
+      },
+    },
   }
 
-  return window.__supabase_client__ as AnyClient
+  return client as any
 }

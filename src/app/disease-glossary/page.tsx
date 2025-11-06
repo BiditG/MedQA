@@ -1,14 +1,14 @@
-import DiseaseGlossary from '@/components/DiseaseGlossary'
+'use client'
 
-export const metadata = {
-  title: 'Disease Glossary — Nepali',
-  description: 'English to Nepali disease name glossary',
-}
+import DiseaseGlossary from '@/components/DiseaseGlossary'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="flex w-full flex-1 flex-col items-center py-8">
-      <DiseaseGlossary />
-    </main>
+    <PremiumGuard>
+      <main className="flex w-full flex-1 flex-col items-center py-8">
+        <DiseaseGlossary />
+      </main>
+    </PremiumGuard>
   )
 }

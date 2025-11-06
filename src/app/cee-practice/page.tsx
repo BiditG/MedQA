@@ -4,6 +4,7 @@ import { QuestionCard } from '@/app/quiz/components/QuestionCard'
 import { ExplanationPanel } from '@/app/quiz/components/ExplanationPanel'
 import { Button } from '@/components/ui/button'
 import { Timer } from '@/app/quiz/components/Timer'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 type MCQ = {
   id: string
@@ -349,266 +350,269 @@ export default function CeePracticePage() {
   if (!items) return <div className="p-4">No questions available.</div>
 
   return (
-    <div className="w-full px-4 py-8">
-      <div className="mx-auto max-w-4xl">
-        {!started && (
-          <div className="rounded-2xl border p-4">
-            <h2 className="mb-2 text-lg font-semibold">CEE Practice</h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Choose subject, topic and number of questions to practice. Casual
-              mode gives immediate feedback; Exam mode is timed.
-            </p>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <label className="flex flex-col text-sm">
-                Subject
-                <select
-                  value={subject}
-                  onChange={(e) => {
-                    setSubject(e.target.value)
-                    setTopic('')
-                  }}
-                  className="mt-1 rounded-md border px-3 py-2"
-                >
-                  <option value="">Any subject</option>
-                  {subjects.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col text-sm">
-                Topic
-                <select
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  className="mt-1 rounded-md border px-3 py-2"
-                  disabled={!topics.length}
-                >
-                  <option value="">Any topic</option>
-                  {topics.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col text-sm">
-                Number of questions
-                <input
-                  type="number"
-                  min={1}
-                  max={200}
-                  value={String(countInput)}
-                  onChange={(e) => setCountInput(e.target.value)}
-                  className="mt-1 rounded-md border px-3 py-2"
-                />
-              </label>
-              <label className="flex flex-col text-sm">
-                Mode
-                <select
-                  value={mode}
-                  onChange={(e) => setMode(e.target.value as any)}
-                  className="mt-1 rounded-md border px-3 py-2"
-                >
-                  <option value="casual">Casual (immediate)</option>
-                  <option value="exam">Exam (timed)</option>
-                </select>
-              </label>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <Button onClick={start}>Start practice</Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setSubject('')
-                  setTopic('')
-                  setCountInput('20')
-                  setMode('casual')
-                }}
-              >
-                Reset
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {started && !finished && questions.length > 0 && (
-          <div className="mt-4">
-            <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm">
-                Question {index + 1} / {questions.length}
+    <PremiumGuard>
+      <div className="w-full px-4 py-8">
+        <div className="mx-auto max-w-4xl">
+          {!started && (
+            <div className="rounded-2xl border p-4">
+              <h2 className="mb-2 text-lg font-semibold">CEE Practice</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Choose subject, topic and number of questions to practice.
+                Casual mode gives immediate feedback; Exam mode is timed.
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label className="flex flex-col text-sm">
+                  Subject
+                  <select
+                    value={subject}
+                    onChange={(e) => {
+                      setSubject(e.target.value)
+                      setTopic('')
+                    }}
+                    className="mt-1 rounded-md border px-3 py-2"
+                  >
+                    <option value="">Any subject</option>
+                    {subjects.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-col text-sm">
+                  Topic
+                  <select
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    className="mt-1 rounded-md border px-3 py-2"
+                    disabled={!topics.length}
+                  >
+                    <option value="">Any topic</option>
+                    {topics.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-col text-sm">
+                  Number of questions
+                  <input
+                    type="number"
+                    min={1}
+                    max={200}
+                    value={String(countInput)}
+                    onChange={(e) => setCountInput(e.target.value)}
+                    className="mt-1 rounded-md border px-3 py-2"
+                  />
+                </label>
+                <label className="flex flex-col text-sm">
+                  Mode
+                  <select
+                    value={mode}
+                    onChange={(e) => setMode(e.target.value as any)}
+                    className="mt-1 rounded-md border px-3 py-2"
+                  >
+                    <option value="casual">Casual (immediate)</option>
+                    <option value="exam">Exam (timed)</option>
+                  </select>
+                </label>
               </div>
-              <div className="flex items-center gap-3">
-                {mode === 'exam' && (
-                  <div className="rounded-full border px-3 py-1">
-                    Time:{' '}
-                    <Timer
-                      durationMs={secondsLeft * 1000}
-                      running={examRunning && !finished}
-                      onExpire={() => {
-                        setFinished(true)
-                        setExamRunning(false)
-                      }}
-                    />
-                  </div>
-                )}
-                <div className="text-sm text-muted-foreground">
-                  {subject || 'Any subject'}
-                  {topic ? ` • ${topic}` : ''} • {questions.length} q
-                </div>
-              </div>
-            </div>
-
-            <>
-              <QuestionCard
-                q={questions[index]?.question || ''}
-                options={[
-                  questions[index]?.optionA || '',
-                  questions[index]?.optionB || '',
-                  questions[index]?.optionC || '',
-                  questions[index]?.optionD || '',
-                ].filter(Boolean)}
-                answerInfo={((): any => {
-                  const a = (questions[index]?.answer || '').toString().trim()
-                  // Numeric (1-based index)
-                  const n = Number(a)
-                  if (Number.isInteger(n) && !Number.isNaN(n))
-                    return { type: 'index', index: Math.max(0, n - 1) }
-                  // Letter answers like A/B/C/D -> map to index
-                  const m = a.match(/^[A-D]$/i)
-                  if (m)
-                    return {
-                      type: 'index',
-                      index: m[0].toUpperCase().charCodeAt(0) - 65,
-                    }
-                  return { type: 'text', text: a }
-                })()}
-                subject={questions[index]?.subject}
-                topic={questions[index]?.topic}
-                year={undefined}
-                selected={selected}
-                selectedIndex={selectedIndex}
-                onSelect={onSelect}
-              />
-
-              {mode === 'casual' && revealed && (
-                <ExplanationPanel
-                  text={questions[index]?.explanation ?? null}
-                />
-              )}
-            </>
-
-            <div className="mt-4 flex gap-2">
-              <Button onClick={prev} disabled={index === 0}>
-                Previous
-              </Button>
-              <Button onClick={next} className="ml-auto">
-                {index + 1 >= questions.length ? 'Finish' : 'Next'}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {finished && (
-          <div className="mt-4 rounded-2xl border p-4">
-            <h3 className="text-lg font-semibold">Results</h3>
-            <div className="mt-2">
-              Score: <strong>{score()}</strong> / {questions.length}
-            </div>
-            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div>
-                <h4 className="font-medium">Per subject</h4>
-                {Object.entries(perSubjectResults()).map(([s, v]) => (
-                  <div key={s} className="mt-2 rounded border p-2">
-                    <div className="font-semibold">{s}</div>
-                    <div className="text-sm">
-                      Correct: {v.correct} | Wrong: {v.wrong} | Total: {v.total}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div>
-                <h4 className="font-medium">Review</h4>
-                <div className="mt-2 max-h-72 overflow-auto">
-                  {questions.map((q, i) => {
-                    const opts = [
-                      q.optionA,
-                      q.optionB,
-                      q.optionC,
-                      q.optionD,
-                    ].filter(Boolean)
-                    const sel = answers[q.id]
-                    const ans = (q.answer || '').toString().trim()
-                    const isIdx = Number.isInteger(Number(ans))
-                    const correctOpt = isIdx
-                      ? ['A', 'B', 'C', 'D'][Number(ans) - 1]
-                      : ans
-                    return (
-                      <div key={q.id} className="mb-3 border-b pb-2">
-                        <div className="text-sm font-medium">
-                          {i + 1}. {q.question}
-                        </div>
-                        <div className="text-xs">
-                          Your answer: {sel ?? '—'} | Correct: {correctOpt}
-                        </div>
-                        {q.explanation && (
-                          <div className="mt-1 text-xs">
-                            Explanation: {q.explanation}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <Button
-                onClick={() => {
-                  setStarted(false)
-                  setFinished(false)
-                  setAiFeedback(null)
-                }}
-              >
-                Back to setup
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setStarted(true)
-                  setFinished(false)
-                  setIndex(0)
-                  setAnswers({})
-                  setSelected(null)
-                  setRevealed(false)
-                }}
-              >
-                Retry
-              </Button>
-              <div className="ml-auto w-full sm:w-auto">
+              <div className="mt-4 flex gap-2">
+                <Button onClick={start}>Start practice</Button>
                 <Button
-                  onClick={requestAiFeedback}
-                  disabled={aiLoading}
-                  className="w-full sm:w-auto"
+                  variant="ghost"
+                  onClick={() => {
+                    setSubject('')
+                    setTopic('')
+                    setCountInput('20')
+                    setMode('casual')
+                  }}
                 >
-                  {aiLoading ? 'Thinking…' : 'Get AI feedback'}
+                  Reset
                 </Button>
               </div>
             </div>
+          )}
 
-            {aiFeedback && (
-              <div className="mt-4 rounded border bg-slate-50 p-3">
-                <h4 className="font-medium">AI feedback</h4>
-                <div className="mt-2 whitespace-pre-wrap text-sm">
-                  {aiFeedback}
+          {started && !finished && questions.length > 0 && (
+            <div className="mt-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm">
+                  Question {index + 1} / {questions.length}
+                </div>
+                <div className="flex items-center gap-3">
+                  {mode === 'exam' && (
+                    <div className="rounded-full border px-3 py-1">
+                      Time:{' '}
+                      <Timer
+                        durationMs={secondsLeft * 1000}
+                        running={examRunning && !finished}
+                        onExpire={() => {
+                          setFinished(true)
+                          setExamRunning(false)
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="text-sm text-muted-foreground">
+                    {subject || 'Any subject'}
+                    {topic ? ` • ${topic}` : ''} • {questions.length} q
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
-        )}
+
+              <>
+                <QuestionCard
+                  q={questions[index]?.question || ''}
+                  options={[
+                    questions[index]?.optionA || '',
+                    questions[index]?.optionB || '',
+                    questions[index]?.optionC || '',
+                    questions[index]?.optionD || '',
+                  ].filter(Boolean)}
+                  answerInfo={((): any => {
+                    const a = (questions[index]?.answer || '').toString().trim()
+                    // Numeric (1-based index)
+                    const n = Number(a)
+                    if (Number.isInteger(n) && !Number.isNaN(n))
+                      return { type: 'index', index: Math.max(0, n - 1) }
+                    // Letter answers like A/B/C/D -> map to index
+                    const m = a.match(/^[A-D]$/i)
+                    if (m)
+                      return {
+                        type: 'index',
+                        index: m[0].toUpperCase().charCodeAt(0) - 65,
+                      }
+                    return { type: 'text', text: a }
+                  })()}
+                  subject={questions[index]?.subject}
+                  topic={questions[index]?.topic}
+                  year={undefined}
+                  selected={selected}
+                  selectedIndex={selectedIndex}
+                  onSelect={onSelect}
+                />
+
+                {mode === 'casual' && revealed && (
+                  <ExplanationPanel
+                    text={questions[index]?.explanation ?? null}
+                  />
+                )}
+              </>
+
+              <div className="mt-4 flex gap-2">
+                <Button onClick={prev} disabled={index === 0}>
+                  Previous
+                </Button>
+                <Button onClick={next} className="ml-auto">
+                  {index + 1 >= questions.length ? 'Finish' : 'Next'}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {finished && (
+            <div className="mt-4 rounded-2xl border p-4">
+              <h3 className="text-lg font-semibold">Results</h3>
+              <div className="mt-2">
+                Score: <strong>{score()}</strong> / {questions.length}
+              </div>
+              <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div>
+                  <h4 className="font-medium">Per subject</h4>
+                  {Object.entries(perSubjectResults()).map(([s, v]) => (
+                    <div key={s} className="mt-2 rounded border p-2">
+                      <div className="font-semibold">{s}</div>
+                      <div className="text-sm">
+                        Correct: {v.correct} | Wrong: {v.wrong} | Total:{' '}
+                        {v.total}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <h4 className="font-medium">Review</h4>
+                  <div className="mt-2 max-h-72 overflow-auto">
+                    {questions.map((q, i) => {
+                      const opts = [
+                        q.optionA,
+                        q.optionB,
+                        q.optionC,
+                        q.optionD,
+                      ].filter(Boolean)
+                      const sel = answers[q.id]
+                      const ans = (q.answer || '').toString().trim()
+                      const isIdx = Number.isInteger(Number(ans))
+                      const correctOpt = isIdx
+                        ? ['A', 'B', 'C', 'D'][Number(ans) - 1]
+                        : ans
+                      return (
+                        <div key={q.id} className="mb-3 border-b pb-2">
+                          <div className="text-sm font-medium">
+                            {i + 1}. {q.question}
+                          </div>
+                          <div className="text-xs">
+                            Your answer: {sel ?? '—'} | Correct: {correctOpt}
+                          </div>
+                          {q.explanation && (
+                            <div className="mt-1 text-xs">
+                              Explanation: {q.explanation}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <Button
+                  onClick={() => {
+                    setStarted(false)
+                    setFinished(false)
+                    setAiFeedback(null)
+                  }}
+                >
+                  Back to setup
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setStarted(true)
+                    setFinished(false)
+                    setIndex(0)
+                    setAnswers({})
+                    setSelected(null)
+                    setRevealed(false)
+                  }}
+                >
+                  Retry
+                </Button>
+                <div className="ml-auto w-full sm:w-auto">
+                  <Button
+                    onClick={requestAiFeedback}
+                    disabled={aiLoading}
+                    className="w-full sm:w-auto"
+                  >
+                    {aiLoading ? 'Thinking…' : 'Get AI feedback'}
+                  </Button>
+                </div>
+              </div>
+
+              {aiFeedback && (
+                <div className="mt-4 rounded border bg-slate-50 p-3">
+                  <h4 className="font-medium">AI feedback</h4>
+                  <div className="mt-2 whitespace-pre-wrap text-sm">
+                    {aiFeedback}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </PremiumGuard>
   )
 }

@@ -4,15 +4,16 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useReducedMotion } from 'framer-motion'
-import { createBrowserClient } from '@/utils/supabase-browser'
 
 async function fetchCount() {
-  const supabase = createBrowserClient()
-  const res = await supabase
-    .from('mcqs')
-    .select('*', { head: true, count: 'exact' })
-  // supabase-js returns count when head:true
-  return Number(res.count ?? 0)
+  try {
+    const res = await fetch('/api/available-questions/count')
+    if (!res.ok) return 0
+    const json = await res.json()
+    return Number(json?.count ?? 0)
+  } catch (e) {
+    return 0
+  }
 }
 
 export default function AvailableQuestions() {

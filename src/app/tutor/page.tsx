@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { PageHeader } from '@/components/PageHeader'
-// PremiumGuard removed; access control handled in middleware
+import { PremiumGuard } from '@/components/PremiumGuard'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -97,99 +97,104 @@ export default function TutorPage() {
   }, [autogrow])
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-2 sm:px-4">
-      <header className="mb-4">
-        <PageHeader title="AI Tutor" subtitle="Simple, focused, and helpful." />
-      </header>
+    <PremiumGuard>
+      <div className="mx-auto w-full max-w-3xl px-2 sm:px-4">
+        <header className="mb-4">
+          <PageHeader
+            title="AI Tutor"
+            subtitle="Simple, focused, and helpful."
+          />
+        </header>
 
-      <Card className="overflow-hidden rounded-xl">
-        {/* Messages */}
-        <CardContent className="p-0">
-          <div className="flex h-[70vh] flex-col">
-            <div
-              className="flex-1 space-y-4 overflow-y-auto p-3 [scrollbar-gutter:stable] sm:p-4"
-              role="log"
-              aria-live="polite"
-            >
-              {messages.length === 0 ? (
-                <div className="mx-auto max-w-md text-center text-sm text-muted-foreground">
-                  Ask a question to start. Keep it short and specific.
-                </div>
-              ) : (
-                messages.map((m, i) =>
-                  m.role === 'assistant' ? (
-                    <AssistantMessage key={i} content={m.content} />
-                  ) : (
-                    <UserMessage key={i} content={m.content} />
-                  ),
-                )
-              )}
-              {loading && <AssistantThinking />}
-              <div ref={endRef} id="tutor-chat-end" />
-            </div>
-
-            {/* Composer */}
-            <div className="border-t bg-background p-3">
-              <form
-                className="flex flex-col gap-2 sm:flex-row sm:items-end"
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  send()
-                }}
+        <Card className="overflow-hidden rounded-xl">
+          {/* Messages */}
+          <CardContent className="p-0">
+            <div className="flex h-[70vh] flex-col">
+              <div
+                className="flex-1 space-y-4 overflow-y-auto p-3 [scrollbar-gutter:stable] sm:p-4"
+                role="log"
+                aria-live="polite"
               >
-                <Textarea
-                  ref={areaRef}
-                  placeholder="Send a message…"
-                  className="max-h-40 min-h-[48px] w-full flex-1 resize-none"
-                  value={input}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                    setInput(e.target.value)
-                    autogrow()
-                  }}
-                  onInput={autogrow}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      send()
-                    }
-                  }}
-                />
-                <div className="flex w-full gap-2 sm:w-auto">
-                  <Button
-                    type="submit"
-                    onClick={send}
-                    disabled={!input.trim() || loading}
-                    className="h-11 w-full sm:h-10 sm:w-24"
-                  >
-                    {loading ? (
-                      <span className="inline-flex items-center gap-2">
-                        <Spinner /> Send
-                      </span>
+                {messages.length === 0 ? (
+                  <div className="mx-auto max-w-md text-center text-sm text-muted-foreground">
+                    Ask a question to start. Keep it short and specific.
+                  </div>
+                ) : (
+                  messages.map((m, i) =>
+                    m.role === 'assistant' ? (
+                      <AssistantMessage key={i} content={m.content} />
                     ) : (
-                      <span className="inline-flex items-center gap-2">
-                        <Send className="h-4 w-4" /> Send
-                      </span>
-                    )}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="h-11 w-full sm:h-10 sm:w-auto"
-                    onClick={clearChat}
-                    disabled={!messages.length && !input}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" /> Clear
-                  </Button>
-                </div>
-              </form>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Enter to send • Shift+Enter for newline
-              </p>
+                      <UserMessage key={i} content={m.content} />
+                    ),
+                  )
+                )}
+                {loading && <AssistantThinking />}
+                <div ref={endRef} id="tutor-chat-end" />
+              </div>
+
+              {/* Composer */}
+              <div className="border-t bg-background p-3">
+                <form
+                  className="flex flex-col gap-2 sm:flex-row sm:items-end"
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    send()
+                  }}
+                >
+                  <Textarea
+                    ref={areaRef}
+                    placeholder="Send a message…"
+                    className="max-h-40 min-h-[48px] w-full flex-1 resize-none"
+                    value={input}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                      setInput(e.target.value)
+                      autogrow()
+                    }}
+                    onInput={autogrow}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        send()
+                      }
+                    }}
+                  />
+                  <div className="flex w-full gap-2 sm:w-auto">
+                    <Button
+                      type="submit"
+                      onClick={send}
+                      disabled={!input.trim() || loading}
+                      className="h-11 w-full sm:h-10 sm:w-24"
+                    >
+                      {loading ? (
+                        <span className="inline-flex items-center gap-2">
+                          <Spinner /> Send
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-2">
+                          <Send className="h-4 w-4" /> Send
+                        </span>
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-11 w-full sm:h-10 sm:w-auto"
+                      onClick={clearChat}
+                      disabled={!messages.length && !input}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" /> Clear
+                    </Button>
+                  </div>
+                </form>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Enter to send • Shift+Enter for newline
+                </p>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </PremiumGuard>
   )
 }
 

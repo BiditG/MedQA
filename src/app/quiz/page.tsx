@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { createBrowserClient } from '@/utils/supabase-browser'
 import { Button } from '@/components/ui/button'
 import { QuizHeader } from './components/QuizHeader'
 import { QuestionCard } from './components/QuestionCard'
@@ -15,6 +14,7 @@ import { Mode } from './components/ModeToggle'
 import { Timer } from './components/Timer'
 import { ResultsSummary } from './components/ResultsSummary'
 import Link from 'next/link'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 type Mcq = {
   id: string
@@ -85,20 +85,10 @@ function QuizClient() {
   const { data: subjectsData, isLoading: subjectsLoading } = useQuery({
     queryKey: ['mcq-subjects'],
     queryFn: async () => {
-      const supabase = createBrowserClient()
-      const { data, error } = await supabase
-        .from('mcqs')
-        .select('subject')
-        .limit(1000)
-      if (error) throw error
-      const vals = Array.from(
-        new Set(
-          (data as any[])
-            .map((r) => (r.subject ?? '').toString().trim())
-            .filter(Boolean),
-        ),
-      )
-      return vals.sort()
+      const res = await fetch('/api/mcqs?op=subjects')
+      if (!res.ok) throw new Error('Failed to load subjects')
+      const json = await res.json()
+      return json.subjects || []
     },
     staleTime: 60_000,
   })
@@ -106,19 +96,13 @@ function QuizClient() {
   const { data: topicsData, isLoading: topicsLoading } = useQuery({
     queryKey: ['mcq-topics', subject],
     queryFn: async () => {
-      const supabase = createBrowserClient()
-      let query = supabase.from('mcqs').select('topic').limit(1000)
-      if (subject) query = query.eq('subject', subject)
-      const { data, error } = await query
-      if (error) throw error
-      const vals = Array.from(
-        new Set(
-          (data as any[])
-            .map((r) => (r.topic ?? '').toString().trim())
-            .filter(Boolean),
-        ),
-      )
-      return vals.sort()
+      const q = new URLSearchParams()
+      q.set('op', 'topics')
+      if (subject) q.set('subject', subject)
+      const res = await fetch(`/api/mcqs?${q.toString()}`)
+      if (!res.ok) throw new Error('Failed to load topics')
+      const json = await res.json()
+      return json.topics || []
     },
     staleTime: 60_000,
   })
@@ -145,19 +129,14 @@ function QuizClient() {
     enabled: started,
     queryKey: ['mcqs', { subject, topic, count }],
     queryFn: async () => {
-      const supabase = createBrowserClient()
-      let query = supabase
-        .from('mcqs')
-        .select(
-          'id, exam, subject, topic, q, options, answer, explanation, year',
-        )
-        .limit(Math.min(200, count * 5))
-
-      if (subject) query = query.eq('subject', subject)
-      if (topic) query = query.eq('topic', topic)
-
-      const { data, error } = await query
-      if (error) throw error
+      const q = new URLSearchParams()
+      if (subject) q.set('subject', subject)
+      if (topic) q.set('topic', topic)
+      q.set('limit', String(Math.min(200, count * 5)))
+      const res = await fetch(`/api/mcqs?${q.toString()}`)
+      if (!res.ok) throw new Error('Failed to load mcqs')
+      const json = await res.json()
+      const data = json.data || []
       return shuffle((data as Mcq[]) ?? []).slice(0, count)
     },
     staleTime: 60_000,
@@ -352,330 +331,335 @@ function QuizClient() {
   }, [mode, examRunning, finished, total])
 
   return (
-    <div className="w-full px-4 py-8 pb-28">
-      <div className="mx-auto box-border w-full max-w-3xl">
-        {/* Setup form shown when not started */}
-        {!started && (
-          <form
-            onSubmit={onStartFormSubmit}
-            className="rounded-2xl border p-4 sm:p-6"
-          >
-            <h2 className="mb-2 text-lg font-semibold">AIIMS/NEET PG MCQs</h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Choose settings for your practice session.
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <label className="flex flex-col overflow-hidden text-sm">
-                Subject
-                <select
-                  value={subject}
-                  onChange={(e) => {
-                    setSubject(e.target.value)
-                    setTopic('')
-                  }}
-                  className="mt-1 w-full max-w-full appearance-none rounded-md border bg-[url('/chev-down.svg')] bg-[length:1rem] bg-[right_0.75rem_center] bg-no-repeat px-3 py-2"
-                >
-                  <option value="">Any subject</option>
-                  {subjectsLoading ? (
-                    <option disabled>Loading…</option>
-                  ) : (
-                    (subjectsData || []).map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </label>
-              <label className="flex flex-col overflow-hidden text-sm">
-                Topic
-                <select
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  className="mt-1 w-full max-w-full appearance-none rounded-md border bg-[url('/chev-down.svg')] bg-[length:1rem] bg-[right_0.75rem_center] bg-no-repeat px-3 py-2"
-                  disabled={topicsLoading || !(topicsData && topicsData.length)}
-                >
-                  <option value="">Any topic</option>
-                  {topicsLoading ? (
-                    <option disabled>Loading…</option>
-                  ) : (
-                    (topicsData || []).map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </label>
-              <label className="flex flex-col overflow-hidden text-sm">
-                Number of questions
-                <input
-                  type="number"
-                  min={1}
-                  max={50}
-                  value={countInput}
-                  onChange={(e) => setCountInput(e.target.value)}
-                  className="mt-1 w-full max-w-full rounded-md border px-3 py-2"
-                />
-              </label>
-              <label className="flex flex-col overflow-hidden text-sm">
-                Mode
-                <select
-                  value={mode}
-                  onChange={(e) => setMode(e.target.value as Mode)}
-                  className="mt-1 rounded-md border px-3 py-2"
-                >
-                  <option value="casual">Casual (immediate feedback)</option>
-                  <option value="exam">Exam (no feedback)</option>
-                </select>
-              </label>
-            </div>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Button type="submit" className="w-full sm:w-auto">
-                Start practice
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setSubject('')
-                  setTopic('')
-                  setCountInput('10')
-                  setMode('casual')
-                }}
-                className="w-full sm:w-auto"
-              >
-                Reset
-              </Button>
-            </div>
-          </form>
-        )}
-        <div className="mb-4 flex items-center justify-between">
-          <QuizHeader
-            index={currentIndex}
-            total={total || count}
-            score={mode === 'casual' ? score : 0}
-          />
-          <div className="flex items-center gap-3 text-sm">
-            {mode === 'exam' && (
-              <div className="rounded-full border px-3 py-1">
-                Time:{' '}
-                <Timer
-                  durationMs={examDurationMs}
-                  running={examRunning && !finished}
-                  onExpire={onFinishExam}
-                />
-              </div>
-            )}
-            <span className="hidden text-muted-foreground sm:inline">
-              {subject || 'Any subject'}
-              {topic ? ` • ${topic}` : ''} • {count} q
-            </span>
-            <Link
-              href={`/?${new URLSearchParams({
-                ...(subject && { subject }),
-                ...(topic && { topic }),
-                mode,
-                count: String(count),
-              }).toString()}`}
-              className="underline-offset-2 hover:underline"
+    <PremiumGuard>
+      <div className="w-full px-4 py-8 pb-28">
+        <div className="mx-auto box-border w-full max-w-3xl">
+          {/* Setup form shown when not started */}
+          {!started && (
+            <form
+              onSubmit={onStartFormSubmit}
+              className="rounded-2xl border p-4 sm:p-6"
             >
-              Adjust
-            </Link>
-          </div>
-        </div>
-
-        {/* Loading */}
-        {isLoading && (
-          <div className="space-y-3">
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-24 w-full rounded-2xl" />
-            <Skeleton className="h-16 w-full rounded-2xl" />
-            <Skeleton className="h-16 w-full rounded-2xl" />
-            <Skeleton className="h-16 w-full rounded-2xl" />
-            <Skeleton className="h-16 w-full rounded-2xl" />
-          </div>
-        )}
-
-        {/* Empty */}
-        {isError && (
-          <div className="rounded-2xl border p-6 text-sm">
-            <p className="font-medium text-rose-500">
-              We couldn’t load questions.
-            </p>
-            <p className="text-muted-foreground">{String(error)}</p>
-            <div className="mt-4">
-              <Button asChild>
-                <Link
-                  href={`/?${new URLSearchParams({
-                    ...(subject && { subject }),
-                    ...(topic && { topic }),
-                    mode,
-                    count: String(count),
-                  }).toString()}`}
+              <h2 className="mb-2 text-lg font-semibold">AIIMS/NEET PG MCQs</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Choose settings for your practice session.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="flex flex-col overflow-hidden text-sm">
+                  Subject
+                  <select
+                    value={subject}
+                    onChange={(e) => {
+                      setSubject(e.target.value)
+                      setTopic('')
+                    }}
+                    className="mt-1 w-full max-w-full appearance-none rounded-md border bg-[url('/chev-down.svg')] bg-[length:1rem] bg-[right_0.75rem_center] bg-no-repeat px-3 py-2"
+                  >
+                    <option value="">Any subject</option>
+                    {subjectsLoading ? (
+                      <option disabled>Loading…</option>
+                    ) : (
+                      (subjectsData || []).map((s: any) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </label>
+                <label className="flex flex-col overflow-hidden text-sm">
+                  Topic
+                  <select
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    className="mt-1 w-full max-w-full appearance-none rounded-md border bg-[url('/chev-down.svg')] bg-[length:1rem] bg-[right_0.75rem_center] bg-no-repeat px-3 py-2"
+                    disabled={
+                      topicsLoading || !(topicsData && topicsData.length)
+                    }
+                  >
+                    <option value="">Any topic</option>
+                    {topicsLoading ? (
+                      <option disabled>Loading…</option>
+                    ) : (
+                      (topicsData || []).map((t: any) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </label>
+                <label className="flex flex-col overflow-hidden text-sm">
+                  Number of questions
+                  <input
+                    type="number"
+                    min={1}
+                    max={50}
+                    value={countInput}
+                    onChange={(e) => setCountInput(e.target.value)}
+                    className="mt-1 w-full max-w-full rounded-md border px-3 py-2"
+                  />
+                </label>
+                <label className="flex flex-col overflow-hidden text-sm">
+                  Mode
+                  <select
+                    value={mode}
+                    onChange={(e) => setMode(e.target.value as Mode)}
+                    className="mt-1 rounded-md border px-3 py-2"
+                  >
+                    <option value="casual">Casual (immediate feedback)</option>
+                    <option value="exam">Exam (no feedback)</option>
+                  </select>
+                </label>
+              </div>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Button type="submit" className="w-full sm:w-auto">
+                  Start practice
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setSubject('')
+                    setTopic('')
+                    setCountInput('10')
+                    setMode('casual')
+                  }}
+                  className="w-full sm:w-auto"
                 >
-                  Adjust filters
-                </Link>
-              </Button>
+                  Reset
+                </Button>
+              </div>
+            </form>
+          )}
+          <div className="mb-4 flex items-center justify-between">
+            <QuizHeader
+              index={currentIndex}
+              total={total || count}
+              score={mode === 'casual' ? score : 0}
+            />
+            <div className="flex items-center gap-3 text-sm">
+              {mode === 'exam' && (
+                <div className="rounded-full border px-3 py-1">
+                  Time:{' '}
+                  <Timer
+                    durationMs={examDurationMs}
+                    running={examRunning && !finished}
+                    onExpire={onFinishExam}
+                  />
+                </div>
+              )}
+              <span className="hidden text-muted-foreground sm:inline">
+                {subject || 'Any subject'}
+                {topic ? ` • ${topic}` : ''} • {count} q
+              </span>
+              <Link
+                href={`/?${new URLSearchParams({
+                  ...(subject && { subject }),
+                  ...(topic && { topic }),
+                  mode,
+                  count: String(count),
+                }).toString()}`}
+                className="underline-offset-2 hover:underline"
+              >
+                Adjust
+              </Link>
             </div>
           </div>
-        )}
 
-        {/* Empty */}
-        {!isLoading && !isError && total === 0 && (
-          <div className="rounded-2xl border p-6 text-center">
-            <div className="mb-2 text-2xl">📚</div>
-            <p className="text-muted-foreground">
-              No questions found. Try adjusting filters.
-            </p>
-          </div>
-        )}
-
-        {/* Quiz */}
-        {!isLoading &&
-          !isError &&
-          total > 0 &&
-          !finished &&
-          !isDone &&
-          current && (
-            <>
-              <QuestionCard
-                exam={current.exam}
-                subject={current.subject}
-                topic={current.topic}
-                year={current.year}
-                q={current.q}
-                options={current.options as string[]}
-                answerInfo={current.answerInfo}
-                selected={selected}
-                selectedIndex={selectedIndex}
-                onSelect={onSelect}
-              />
-
-              {/* Casual vs Exam feedback */}
-              {mode === 'casual' ? (
-                <>
-                  <div
-                    className="mt-3 text-sm text-muted-foreground"
-                    aria-live="polite"
-                  >
-                    {selected
-                      ? (() => {
-                          const correct =
-                            current.answerInfo.type === 'index'
-                              ? selected ===
-                                (current.options as string[])[
-                                  current.answerInfo.index
-                                ]
-                              : selected === current.answerInfo.text
-                          return correct
-                            ? 'Great choice! ✅'
-                            : 'Close — here’s why…'
-                        })()
-                      : 'Pick the best answer to continue.'}
-                  </div>
-                  <ExplanationPanel
-                    text={revealed ? current.explanation : null}
-                  />
-                </>
-              ) : null}
-
-              <QuizFooter
-                index={currentIndex}
-                total={total}
-                canNext={mode === 'exam' ? true : !!selected}
-                onNext={onNext}
-              />
-            </>
+          {/* Loading */}
+          {isLoading && (
+            <div className="space-y-4">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-24 w-full rounded-2xl" />
+              <Skeleton className="h-16 w-full rounded-2xl" />
+              <Skeleton className="h-16 w-full rounded-2xl" />
+              <Skeleton className="h-16 w-full rounded-2xl" />
+              <Skeleton className="h-16 w-full rounded-2xl" />
+            </div>
           )}
 
-        {/* Casual Results */}
-        {!isLoading && !isError && isDone && mode === 'casual' && (
-          <div>
-            <ScoreSummary
-              score={score}
-              total={total}
-              onRestart={onRestart}
-              onExport={exportScore}
-            />
-            <div className="mt-3 flex gap-2">
-              <Button variant="ghost" onClick={goBackToSetup}>
-                Back to setup
-              </Button>
+          {/* Empty */}
+          {isError && (
+            <div className="rounded-2xl border p-6 text-sm">
+              <p className="font-medium text-rose-500">
+                We couldn’t load questions.
+              </p>
+              <p className="text-muted-foreground">{String(error)}</p>
+              <div className="mt-4">
+                <Button asChild>
+                  <Link
+                    href={`/?${new URLSearchParams({
+                      ...(subject && { subject }),
+                      ...(topic && { topic }),
+                      mode,
+                      count: String(count),
+                    }).toString()}`}
+                  >
+                    Adjust filters
+                  </Link>
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Exam Results */}
-        {!isLoading &&
-          !isError &&
-          (finished || (isDone && mode === 'exam')) &&
-          mode === 'exam' &&
-          (() => {
-            const { scoreRaw, max, counts } = computeExamScore()
-            return (
-              <div>
-                <ResultsSummary
-                  score={scoreRaw}
-                  max={max}
-                  breakdown={counts}
-                  onRetry={onRestart}
-                  onReview={() => setReviewMode(true)}
-                  onExport={exportScore}
+          {/* Empty */}
+          {!isLoading && !isError && total === 0 && (
+            <div className="rounded-2xl border p-6 text-center">
+              <div className="mb-2 text-2xl">📚</div>
+              <p className="text-muted-foreground">
+                No questions found. Try adjusting filters.
+              </p>
+            </div>
+          )}
+
+          {/* Quiz */}
+          {!isLoading &&
+            !isError &&
+            total > 0 &&
+            !finished &&
+            !isDone &&
+            current && (
+              <>
+                <QuestionCard
+                  exam={current.exam}
+                  subject={current.subject}
+                  topic={current.topic}
+                  year={current.year}
+                  q={current.q}
+                  options={current.options as string[]}
+                  answerInfo={current.answerInfo}
+                  selected={selected}
+                  selectedIndex={selectedIndex}
+                  onSelect={onSelect}
                 />
-                <div className="mt-3 flex gap-2">
-                  <Button variant="ghost" onClick={goBackToSetup}>
-                    Back to setup
+
+                {/* Casual vs Exam feedback */}
+                {mode === 'casual' ? (
+                  <>
+                    <div
+                      className="mt-3 text-sm text-muted-foreground"
+                      aria-live="polite"
+                    >
+                      {selected
+                        ? (() => {
+                            const correct =
+                              current.answerInfo.type === 'index'
+                                ? selected ===
+                                  (current.options as string[])[
+                                    current.answerInfo.index
+                                  ]
+                                : selected === current.answerInfo.text
+                            return correct
+                              ? 'Great choice! ✅'
+                              : 'Close — here’s why…'
+                          })()
+                        : 'Pick the best answer to continue.'}
+                    </div>
+                    <ExplanationPanel
+                      text={revealed ? current.explanation : null}
+                    />
+                  </>
+                ) : null}
+
+                <QuizFooter
+                  index={currentIndex}
+                  total={total}
+                  canNext={mode === 'exam' ? true : !!selected}
+                  onNext={onNext}
+                />
+              </>
+            )}
+
+          {/* Casual Results */}
+          {!isLoading && !isError && isDone && mode === 'casual' && (
+            <div>
+              <ScoreSummary
+                score={score}
+                total={total}
+                onRestart={onRestart}
+                onExport={exportScore}
+              />
+              <div className="mt-3 flex gap-2">
+                <Button variant="ghost" onClick={goBackToSetup}>
+                  Back to setup
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Exam Results */}
+          {!isLoading &&
+            !isError &&
+            (finished || (isDone && mode === 'exam')) &&
+            mode === 'exam' &&
+            (() => {
+              const { scoreRaw, max, counts } = computeExamScore()
+              return (
+                <div>
+                  <ResultsSummary
+                    score={scoreRaw}
+                    max={max}
+                    breakdown={counts}
+                    onRetry={onRestart}
+                    onReview={() => setReviewMode(true)}
+                    onExport={exportScore}
+                  />
+                  <div className="mt-3 flex gap-2">
+                    <Button variant="ghost" onClick={goBackToSetup}>
+                      Back to setup
+                    </Button>
+                  </div>
+                </div>
+              )
+            })()}
+          {/* Review mode: show all questions with selections and explanations */}
+          {reviewMode && (
+            <div className="mt-6 space-y-4">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Review answers</h3>
+                <div className="flex gap-2">
+                  <Button onClick={() => setReviewMode(false)}>
+                    Back to results
+                  </Button>
+                  <Button variant="ghost" onClick={onRestart}>
+                    Restart
                   </Button>
                 </div>
               </div>
-            )
-          })()}
-        {/* Review mode: show all questions with selections and explanations */}
-        {reviewMode && (
-          <div className="mt-6 space-y-4">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Review answers</h3>
-              <div className="flex gap-2">
-                <Button onClick={() => setReviewMode(false)}>
-                  Back to results
-                </Button>
-                <Button variant="ghost" onClick={onRestart}>
-                  Restart
-                </Button>
+              <div className="space-y-4">
+                {mcqs.map((q, i) => {
+                  const opts = toArray(q.options)
+                  const sel = selections[i]
+                  const selectedText = sel == null ? null : opts[sel]
+                  const ans = getCorrectIndexOrText(q.answer)
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  const answerIdx =
+                    ans.type === 'index'
+                      ? ans.index
+                      : opts.findIndex((o) => o === ans.text)
+                  return (
+                    <div key={q.id}>
+                      <QuestionCard
+                        exam={q.exam}
+                        subject={q.subject}
+                        topic={q.topic}
+                        year={q.year}
+                        q={q.q}
+                        options={opts}
+                        answerInfo={ans}
+                        selected={selectedText}
+                        onSelect={() => {}}
+                      />
+                      <ExplanationPanel text={q.explanation} />
+                    </div>
+                  )
+                })}
               </div>
             </div>
-            <div className="space-y-4">
-              {mcqs.map((q, i) => {
-                const opts = toArray(q.options)
-                const sel = selections[i]
-                const selectedText = sel == null ? null : opts[sel]
-                const ans = getCorrectIndexOrText(q.answer)
-                const answerIdx =
-                  ans.type === 'index'
-                    ? ans.index
-                    : opts.findIndex((o) => o === ans.text)
-                return (
-                  <div key={q.id}>
-                    <QuestionCard
-                      exam={q.exam}
-                      subject={q.subject}
-                      topic={q.topic}
-                      year={q.year}
-                      q={q.q}
-                      options={opts}
-                      answerInfo={ans}
-                      selected={selectedText}
-                      onSelect={() => {}}
-                    />
-                    <ExplanationPanel text={q.explanation} />
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </PremiumGuard>
   )
 }
 

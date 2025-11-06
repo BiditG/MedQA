@@ -1,22 +1,41 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@/utils/supabase-server'
 
 export default async function AuthButton() {
   const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
+  const accessToken = cookieStore.get('sb-access-token')?.value
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user: any = null
+  if (accessToken) {
+    try {
+      // Fetch user from /api/auth/me
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+        }/api/auth/me`,
+        {
+          headers: { Cookie: `sb-access-token=${accessToken}` },
+        },
+      )
+      if (res.ok) {
+        user = await res.json()
+      }
+    } catch (err) {
+      // ignore
+    }
+  }
 
   const signOut = async () => {
     'use server'
-
     const cookieStore = cookies()
-    const supabase = createServerClient(cookieStore)
-    await supabase.auth.signOut()
+    // remove Supabase cookies
+    try {
+      cookieStore.delete('sb-access-token')
+      cookieStore.delete('sb-refresh-token')
+    } catch (e) {
+      // ignore
+    }
     return redirect('/login')
   }
 

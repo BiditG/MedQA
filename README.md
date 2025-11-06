@@ -1,5 +1,3 @@
-![image](https://github.com/michaeltroya/supa-next-starter/assets/38507347/2ea40874-98de-49ec-ab6a-74c816e6ca22)
-
 <h1 align="center">🚀 MEDQAS</h1>
 
 <p align="center">
@@ -23,7 +21,7 @@
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
+  <a href="#quickstart"><strong>Quickstart</strong></a> ·
   <a href="#documentation"><strong>Documentation</strong></a> ·
   <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
 </p>
@@ -32,7 +30,7 @@
 ## Features
 
 - ⚡️ Next.js 14 (App Router)
-- 💚 Supabase w/ supabase-ssr - Works across the entire [Next.js](https://nextjs.org) stack (App Router, Pages Router, Client, Server, Middleware, It just works!)
+- 🔐 Supabase authentication and database
 - ⚛️ React 18
 - ⛑ TypeScript
 - 📦 [pnpm](https://pnpm.io/) - Fast, disk space efficient package manager
@@ -51,42 +49,57 @@
 - ✨ Next Top Loader - Render a pleasent top loader on navigation with [nextjs-toploader](https://github.com/TheSGJ/nextjs-toploader)
 - 🔋 Lots Extras - Next Bundle Analyzer, Vercel Analytics, Vercel Geist Font
 
-## Clone and run locally
+## Quickstart
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+1) Prerequisites
 
-2. Create a Next.js app using the Supabase Starter template npx command
+- Node.js >= 18.17.0
+- pnpm 8
+- A Supabase project (free tier works).
 
-   ```bash
-   pnpm create next-app -e https://github.com/michaeltroya/supa-next-starter
-   # or
-   npx create-next-app -e https://github.com/michaeltroya/supa-next-starter
-   ```
+2) Configure environment
 
-3. Use `cd` to change into the app's directory
+Create `.env.local` in the project root (do not commit). Minimal example:
 
-   ```bash
-   cd name-of-new-app
-   ```
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
 
-4. Rename `.env.local.example` to `.env.local` and update the following:
+Optional: set an initial admin for the seed script
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
+```
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=supersecret
+```
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+3) Install and run
 
-5. You can now run the Next.js local development server:
+```bash
+pnpm install
+pnpm dev
+```
 
-   ```bash
-   pnpm run dev
-   ```
+The app will be available at http://localhost:3000.
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+4) Seed an admin user
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+```powershell
+$env:ADMIN_EMAIL="admin@example.com"; $env:ADMIN_PASSWORD="supersecret"; node scripts/seed-admin.js
+```
+
+Alternatively, set ADMIN_EMAIL and ADMIN_PASSWORD in `.env.local` and simply run:
+
+```bash
+node scripts/seed-admin.js
+```
+
+5) Log in
+
+- Visit /login and use the seeded credentials.
+- Or POST to /api/auth/login with JSON `{ "email": "admin@example.com", "password": "supersecret" }`.
+  Successful login returns a JWT; the app stores it client-side and may set an HttpOnly cookie when enabled.
 
 ## Showcase
 
@@ -112,6 +125,19 @@ MEDQAS is built from a Next.js starter. This repository contains the MEDQAS appl
 - `pnpm test:ci` — Runs all the jest tests in the project, Jest will assume it is running in a CI environment.
 - `pnpm analyze` — Builds the project and opens the bundle analyzer.
 
+### Auth overview
+
+- Email/password auth with Supabase (issued at `POST /api/auth/login`).
+- User data stored in Supabase `auth.users` and `public.profiles` table.
+- Admin-only user management at `/admin/users` backed by `/api/profiles`.
+
+Environment variables:
+- `NEXT_PUBLIC_SUPABASE_URL` — required. Supabase project URL.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — required. Supabase anon key.
+- `SUPABASE_SERVICE_ROLE_KEY` — required. Supabase service role key.
+
+Note: JWT auth has been removed in favor of Supabase.
+
 ### Paths
 
 TypeScript is pre-configured with custom path mappings. To import components or files, use the `@` prefix.
@@ -125,7 +151,7 @@ import avatar from '@/public/avatar.png'
 
 ### Switch to Yarn/npm
 
-This starter uses pnpm by default, but this choice is yours. If you'd like to switch to Yarn/npm, delete the `pnpm-lock.yaml` file, install the dependencies with Yarn/npm, change the CI workflow, and Husky Git hooks to use Yarn/npm commands.
+This project uses pnpm by default, but you can switch to Yarn/npm. Delete `pnpm-lock.yaml`, reinstall, and update any CI/Husky commands accordingly.
 
 ## License
 
@@ -133,4 +159,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Feedback and issues
 
-Please file feedback and issues [here](https://github.com/michaeltroya/supa-next-starter/issues).
+Please file feedback and issues in this repository.

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { createBrowserClient } from '@/utils/supabase-browser'
 
 export default function SubscriptionModal({
   open,
@@ -103,25 +102,21 @@ export default function SubscriptionModal({
                     // Close modal promptly for snappy UX
                     onClose()
 
-                    // Determine auth state: prefer prop (treat truthy values as authed), fallback to Supabase
+                    // Determine auth state: prefer prop (treat truthy values as authed), fallback to checking local token
                     let authed =
                       typeof isAuthed !== 'undefined'
                         ? Boolean(isAuthed)
                         : undefined
                     if (authed === undefined) {
                       try {
-                        const supabase = createBrowserClient()
-                        // use getSession which is more reliable for client session presence
-                        const { data, error } = await supabase.auth.getSession()
-                        if (error) {
-                          console.debug(
-                            '[subscribe] getSession error',
-                            error.message,
-                          )
-                        }
-                        authed = !!data?.session?.user
+                        const token =
+                          typeof window !== 'undefined'
+                            ? localStorage.getItem('token')
+                            : null
+                        if (token) authed = true
+                        else authed = false
                       } catch (err) {
-                        console.debug('[subscribe] supabase client error', err)
+                        console.debug('[subscribe] auth check failed', err)
                         authed = false
                       }
                     }

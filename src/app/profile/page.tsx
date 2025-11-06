@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { createBrowserClient } from '@/utils/supabase-browser'
-import { useProfile } from '@/hooks/useProfile'
+import useUser from '@/hooks/useUser'
 import { useUserStats } from '@/hooks/useUserStats'
+import { signOut as clientSignOut } from '@/utils/auth-client'
 
 function formatDateMaybe(d?: string | null) {
   if (!d) return '—'
@@ -22,43 +22,44 @@ function tierLabel(profile: any) {
 }
 
 export default function ProfilePage() {
-  const { profile, loading } = useProfile()
+  const { user: profile, loading } = useUser()
   const [newPassword, setNewPassword] = useState('')
+  const [name, setName] = useState(profile?.name || '')
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+
   const { stats, loading: statsLoading, error: statsError } = useUserStats()
 
-  async function handleChangePassword(e: React.FormEvent) {
-    e.preventDefault()
-    setMessage(null)
-    if (newPassword.length < 8) {
-      setMessage('Password must be at least 8 characters')
-      return
-    }
+  async function handleSignOut() {
+    clientSignOut()
+    window.location.href = '/'
+  }
+
+  async function handleSaveProfile() {
+    if (!profile) return
     setSaving(true)
     try {
-      const supabase = createBrowserClient()
-      // @ts-ignore - supabase v2
-      const { data, error } = await supabase.auth.updateUser({
-        password: newPassword,
+      const token = localStorage.getItem('token')
+      const body: any = {}
+      if (name) body.name = name
+      if (newPassword) body.password = newPassword
+      const resp = await fetch(`/api/users/${profile.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify(body),
       })
-      if (error) {
-        setMessage(error.message || 'Failed to update password')
-      } else {
-        setMessage('Password updated successfully')
-        setNewPassword('')
-      }
-    } catch (err: any) {
-      setMessage(err?.message || String(err))
+      if (!resp.ok) throw new Error((await resp.json()).error || 'Failed')
+      // refresh
+      window.dispatchEvent(new CustomEvent('auth:change', { detail: {} }))
+      setNewPassword('')
+      alert('Profile updated')
+    } catch (e: any) {
+      alert(e?.message || 'Failed')
     } finally {
       setSaving(false)
     }
-  }
-
-  async function handleSignOut() {
-    const supabase = createBrowserClient()
-    await supabase.auth.signOut()
-    window.location.href = '/'
   }
 
   const reduce = useReducedMotion()
@@ -109,19 +110,21 @@ export default function ProfilePage() {
                     <div>
                       <div
                         className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${
-                          profile.premium
+                          (profile as any).premium
                             ? 'bg-amber-100 text-amber-800'
                             : 'bg-slate-100 text-slate-800'
                         }`}
                       >
                         {tierLabel(profile)}
                       </div>
-                      {profile?.premium_expires_at ? (
+                      {(profile as any)?.premium_expires_at ? (
                         <div className="mt-1 text-xs text-muted-foreground">
                           {Math.max(
                             0,
                             Math.ceil(
-                              (new Date(profile.premium_expires_at).getTime() -
+                              (new Date(
+                                (profile as any).premium_expires_at,
+                              ).getTime() -
                                 Date.now()) /
                                 (1000 * 60 * 60 * 24),
                             ),
@@ -133,12 +136,19 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex gap-3">
+                <div className="mt-3 flex gap-3">
                   <button
                     onClick={handleSignOut}
                     className="inline-flex items-center gap-2 rounded-md border px-4 py-2"
                   >
                     Sign out
+                  </button>
+                  <button
+                    onClick={handleSaveProfile}
+                    disabled={saving}
+                    className="inline-flex items-center gap-2 rounded-md border px-4 py-2"
+                  >
+                    {saving ? 'Saving…' : 'Save profile'}
                   </button>
                 </div>
               </div>
@@ -164,7 +174,7 @@ export default function ProfilePage() {
                   { label: 'Correct MCQs', value: stats?.total_correct ?? 0 },
                   { label: 'XP', value: stats?.xp ?? 0 },
                   { label: 'Rank', value: stats?.rank ?? '—' },
-                ].map((s, i) => (
+                ].map((s, _i) => (
                   <motion.div
                     key={s.label}
                     variants={item}
@@ -198,42 +208,42 @@ export default function ProfilePage() {
           </div>
 
           <aside className="space-y-6">
-            <form
-              onSubmit={handleChangePassword}
-              className="rounded-md bg-card p-4"
-            >
-              <h2 className="mb-2 font-medium">Change password</h2>
-              <div className="mb-2 text-sm text-muted-foreground">
-                Enter a new password (min 8 characters)
+            <div className="rounded-md bg-card p-4">
+              <h2 className="mb-2 font-medium">Account</h2>
+              <p className="text-sm text-muted-foreground">
+                You can update your name and password here.
+              </p>
+              <div className="mt-3 space-y-2">
+                <input
+                  className="w-full rounded-md border px-3 py-2"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <input
+                  className="w-full rounded-md border px-3 py-2"
+                  placeholder="New password"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveProfile}
+                    disabled={saving}
+                    className="rounded-md border px-3 py-2"
+                  >
+                    {saving ? 'Saving…' : 'Save'}
+                  </button>
+                  <button
+                    onClick={handleSignOut}
+                    className="rounded-md border px-3 py-2"
+                  >
+                    Sign out
+                  </button>
+                </div>
               </div>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full rounded-md border px-3 py-2"
-                placeholder="New password"
-                aria-label="New password"
-              />
-              <div className="mt-3 flex items-center gap-2">
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="rounded-md bg-blue-600 px-4 py-2 text-white disabled:opacity-60"
-                >
-                  {saving ? 'Saving…' : 'Change password'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  className="rounded-md border px-3 py-2"
-                >
-                  Sign out
-                </button>
-              </div>
-              {message && (
-                <div className="mt-2 text-sm text-red-600">{message}</div>
-              )}
-            </form>
+            </div>
 
             <div className="rounded-md bg-card p-4">
               <h3 className="mb-2 font-medium">Account details</h3>

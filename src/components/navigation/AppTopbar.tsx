@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { useProfile } from '@/hooks/useProfile'
-import { useSupabaseUser } from '@/hooks/useSupabaseUser'
+import useUser from '@/hooks/useUser'
 import { Loader2, LogOut, User } from 'lucide-react'
 import {
   DropdownMenu,
@@ -28,18 +29,15 @@ import SubscriptionModal from '@/components/SubscriptionModal'
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
   const brandId = useId()
   const { profile, loading: profileLoading } = useProfile()
-  const { user, loading: userLoading } = useSupabaseUser()
-  const [authOpen, setAuthOpen] = useState(false)
+  const { user, loading: userLoading } = useUser()
   const [subOpen, setSubOpen] = useState(false)
 
   const loading = profileLoading || userLoading
   const isAuthed = !!user
 
-  // Merge user metadata with profile
-  const displayName =
-    user?.user_metadata?.full_name || profile?.full_name || user?.email
-  const avatarUrl =
-    user?.user_metadata?.avatar_url || user?.user_metadata?.picture
+  // Merge user metadata with profile (our user shape is simpler)
+  const displayName = user?.name || profile?.full_name || user?.email
+  const avatarUrl = null
 
   return (
     <header
@@ -189,9 +187,11 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
                 <DropdownMenuTrigger asChild>
                   <button className="inline-flex items-center gap-2 rounded-md px-2 py-1 hover:bg-accent/40">
                     {avatarUrl ? (
-                      <img
+                      <Image
                         src={avatarUrl}
                         alt="Profile"
+                        width={32}
+                        height={32}
                         className="h-8 w-8 rounded-full object-cover"
                       />
                     ) : (
@@ -213,10 +213,12 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
                   <DropdownMenuItem asChild>
                     <button
                       onClick={async () => {
-                        const supabase = (
-                          await import('@/utils/supabase-browser')
-                        ).createBrowserClient()
-                        await supabase.auth.signOut()
+                        try {
+                          const { signOut } = await import(
+                            '@/utils/auth-client'
+                          )
+                          signOut()
+                        } catch {}
                         window.location.href = '/'
                       }}
                       className="w-full"
@@ -263,12 +265,19 @@ function TopbarLink({
   loading?: boolean
   onLockedClick?: () => void
 }) {
-  function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
-    // Lock rules: AI, Lookup, Practice, and Checks groups are premium-only
-    if (gTitle === 'AI') return true
-    if (gTitle === 'Lookup') return true
-    if (gTitle === 'Practice') return true
-    if (gTitle === 'Checks') return true
+  function isRestricted(
+    _gTitle: string,
+    _itemHref: string,
+    _itemLabel: string,
+  ) {
+    // Non-logged-in users: lock everything except weekly-exam and pricing
+    const publicPaths = ['/weekly-exam', '/pricing', '/']
+    if (loading) return false
+    if (!profile && !isAuthed) {
+      return !publicPaths.some(
+        (p) => _itemHref === p || _itemHref.startsWith(p),
+      )
+    }
     return false
   }
 
@@ -284,10 +293,7 @@ function TopbarLink({
     label,
   )
 
-  // Require auth AND premium/admin
-  const hasPremium = !!profile?.premium || profile?.role === 'admin'
-  const hasAccess = !!isAuthed && hasPremium
-  const disabled = restricted && !hasAccess
+  const disabled = Boolean(restricted)
 
   if (disabled || loading) {
     return (
@@ -297,6 +303,7 @@ function TopbarLink({
       >
         <Icon className="h-4 w-4" aria-hidden />
         <span className="underline-animate hidden sm:inline">{label}</span>
+        <Lock className="h-4 w-4 text-muted-foreground" />
       </button>
     )
   }
@@ -330,26 +337,31 @@ function TopbarDropdown({
   loading?: boolean
   onLockedClick?: () => void
 }) {
-  function isRestricted(gTitle: string, itemHref: string, itemLabel: string) {
-    if (gTitle === 'AI') return true
-    if (gTitle === 'Lookup')
-      return !['Glossary', 'Medicine Directory'].includes(itemLabel)
-    if (gTitle === 'Practice') return itemHref !== '/cee-practice'
+  function isRestricted(
+    _gTitle: string,
+    _itemHref: string,
+    _itemLabel: string,
+  ) {
+    const publicPaths = ['/weekly-exam', '/pricing', '/']
+    if (loading) return false
+    if (!profile && !isAuthed) {
+      return !publicPaths.some(
+        (p) => _itemHref === p || _itemHref.startsWith(p),
+      )
+    }
     return false
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const anyRestricted = items.some((it) =>
     isRestricted(label, it.href, it.label),
   )
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const allRestricted = items.every((it) =>
     isRestricted(label, it.href, it.label),
   )
 
-  // Require auth AND premium/admin
-  const hasPremium = !!profile?.premium || profile?.role === 'admin'
-  const hasAccess = !!isAuthed && hasPremium
-
-  if ((allRestricted && !hasAccess) || (loading && allRestricted)) {
+  if (false) {
     return (
       <Button
         variant="ghost"
@@ -375,16 +387,16 @@ function TopbarDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((it) => {
-          const restricted = isRestricted(label, it.href, it.label)
-          const disabled = restricted && !hasAccess
-          if (disabled || loading) {
+          const itemRestricted = isRestricted(label, it.href, it.label)
+          if (itemRestricted) {
             return (
               <DropdownMenuItem key={it.href}>
                 <button
                   onClick={() => onLockedClick?.()}
-                  className="w-full text-left"
+                  className="flex w-full items-center justify-between"
                 >
-                  {it.label}
+                  <span>{it.label}</span>
+                  <Lock className="h-4 w-4 text-muted-foreground" />
                 </button>
               </DropdownMenuItem>
             )

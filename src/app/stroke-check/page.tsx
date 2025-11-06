@@ -1,13 +1,14 @@
-import StrokeReport from '@/components/StrokeReport'
+'use client'
 
-export const metadata = {
-  title: 'Stroke Check — MEDQAS',
-}
+import StrokeReport from '@/components/StrokeReport'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="p-6">
-      <StrokeReport />
-    </main>
+    <PremiumGuard>
+      <main className="p-6">
+        <StrokeReport />
+      </main>
+    </PremiumGuard>
   )
 }

@@ -1,13 +1,14 @@
-import PneumoniaQuiz from '@/components/PneumoniaQuiz'
+'use client'
 
-export const metadata = {
-  title: 'Pneumonia Check',
-}
+import PneumoniaQuiz from '@/components/PneumoniaQuiz'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="p-6">
-      <PneumoniaQuiz />
-    </main>
+    <PremiumGuard>
+      <main className="p-6">
+        <PneumoniaQuiz />
+      </main>
+    </PremiumGuard>
   )
 }

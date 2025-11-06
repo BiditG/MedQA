@@ -1,13 +1,14 @@
-import BacteriaQuiz from '@/components/BacteriaQuiz'
+'use client'
 
-export const metadata = {
-  title: 'Bacteria Harmful Quiz',
-}
+import BacteriaQuiz from '@/components/BacteriaQuiz'
+import { PremiumGuard } from '@/components/PremiumGuard'
 
 export default function Page() {
   return (
-    <main className="p-6">
-      <BacteriaQuiz />
-    </main>
+    <PremiumGuard>
+      <main className="p-6">
+        <BacteriaQuiz />
+      </main>
+    </PremiumGuard>
   )
 }

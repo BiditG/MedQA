@@ -2,29 +2,39 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { createBrowserClient } from '@/utils/supabase-browser'
 
+// PremiumGuard: after removing Supabase-based premium checks, treat any
+// authenticated user as allowed. If you later reintroduce premium tiers,
+// update this to check `user.premium` or a dedicated endpoint.
 export function PremiumGuard({ children }: { children: React.ReactNode }) {
   const [allowed, setAllowed] = useState<boolean | null>(null)
 
   useEffect(() => {
+    let mounted = true
     const run = async () => {
-      const supabase = createBrowserClient()
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (!session) {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!mounted) return
+        if (!res.ok) {
+          setAllowed(false)
+          return
+        }
+        const json = await res.json()
+        setAllowed(Boolean(json?.user))
+      } catch (e) {
+        if (!mounted) return
         setAllowed(false)
-        return
       }
-      const { data } = await supabase
-        .from('profiles')
-        .select('premium')
-        .eq('id', session.user.id)
-        .maybeSingle()
-      setAllowed(!!data?.premium)
     }
     run()
+    function onAuth() {
+      run()
+    }
+    window.addEventListener('auth:change', onAuth as EventListener)
+    return () => {
+      mounted = false
+      window.removeEventListener('auth:change', onAuth as EventListener)
+    }
   }, [])
 
   if (allowed === null)
@@ -32,9 +42,9 @@ export function PremiumGuard({ children }: { children: React.ReactNode }) {
   if (!allowed)
     return (
       <div className="p-6 text-sm">
-        This feature is for premium users.{' '}
-        <Link href="/upgrade" className="underline">
-          Upgrade
+        This feature is for signed-in users.{' '}
+        <Link href="/login" className="underline">
+          Sign in
         </Link>
       </div>
     )
