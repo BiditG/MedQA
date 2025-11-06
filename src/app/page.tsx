@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Head from 'next/head'
 import { Hero } from './(home)/components/Hero'
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -34,6 +35,72 @@ function HomeInner() {
           <WhatWeOffer />
         </div>
       </section>
+      <section className="w-full border-t border-t-foreground/10 bg-background/50 py-8">
+        <div className="mx-auto max-w-6xl px-4">
+          <h2 className="mb-8 text-center text-2xl font-bold">
+            Frequently Asked Questions
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
+              <div className="mb-2 text-lg font-semibold text-primary">
+                What is MEDQAS?
+              </div>
+              <div className="text-sm text-muted-foreground">
+                MEDQAS is Nepal’s all-in-one medical learning app for CEE,
+                AIIMS, NEET PG, and entrance exam preparation. Practice
+                thousands of MCQs, explore a Nepali disease glossary, and get
+                AI-powered clinical guidance.
+              </div>
+            </div>
+            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
+              <div className="mb-2 text-lg font-semibold text-primary">
+                Can I practice CEE MCQs and entrance questions for free?
+              </div>
+              <div className="text-sm text-muted-foreground">
+                MCQs on MEDQAS are accessible only after you buy a package. Once
+                you purchase, your login credentials (email and password) will
+                be provided by the admin. For available plans, see the{' '}
+                <Link href="/pricing" className="underline">
+                  pricing page
+                </Link>
+                .
+              </div>
+            </div>
+            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
+              <div className="mb-2 text-lg font-semibold text-primary">
+                How does MEDQAS help with medical entrance prep?
+              </div>
+              <div className="text-sm text-muted-foreground">
+                MEDQAS provides exam-style MCQs, explanations, and AI guidance
+                to help you prepare for medical entrance exams in Nepal,
+                including CEE, AIIMS, and NEET PG.
+              </div>
+            </div>
+            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
+              <div className="mb-2 text-lg font-semibold text-primary">
+                Is MEDQAS trusted for Nepali medical students?
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Yes, MEDQAS is designed for Nepali learners, with verified
+                clinical resources and a Nepali disease glossary to support your
+                studies.
+              </div>
+            </div>
+            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
+              <div className="mb-2 text-lg font-semibold text-primary">
+                How do I get started?
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Visit our{' '}
+                <Link href="/pricing" className="underline">
+                  pricing page
+                </Link>{' '}
+                for subscription options, or start practicing MCQs for free.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <footer className="w-full border-t border-t-foreground/10 p-8 text-center text-xs">
         <p className="mb-2 text-muted-foreground">
           Built with Next.js, Tailwind, and Supabase
@@ -45,11 +112,46 @@ function HomeInner() {
 
 export default function Home() {
   return (
-    <Suspense
-      fallback={<div className="w-full max-w-6xl px-4 py-8">Loading…</div>}
-    >
-      <HomeInner />
-    </Suspense>
+    <>
+      <Head>
+        <title>
+          MEDQAS — CEE MCQs, AIIMS, NEET PG, Entrance Prep, Free MCQs
+        </title>
+        <meta
+          name="description"
+          content="Practice CEE questions, AIIMS/NEET PG MCQs, and entrance exam prep for Nepali medical students. Free MCQs, clinical reasoning, and more on MEDQAS."
+        />
+        <meta
+          name="keywords"
+          content="CEE questions, CEE MCQs, entrance prep, free MCQs entrance, MEDQAS, AIIMS MCQs, NEET PG MCQs, medical entrance Nepal, medical quiz, Nepali medical students"
+        />
+        <meta
+          property="og:title"
+          content="MEDQAS — CEE MCQs, AIIMS, NEET PG, Entrance Prep"
+        />
+        <meta
+          property="og:description"
+          content="Nepal’s all-in-one medical learning app: CEE, AIIMS, NEET PG MCQs, entrance prep, and more."
+        />
+        <meta property="og:image" content="/opengraph-image.png" />
+        <meta property="og:url" content="https://medqas.com/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="MEDQAS — CEE MCQs, AIIMS, NEET PG, Entrance Prep"
+        />
+        <meta
+          name="twitter:description"
+          content="Practice CEE, AIIMS, NEET PG MCQs and entrance exam questions for Nepali medical students. Free MCQs and more on MEDQAS."
+        />
+        <meta name="twitter:image" content="/opengraph-image.png" />
+      </Head>
+      <Suspense
+        fallback={<div className="w-full max-w-6xl px-4 py-8">Loading…</div>}
+      >
+        <HomeInner />
+      </Suspense>
+    </>
   )
 }
 

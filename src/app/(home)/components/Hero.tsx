@@ -15,11 +15,15 @@ export function Hero({
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
         <div className="mx-auto max-w-2xl">
           <h1 className="heading-gradient text-3xl font-semibold leading-tight sm:text-5xl">
-            All-in-one medical learning
+            MEDQAS: CEE MCQs, AIIMS, NEET PG, Entrance Prep & Free Medical
+            Questions
           </h1>
           <p className="mx-auto mt-4 max-w-[70ch] text-base text-muted-foreground sm:text-lg">
-            Practice MCQs, sharpen clinical reasoning, explore anatomy, and get
-            personalised AI guidance — everything in one focused app.
+            Practice CEE questions, AIIMS/NEET PG MCQs, and entrance exam prep
+            for Nepali medical students. Access free MCQs, clinical reasoning,
+            anatomy, and AI guidance — all in one medical learning app. MEDQAS
+            is your trusted platform for medical entrance preparation, exam
+            success, and verified clinical resources in Nepal.
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link
