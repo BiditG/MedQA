@@ -15,13 +15,13 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: {
-    default: 'MEDQAS — All-in-One Medical App for Nepali Learners',
+    default: 'MEDQAS: Redefining Medical Learning Through AI & Smart MCQs',
     template: '%s | MEDQAS',
   },
   description:
     'MEDQAS is Nepal’s all-in-one medical learning app: practice MCQs, explore a Nepali disease glossary, and track your progress to boost exam success.',
   openGraph: {
-    title: 'MEDQAS — All-in-One Medical App for Nepali Students',
+    title: 'MEDQAS: Redefining Medical Learning Through AI & Smart MCQs',
     description:
       'Practice thousands of clinical MCQs, learn Nepali disease names, and prepare smarter with MEDQAS — designed for Nepal’s future doctors.',
     url: defaultUrl,
@@ -39,7 +39,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MEDQAS — Nepal’s All-in-One Medical App',
+    title: 'MEDQAS: Redefining Medical Learning Through AI & Smart MCQs',
     description:
       'MCQ practice, Nepali glossary, and progress tracking — MEDQAS helps Nepali medical students master exams faster.',
     images: [`${defaultUrl}/opengraph-image.png`],

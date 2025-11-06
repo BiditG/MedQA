@@ -13,7 +13,7 @@ import {
   Pill,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { cn } from '@/utils/tailwind'
 import { Lock } from 'lucide-react'
 import { useProfile } from '@/hooks/useProfile'
@@ -91,11 +91,7 @@ export function AppSidebar({
     }
   }, [open])
 
-  function isRestricted(
-    _gTitle: string,
-    _itemHref: string,
-    _itemLabel: string,
-  ) {
+  function isRestricted(_gTitle: string, _itemHref: string) {
     // Non-logged-in users: lock everything except the weekly exam and pricing/subscribe
     // If profile is null (not signed in) then restrict unless the item is allowed publicly.
     const publicPaths = ['/weekly-exam', '/pricing', '/']
@@ -111,7 +107,7 @@ export function AppSidebar({
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:fixed md:inset-y-0 md:z-30 md:flex md:w-64 md:flex-col md:border-r md:bg-background">
+      <aside className="hidden md:fixed md:inset-y-0 md:z-30 md:flex md:w-64 md:flex-col md:border-r md:bg-muted/30 md:backdrop-blur-sm">
         <div className="flex h-16 items-center gap-2 border-b px-4">
           <div className="h-8 w-8 rounded-md bg-primary/20" aria-hidden />
           <Link href="/" className="text-sm font-semibold">
@@ -134,7 +130,7 @@ export function AppSidebar({
                 </div>
                 <ul className="space-y-1">
                   {g.items.map((l) => {
-                    const restricted = isRestricted(g.title, l.href, l.label)
+                    const restricted = isRestricted(g.title, l.href)
                     // Disabled flag controls UI lock state for links
                     const disabled = Boolean(restricted)
 
@@ -201,7 +197,7 @@ export function AppSidebar({
         <div className="absolute inset-0 bg-black/40" onClick={onClose} />
         <div
           className={cn(
-            'absolute inset-y-0 left-0 w-72 border-r bg-background shadow-xl transition-transform',
+            'absolute inset-y-0 left-0 w-72 border-r bg-muted/30 shadow-xl transition-transform',
             open ? 'translate-x-0' : '-translate-x-full',
           )}
           onClick={(e) => e.stopPropagation()}
@@ -232,7 +228,7 @@ export function AppSidebar({
                   </div>
                   <ul className="space-y-1">
                     {g.items.map((l) => {
-                      const restricted = isRestricted(g.title, l.href, l.label)
+                      const restricted = isRestricted(g.title, l.href)
                       const disabled = Boolean(restricted)
 
                       if (l.href === '/pricing' || g.title === 'Upgrade') {

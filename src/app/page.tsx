@@ -31,32 +31,32 @@ function HomeInner() {
       )}
       <Hero />
       <section className="w-full">
-        <div className="mx-auto max-w-6xl px-4 py-8">
+        <div className="mx-auto max-w-6xl px-4 py-8 lg:px-6 lg:py-12">
           <WhatWeOffer />
         </div>
       </section>
-      <section className="w-full border-t border-t-foreground/10 bg-background/50 py-8">
-        <div className="mx-auto max-w-6xl px-4">
-          <h2 className="mb-8 text-center text-2xl font-bold">
+      <section className="w-full border-t border-t-foreground/10 bg-background/50 py-8 lg:py-12">
+        <div className="mx-auto max-w-6xl px-4 lg:px-6">
+          <h2 className="mb-6 text-center text-2xl font-bold lg:mb-8 lg:text-3xl">
             Frequently Asked Questions
           </h2>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
-              <div className="mb-2 text-lg font-semibold text-primary">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-col rounded-lg border bg-card p-4 shadow-sm lg:p-6">
+              <div className="mb-2 text-lg font-semibold text-primary lg:text-xl">
                 What is MEDQAS?
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground lg:text-base">
                 MEDQAS is Nepal’s all-in-one medical learning app for CEE,
                 AIIMS, NEET PG, and entrance exam preparation. Practice
                 thousands of MCQs, explore a Nepali disease glossary, and get
                 AI-powered clinical guidance.
               </div>
             </div>
-            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
-              <div className="mb-2 text-lg font-semibold text-primary">
+            <div className="flex flex-col rounded-lg border bg-card p-4 shadow-sm lg:p-6">
+              <div className="mb-2 text-lg font-semibold text-primary lg:text-xl">
                 Can I practice CEE MCQs and entrance questions for free?
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground lg:text-base">
                 MCQs on MEDQAS are accessible only after you buy a package. Once
                 you purchase, your login credentials (email and password) will
                 be provided by the admin. For available plans, see the{' '}
@@ -66,31 +66,31 @@ function HomeInner() {
                 .
               </div>
             </div>
-            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
-              <div className="mb-2 text-lg font-semibold text-primary">
+            <div className="flex flex-col rounded-lg border bg-card p-4 shadow-sm lg:p-6">
+              <div className="mb-2 text-lg font-semibold text-primary lg:text-xl">
                 How does MEDQAS help with medical entrance prep?
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground lg:text-base">
                 MEDQAS provides exam-style MCQs, explanations, and AI guidance
                 to help you prepare for medical entrance exams in Nepal,
                 including CEE, AIIMS, and NEET PG.
               </div>
             </div>
-            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
-              <div className="mb-2 text-lg font-semibold text-primary">
+            <div className="flex flex-col rounded-lg border bg-card p-4 shadow-sm lg:p-6">
+              <div className="mb-2 text-lg font-semibold text-primary lg:text-xl">
                 Is MEDQAS trusted for Nepali medical students?
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground lg:text-base">
                 Yes, MEDQAS is designed for Nepali learners, with verified
                 clinical resources and a Nepali disease glossary to support your
                 studies.
               </div>
             </div>
-            <div className="flex flex-col rounded-lg border bg-card p-6 shadow-sm">
-              <div className="mb-2 text-lg font-semibold text-primary">
+            <div className="flex flex-col rounded-lg border bg-card p-4 shadow-sm lg:p-6">
+              <div className="mb-2 text-lg font-semibold text-primary lg:text-xl">
                 How do I get started?
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground lg:text-base">
                 Visit our{' '}
                 <Link href="/pricing" className="underline">
                   pricing page
@@ -101,7 +101,7 @@ function HomeInner() {
           </div>
         </div>
       </section>
-      <footer className="w-full border-t border-t-foreground/10 p-8 text-center text-xs">
+      <footer className="w-full border-t border-t-foreground/10 p-6 text-center text-xs lg:p-8 lg:text-sm">
         <p className="mb-2 text-muted-foreground">
           Built with Next.js, Tailwind, and Supabase
         </p>
@@ -261,7 +261,7 @@ function WhatWeOffer() {
 
   return (
     <div>
-      <h2 className="mb-4 text-lg font-semibold">What we offer</h2>
+      <h2 className="mb-4 text-lg font-semibold lg:text-xl">What we offer</h2>
       <motion.div
         variants={container}
         initial={reduce ? undefined : 'hidden'}
@@ -274,14 +274,14 @@ function WhatWeOffer() {
             <Link href={href} className="group outline-none">
               <Card className="card-accent h-full transition-transform duration-200 group-hover:-translate-y-0.5">
                 <CardHeader className="flex-row items-center gap-3">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 text-primary">
-                    <Icon className="h-5 w-5" aria-hidden />
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 text-primary lg:h-12 lg:w-12">
+                    <Icon className="h-5 w-5 lg:h-6 lg:w-6" aria-hidden />
                   </div>
-                  <CardTitle className="text-base sm:text-lg">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl">
                     {title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 text-sm text-muted-foreground sm:text-base">
+                <CardContent className="pt-0 text-sm text-muted-foreground sm:text-base lg:text-lg">
                   {desc}
                 </CardContent>
               </Card>

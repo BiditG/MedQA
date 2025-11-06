@@ -41,7 +41,7 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
 
   return (
     <header
-      className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/50"
+      className="sticky top-0 z-40 border-b border-border/50 bg-muted/20 backdrop-blur supports-[backdrop-filter]:bg-muted/10"
       role="banner"
     >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4">
@@ -265,11 +265,7 @@ function TopbarLink({
   loading?: boolean
   onLockedClick?: () => void
 }) {
-  function isRestricted(
-    _gTitle: string,
-    _itemHref: string,
-    _itemLabel: string,
-  ) {
+  function isRestricted(_gTitle: string, _itemHref: string) {
     // Non-logged-in users: lock everything except weekly-exam and pricing
     const publicPaths = ['/weekly-exam', '/pricing', '/']
     if (loading) return false
@@ -290,7 +286,6 @@ function TopbarLink({
           ? 'Practice'
           : 'Lookup',
     href,
-    label,
   )
 
   const disabled = Boolean(restricted)
@@ -337,11 +332,7 @@ function TopbarDropdown({
   loading?: boolean
   onLockedClick?: () => void
 }) {
-  function isRestricted(
-    _gTitle: string,
-    _itemHref: string,
-    _itemLabel: string,
-  ) {
+  function isRestricted(_gTitle: string, _itemHref: string) {
     const publicPaths = ['/weekly-exam', '/pricing', '/']
     if (loading) return false
     if (!profile && !isAuthed) {
@@ -353,13 +344,9 @@ function TopbarDropdown({
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const anyRestricted = items.some((it) =>
-    isRestricted(label, it.href, it.label),
-  )
+  const anyRestricted = items.some((it) => isRestricted(label, it.href))
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const allRestricted = items.every((it) =>
-    isRestricted(label, it.href, it.label),
-  )
+  const allRestricted = items.every((it) => isRestricted(label, it.href))
 
   if (false) {
     return (
@@ -387,7 +374,7 @@ function TopbarDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((it) => {
-          const itemRestricted = isRestricted(label, it.href, it.label)
+          const itemRestricted = isRestricted(label, it.href)
           if (itemRestricted) {
             return (
               <DropdownMenuItem key={it.href}>
