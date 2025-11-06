@@ -12,12 +12,11 @@ export async function PUT(req: Request, ctx: { params: { id: string } }) {
       active: body?.active,
       expiresAt: body?.expiresAt,
     })
-    if (!updated) {
+    if (!updated)
       return NextResponse.json(
         { ok: false, error: 'Not found' },
         { status: 404 },
       )
-    }
     return NextResponse.json({ ok: true, code: updated })
   } catch (e: any) {
     return NextResponse.json(
