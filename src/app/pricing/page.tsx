@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Check, ExternalLink, Star } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 
-export default function PricingPage() {
+function PricingPage() {
   const features = [
     {
       emoji: '🧠',
@@ -420,5 +420,13 @@ export default function PricingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PricingPage />
+    </Suspense>
   )
 }

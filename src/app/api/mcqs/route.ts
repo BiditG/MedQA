@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { fetchNeetPgMcqs } from '@/utils/supabase-data'
 
+export const dynamic = 'force-dynamic'
+
 async function getSubjectsFromSupabase() {
   try {
     const { createClient } = await import('@supabase/supabase-js')
