@@ -1,13 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AppTopbar } from './AppTopbar'
 import { AppSidebar } from './AppSidebar'
 import SubscriptionModal from '@/components/SubscriptionModal'
+import useUser from '@/hooks/useUser'
+import { usePathname } from 'next/navigation'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   const [subOpen, setSubOpen] = useState(false)
+  const { user, loading } = useUser()
+  const pathname = usePathname()
+  const openedRef = useRef(false)
+
+  // Auto-open subscription modal for unauthenticated visitors on the landing page
+  useEffect(() => {
+    if (openedRef.current) return
+    if (pathname !== '/') return
+    if (loading) return
+    if (!user) {
+      setSubOpen(true)
+      openedRef.current = true
+    }
+  }, [pathname, loading, user])
   return (
     <>
       <AppTopbar onMenu={() => setOpen(true)} />

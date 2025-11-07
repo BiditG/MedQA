@@ -1,51 +1,62 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Check, ExternalLink, Star } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 export default function PricingPage() {
   const features = [
     {
       emoji: '🧠',
-      title: 'Full MCQ Library',
-      desc: 'Practice thousands of multiple-choice questions across subjects.',
+      title: 'AI Tutor',
+      desc: 'Stepwise clinical reasoning, evidence-backed answers, adaptive follow-ups.',
+    },
+    {
+      emoji: '📄',
+      title: 'PDF → MCQ Generator',
+      desc: 'Convert notes, lectures and PDFs into exam-style practice questions.',
     },
     {
       emoji: '🫀',
       title: '3D Organ Models',
-      desc: 'Ultra-realistic 3D anatomy models; rotate, zoom, and go fullscreen.',
+      desc: 'High-quality 3D anatomy: rotate, zoom, annotate and compare organs.',
     },
     {
       emoji: '🔍',
-      title: 'Compare Organs',
-      desc: 'View up to 9 organs simultaneously to understand relationships.',
+      title: 'Clinical Checks & Diagnosis',
+      desc: 'Heart, stroke, pneumonia and MRI checks powered by AI-assisted tools.',
     },
     {
-      emoji: '🎯',
-      title: 'Entrance Prep Modules',
-      desc: 'Nepali-specific medical entrance preparation content.',
+      emoji: '📚',
+      title: 'Full Question Bank',
+      desc: 'Curated MCQs and premium exam packages (CEE, AIIMS, NEET PG, and more).',
     },
     {
-      emoji: '🤖',
-      title: 'AI-Powered Tools',
-      desc: 'Smart study recommendations, generate MCQs from PDFs, pathogenesis flowcharts.',
+      emoji: '⚡',
+      title: 'Priority Processing',
+      desc: 'Faster processing, higher upload limits, and priority queueing for heavy tasks.',
+    },
+    {
+      emoji: '�',
+      title: 'Drug & Device Lookup',
+      desc: 'Quick access to medicine details and device references.',
     },
     {
       emoji: '📈',
-      title: 'Study Progress Tracker',
-      desc: 'Track your performance and focus on weak areas.',
+      title: 'Study Progress & Analytics',
+      desc: 'Track strengths, weaknesses and personalized study recommendations.',
     },
     {
-      emoji: '✨',
-      title: 'Interactive Learning',
-      desc: 'Engaging visuals and AI-assisted explanations make learning faster.',
+      emoji: '🤝',
+      title: 'Priority Support',
+      desc: 'Faster responses and dedicated support for premium users.',
     },
     {
       emoji: '📱',
       title: 'Cross-Platform Access',
-      desc: 'Access from web, tablet, or mobile.',
+      desc: 'Use MEDQAS on web, tablet, and mobile with synced progress.',
     },
   ]
 
@@ -56,6 +67,14 @@ export default function PricingPage() {
   ]
   const [selected, setSelected] = useState(plans[0])
   const fmt = (n: number) => `रु ${n.toLocaleString('en-IN')}`
+
+  const search = useSearchParams()
+  useEffect(() => {
+    const s = search?.get('selected')
+    if (!s) return
+    const found = plans.find((p) => p.id === s)
+    if (found) setSelected(found)
+  }, [search])
 
   return (
     <div className="fixed inset-0 z-[60] flex items-start justify-center px-4 py-6 sm:items-center">
@@ -318,11 +337,11 @@ export default function PricingPage() {
             {/* QR Code */}
             <div className="mb-6">
               <p className="mb-3 text-sm text-muted-foreground">
-                Scan this QR code to pay via UPI:
+                Scan this QR code to pay via Esewa:
               </p>
               <div className="flex justify-center rounded-lg border bg-white p-4">
                 <Image
-                  src="/payment-qr.png"
+                  src="/data/QR.jpg"
                   alt="Payment QR Code"
                   width={200}
                   height={200}
@@ -330,7 +349,7 @@ export default function PricingPage() {
                 />
               </div>
               <p className="mt-2 text-center font-mono text-sm">
-                UPI ID: your-upi@okaxis
+                Esewa ID: 9803526374
               </p>
             </div>
 
@@ -351,7 +370,7 @@ export default function PricingPage() {
                   1
                 </span>
                 <p className="text-sm">
-                  Scan the QR code or use the UPI ID above
+                  Scan the QR code or use the Esewa ID above
                 </p>
               </div>
               <div className="flex gap-3">
@@ -391,7 +410,11 @@ export default function PricingPage() {
           {/* Footer */}
           <div className="mt-8 text-center text-sm text-muted-foreground">
             <p>
-              ✓ Secure payment • ✓ Cancel anytime • ✓ 7-day money-back guarantee
+              Questions or issues? Contact us at{' '}
+              <a href="mailto:medqas.np@gmail.com" className="underline">
+                medqas.np@gmail.com
+              </a>{' '}
+              — we typically respond within 24 hours.
             </p>
           </div>
         </div>

@@ -100,7 +100,10 @@ export default function SubscriptionModal({
           </button>
 
           <p className="text-center text-xs text-muted-foreground">
-            Cancel anytime • 7-day money-back guarantee
+            Questions or problems? Email{' '}
+            <a href="mailto:medqas.np@gmail.com" className="underline">
+              medqas.np@gmail.com
+            </a>
           </p>
         </div>
       </div>
