@@ -11,8 +11,10 @@ import {
   Image as ImageIcon,
   Stethoscope,
   Pill,
+  Coffee,
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect } from 'react'
 import { cn } from '@/utils/tailwind'
 import { Lock } from 'lucide-react'
@@ -42,6 +44,8 @@ export function AppSidebar({
         { href: '/quiz', label: 'AIIMS/NEET PG MCQs', icon: Brain },
         { href: '/cee-practice', label: 'CEE Practice', icon: Brain },
         { href: '/cee-exam', label: 'CEE Full Exam', icon: Brain },
+        { href: '/cee-past-practice', label: 'Past Questions', icon: Brain },
+        { href: '/pomodoro', label: 'Pomodoro', icon: Coffee },
       ],
     },
     {
@@ -109,7 +113,13 @@ export function AppSidebar({
       {/* Desktop sidebar */}
       <aside className="hidden md:fixed md:inset-y-0 md:z-30 md:flex md:w-64 md:flex-col md:border-r md:bg-muted/30 md:backdrop-blur-sm">
         <div className="flex h-16 items-center gap-2 border-b px-4">
-          <div className="h-8 w-8 rounded-md bg-primary/20" aria-hidden />
+          <Image
+            src="/data/logo.jpg"
+            alt="MEDQAS"
+            width={32}
+            height={32}
+            className="rounded-md object-cover"
+          />
           <Link href="/" className="text-sm font-semibold">
             MEDQAS
           </Link>
@@ -206,7 +216,13 @@ export function AppSidebar({
           }}
         >
           <div className="flex h-16 items-center gap-2 border-b px-4">
-            <div className="h-8 w-8 rounded-md bg-primary/20" aria-hidden />
+            <Image
+              src="/data/logo.jpg"
+              alt="MEDQAS"
+              width={32}
+              height={32}
+              className="rounded-md object-cover"
+            />
             <Link href="/" className="text-sm font-semibold" onClick={onClose}>
               MEDQAS
             </Link>

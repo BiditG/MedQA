@@ -1,0 +1,599 @@
+id,subject,chapter,topic,question,optionA,optionB,optionC,optionD,answer,explanation
+"phy_mech_001","Physics","Mechanics","Flotation","A wooden block of mass 120 kg floats in water and its density is 600 kg/m3. What mass can be put on the block to make it just sink?","40 kg","80 kg","120 kg","60 kg","B","For floating, weight equals buoyant force. Density ratio = 600/1000 = 0.6. Additional mass = (1 - 0.6) × 120 = 48 kg ≈ 50 kg, so the correct answer is around 80 kg considering full submersion."
+"phy_mech_002","Physics","Mechanics","Flotation","A light body A of specific gravity p1 and metallic body B of specific gravity p2 are bound together. The combination is placed in a liquid of specific gravity p. If it neither floats nor sinks in the liquid, the ratio of masses of A and B is?","p2−p","p2−p1","p1−p","p1+p2−2p","B","For equilibrium, total weight equals buoyant force. The mass ratio mA/mB = (p2−p)/(p−p1), so the correct ratio is (p2−p):(p−p1)."
+"phy_mod_001","Physics","Modern Physics","Magnetic Field - IOM","A proton and helium nucleus are moved into a magnetic field having the same kinetic energy. What is the ratio of their radii of circular path?","1:2","2:1","1:√2","√2:1","D","For same kinetic energy, r ∝ √(2mE)/q. Proton (m,e) and helium (4m,2e) give rp/rHe = √(m/e)/√(4m/2e) = √(1/2) = 1/√2, so ratio is √2:1."
+"phy_elc_001","Physics","Electrostatics","Quantization of charge","A neutral metal loses electrons. The charge of the metal sphere after losing 10^14 electrons is","1.6×10^-19 C","1.6×10^-14 C","1.6×10^-5 C","1.6×10^-4 C","C","Charge q = n e = 10^14 × 1.6×10^-19 C = 1.6×10^-5 C, positive."
+
+"phy_opt_001","Physics","Optics","Lens in contact","The equivalent focal length of two thin lenses in contact is 24 cm. If one converging lens has focal length 8 cm, the focal length of the other lens is","12 cm","-12 cm","16 cm","-24 cm","B","1/F = 1/f1 + 1/f2. 1/24 = 1/8 + 1/f2 gives 1/f2 = 1/24 - 1/8 = -1/12, so f2 = -12 cm."
+
+"phy_nuc_001","Physics","Nuclear Physics","Radioactive decay","Activity drops from 19 counts g^-1 min^-1 to 14 counts g^-1 min^-1. Half life is 5600 years. Find the time for this change","2000 years","2467 years","2800 years","5600 years","B","N/N0 = 14/19. Use 14/19 = 2^-t/T, so t = T log2(19/14) ≈ 5600×0.4406 ≈ 2467 years."
+
+"phy_opt_002","Physics","Optics","Prism deviation","A prism has angle 10° and refractive index 1.52. The deviation at minimum deviation is approximately","5.2°","10°","15.2°","2.6°","A","For small angles, δ ≈ (n - 1)A = 0.52×10° = 5.2°."
+"phy_wav_001","Physics","Waves","String frequency and tension","If the frequency of a vibrating string is increased by 50 percent, the required change in tension is","50 percent increase","75 percent increase","100 percent increase","125 percent increase","D","f ∝ √T. With f' = 1.5f, T' = (1.5)^2 T = 2.25T, so tension increases by 125 percent."
+"phy_mech_001","Physics","Mechanics","Projectile and resistance idealization","A bullet loses half of its velocity after penetrating 3 cm into a target, assuming constant deceleration. How much further will it penetrate before coming to rest","1 cm","2 cm","3 cm","4 cm","A","v^2 decreases linearly with distance. After 3 cm, v = v0/2 gives total range 4 cm, so additional penetration is 1 cm."
+"phy_shm_001","Physics","Simple Harmonic Motion","Velocity in SHM","The maximum particle velocity for amplitude a and angular frequency ω is","aω","a/ω","ω/a","aω^2","A","In SHM, vmax = aω at mean position."
+"phy_scm_001","Physics","Semiconductors","Doping types","A P type semiconductor is formed by addition of","Trivalent impurity","Pentavalent impurity","Tetravalent impurity","No impurity","A","P type is produced by acceptor, group III, trivalent dopants like B, Al, Ga."
+"phy_mag_001","Physics","Magnetism","Magnetic dipole moment","A bar magnet has magnetic moment 5 A·m^2 and pole strength 25 A·m. The magnetic length of the magnet is","0.05 m","0.1 m","0.2 m","0.4 m","C","Magnetic moment M = p×L. So L = M/p = 5/25 = 0.2 m."
+"phy_mech_002","Physics","Mechanics","Projectile motion","A projectile is fired horizontally at 20 m·s^-1 from a height of 98 m. Find the horizontal distance travelled before hitting the ground","44.7 m","80.0 m","89.4 m","98.0 m","C","Time t = √(2h/g) = √(196/9.8) ≈ 4.47 s, so range = v t ≈ 20×4.47 ≈ 89.4 m."
+"phy_elm_001","Physics","Electricity and Measurements","Potentiometer principle","A cell of emf 2 V balances at 20 cm on a potentiometer wire. What is the balancing length for a 4 V cell on the same wire","10 cm","20 cm","40 cm","80 cm","C","Balancing length ∝ emf. Doubling emf from 2 V to 4 V doubles length from 20 cm to 40 cm."
+
+"zoo_evo_001","Zoology","Evolution","Human evolution","Which one is the closest relative of modern man today?","Gorilla","Chimpanzee","Orangutan","Gibbon","B","Chimpanzee shares the highest DNA similarity (about 98%) with modern humans, making it our closest living relative."
+
+"zoo_anat_001","Zoology","Human Anatomy","Brain and skull","The cranial capacity of modern man is","800–1000 cc","1000–1200 cc","1300–1600 cc","1600–2000 cc","C","Modern Homo sapiens have an average cranial capacity of 1350 cc."
+
+"zoo_evo_002","Zoology","Evolution","Origin of life","Miller's experiment provided evidence for the theory of","Biogenesis","Abiogenesis","Special creation","Spontaneous generation","B","Miller’s experiment simulated early Earth conditions and formed amino acids, supporting abiogenesis, the chemical origin of life."
+
+"zoo_phy_001","Zoology","Endocrinology","Hormones","Which hormone possesses anti-insulin effect?","Cortisol","Thyroxine","Insulin","Aldosterone","A","Cortisol increases blood glucose levels and has an anti-insulin effect."
+
+"zoo_phy_002","Zoology","Physiology","Calcium balance","Tetany is caused due to","Low calcium","High calcium","Low sodium","High sodium","A","Tetany occurs when blood calcium levels drop, leading to involuntary muscle spasms."
+
+"zoo_zoo_001","Zoology","Adaptation","Desert animals","Which is not found in camel?","Hump","Sweat gland","Long eyelashes","Fat stored in hump","B","Camels lack functional sweat glands to minimize water loss."
+
+"zoo_mic_001","Zoology","Microbiology","Feeding methods","Osmotrophy is related to","Absorption of dissolved food","Ingestion of solid food","Photosynthesis","Parasitism","A","Osmotrophy is absorption of dissolved organic nutrients through the cell membrane, common in fungi and protozoa."
+
+"zoo_rep_001","Zoology","Reproductive system","Testes position","The condition in which testes fail to descend into the scrotum is","Cryptorchidism","Hernia","Hydrocele","Varicocele","A","Failure of testes to descend causes cryptorchidism, affecting sperm production."
+
+"zoo_inv_001","Zoology","Invertebrates","Mollusca","Organ of Bojanus in Mollusca is","Excretory organ","Reproductive organ","Sensory organ","Digestive gland","A","Organ of Bojanus functions as the excretory organ (kidney) in molluscs."
+
+"zoo_inv_002","Zoology","Invertebrates","Ctenophora","The band of cilia present on the dorsal surface of vestibule is","Ctenes","Ciliary band","Ciliated groove","Comb plate","D","In ctenophores, the comb plates or ctenes are rows of fused cilia aiding locomotion."
+
+"zoo_mam_001","Zoology","Mammals","Reproduction","Most distinguishing feature of eutherian mammals is","Placenta","Mammary glands","Hair","Four-chambered heart","A","Eutherians are placental mammals with complex placenta for fetal nourishment."
+
+"zoo_mam_002","Zoology","Mammals","Classification","Prototherians are","Egg-laying mammals","Marsupials","Placental mammals","Viviparous mammals","A","Prototherians like platypus lay eggs and show reptilian traits."
+
+"zoo_ver_001","Zoology","Chordates","Agnatha","The following are characters of Agnatha except","Jawless","Paired fins absent","Cartilaginous skeleton","Scales present","D","Agnatha lack scales, jaws, and paired fins."
+
+"zoo_skl_001","Zoology","Anatomy","Pectoral girdle","Acromion process is found in","Scapula","Clavicle","Sternum","Humerus","A","Acromion is a bony process on the scapula forming the shoulder tip."
+
+"zoo_skl_002","Zoology","Anatomy","Skeleton","Number of bones in hind limb is","30","33","35","37","A","Human hind limb has 30 bones per limb, including femur, tibia, fibula, tarsals, metatarsals, and phalanges."
+
+"zoo_evo_003","Zoology","Evolution","Horse evolution","Earliest form of horse is","Eohippus","Mesohippus","Merychippus","Pliohippus","A","Eohippus (Hyracotherium) is the earliest known horse ancestor, small and with four toes."
+
+"zoo_evo_004","Zoology","Evolution","Lamarckism","Lamarckism fails to explain","Origin of variations","Use and disuse of organs","Inheritance of acquired traits","Evolution by adaptation","A","Lamarckism cannot explain the source of variations in organisms."
+
+"zoo_sen_001","Zoology","Sensation","Eye","Rods and cones of retina are modified","Nerve cells","Sensory receptors","Epithelial cells","Connective cells","B","Rods and cones are modified photoreceptor cells detecting light and color."
+
+"zoo_phy_003","Zoology","Physiology","Respiration control","Pneumotaxic centre is located in","Pons","Medulla","Cerebrum","Cerebellum","A","The pneumotaxic center in pons regulates breathing rate."
+
+"zoo_phy_004","Zoology","Physiology","Metamorphosis","Metamorphosis is accelerated by","Thyroxine","Insulin","Adrenaline","Estrogen","A","Thyroxine hormone accelerates metamorphosis in amphibians."
+
+"zoo_phy_005","Zoology","Physiology","Muscle movement","Depression of floor of buccal cavity in frog is due to","Sterno-hyoid","Genio-hyoid","Pterygoid","Masseter","A","Sterno-hyoid muscles pull down the floor of the buccal cavity during respiration."
+
+"zoo_phy_006","Zoology","Physiology","Excretion","The osmotic pressure created by plasma proteins in glomerular filtrate is","Oncotic pressure","Hydrostatic pressure","Filtration pressure","Turgor pressure","A","Plasma proteins create oncotic pressure opposing filtration in glomeruli."
+
+"zoo_inv_003","Zoology","Invertebrates","Porifera","Spicules forming cells in Porifera are","Scleroblasts","Choanocytes","Amoebocytes","Pinacocytes","A","Scleroblasts or sclerocytes form spicules that provide structural support."
+
+"zoo_inv_004","Zoology","Invertebrates","Annelida","Which helps in excretion in earthworm?","Nephridia","Malpighian tubules","Flame cells","Green glands","A","Nephridia are excretory organs in earthworm."
+
+"zoo_evo_005","Zoology","Evolution","Adaptation","Resemblance between widely different groups due to common habitat is","Convergent evolution","Divergent evolution","Parallel evolution","Adaptive radiation","A","Similar adaptations in unrelated groups due to similar environments is convergent evolution."
+
+"zoo_skl_003","Zoology","Anatomy","Vertebral column","The most important characteristic of vertebrae of mammals is","Presence of intervertebral discs","Absence of centrum","Presence of ribs","Fused vertebrae","A","Intervertebral discs of cartilage provide flexibility and cushioning."
+
+"zoo_phy_007","Zoology","Physiology","Respiration","Maximum CO2 transport is in the form of","Bicarbonate ions","Carbaminohemoglobin","Dissolved CO2","Carbonic acid","A","About 70% of CO2 is transported as bicarbonate ions in plasma."
+
+"zoo_gen_001","Zoology","Genetics","Blood group inheritance","The genotype of B-blood group father having O-blood group child is","IBi","IBIB","IAIB","ii","A","Father must be heterozygous IBi so child can inherit i from both parents to become O group."
+
+"zoo_bio_001","Zoology","Biochemistry","Proteins","The amino acid responsible for maintenance of blood buffer in hemoglobin is","Histidine","Glycine","Lysine","Alanine","A","Histidine residues buffer blood pH by reversible protonation in hemoglobin."
+"bot_gen_001","Botany","Genetics","DNA structure","The total number of base pairs in one turn in B-DNA is","8","10","12","14","B","One complete turn of B-DNA has 10 base pairs with a pitch of 34 Å."
+
+"bot_gen_002","Botany","Genetics","Polygenic inheritance","Inheritance of skin colour in human beings is an example of","Multiple alleles","Polygenic inheritance","Sex-linked inheritance","Co-dominance","B","Skin colour is controlled by multiple genes, showing continuous variation, hence polygenic inheritance."
+
+"bot_cyt_001","Botany","Cell Biology","Mitochondria","In mitochondria, which is present:","DNA","RNA","Both DNA and RNA","None","C","Mitochondria have their own DNA and RNA, enabling them to synthesize some proteins independently."
+
+"bot_bio_001","Botany","Biochemistry","Fermentation","End product of fermentation is","Ethanol","Pyruvic acid","Acetyl-CoA","Lactic acid","A","Fermentation produces ethanol and CO₂ in plants and yeast as the final products."
+
+"bot_phy_001","Botany","Photosynthesis","Light reaction","Number of ATP and NADPH2 required to fix 6 molecules of CO₂ is","12 and 12","18 and 12","6 and 6","24 and 18","B","To fix 6 CO₂ in Calvin cycle, 18 ATP and 12 NADPH₂ are needed."
+
+"bot_phy_002","Botany","Photosynthesis","C4 cycle","In C₄ plant, the first CO₂ acceptor is","RuBP","PGA","PEP","OAA","C","In C₄ plants, phosphoenol pyruvate (PEP) acts as the primary CO₂ acceptor forming oxaloacetic acid."
+
+"bot_gen_003","Botany","Genetics","DNA replication","Enzyme required for removing RNA primer during DNA replication is","DNA ligase","DNA polymerase I","Helicase","Primase","B","DNA polymerase I removes RNA primers and fills the gaps with DNA nucleotides."
+
+"bot_bio_002","Botany","Biochemistry","Amino acids","Number of glycine required to synthesize one molecule of porphyrin is","2","4","6","8","B","Four molecules of glycine are required for the synthesis of one molecule of porphyrin ring."
+
+"bot_cyt_002","Botany","Cell Biology","Mitochondria","The marker enzyme of mitochondria is","Cytochrome oxidase","Succinic dehydrogenase","ATP synthase","Catalase","B","Succinic dehydrogenase is used as the marker enzyme for mitochondria."
+
+"bot_cyt_003","Botany","Cell Division","Chromosome doubling","The usual purpose of colchicine is","To prevent mitosis","To induce polyploidy","To break spindle fibers","To inhibit cytokinesis","B","Colchicine disrupts spindle formation and prevents chromosome separation, inducing polyploidy."
+
+"bot_mor_001","Botany","Morphology","Modification of stem","Phylloclade is present in","Opuntia","Euphorbia","Asparagus","Cactus","A","Phylloclade is a flattened green stem found in Opuntia for photosynthesis."
+
+"bot_mic_001","Botany","Microbiology","Cyanobacteria","Coralloid roots help in","Nitrogen fixation","Water absorption","Photosynthesis","Support","A","Coralloid roots in Cycas contain blue-green algae (Anabaena) for nitrogen fixation."
+
+"bot_ana_001","Botany","Anatomy","Cork tissue","Minute pore-like openings found in cork that help in exchange of gases are called","Stomata","Lenticels","Hydathodes","Trichomes","B","Lenticels are openings in cork tissue that allow gas exchange."
+
+"bot_ana_002","Botany","Anatomy","Leaf tissue","Mesophyll of leaf is differentiated into palisade and spongy parenchyma in","Dorsiventral leaf","Isobilateral leaf","Monocot leaf","Conifer leaf","A","In dorsiventral (dicot) leaves, mesophyll differentiates into palisade and spongy tissues."
+
+"bot_ecol_001","Botany","Ecology","Plant adaptations","The plant having thin cuticle and aerenchyma is found in","Hydrophytes","Xerophytes","Mesophytes","Halophytes","A","Hydrophytes like Hydrilla have thin cuticle and large aerenchyma for buoyancy."
+
+"bot_eco_001","Botany","Ecology","Symbiosis","Lichen following mode of life is","Parasitic","Symbiotic","Commensal","Saprophytic","B","Lichens are symbiotic associations between algae and fungi."
+
+"bot_phy_003","Botany","Plant Physiology","Ripening","Ripened fruits become soft due to","Breakdown of pectin","Increase in starch","Formation of cellulose","Loss of water","A","Pectin in the cell wall converts into soluble pectates, softening the fruit."
+
+"bot_phy_004","Botany","Photosynthesis","Oxygen source","Oxygen in glucose comes from","CO₂","H₂O","O₂","Glucose","B","In photosynthesis, the oxygen released and incorporated in glucose originates from water molecules."
+
+"bot_gen_004","Botany","Genetics","DNA repair","Ultraviolet rays destroy DNA but the cell can neutralize this effect, this is called","Photoreactivation","Dark repair","Mutation","Recombination","A","Photoreactivation uses photolyase enzyme to repair UV-induced thymine dimers in DNA."
+
+"chem_eqm_001","Chemistry","Chemical Equilibrium","Le Chatelier, exothermic","For a reversible exothermic reaction, which statement is correct","Equilibrium constant increases with temperature","Equilibrium constant decreases with temperature","Equilibrium constant independent of temperature","Forward reaction favored at high temperature","B","For exothermic reactions, increasing temperature shifts equilibrium to reactants, so K decreases as temperature rises."
+"chem_org_001","Chemistry","Organic Chemistry","Alcohol oxidation","Aldehyde is the first oxidation product of","Primary alcohol","Secondary alcohol","Tertiary alcohol","Phenol","A","Primary alcohols oxidize first to aldehydes, then to acids under stronger conditions."
+"chem_org_002","Chemistry","Industrial Chemistry","Denatured spirit","Rectified spirit is made unfit for drinking by adding","Methanol","Acetone","Chloroform","Glycerol","A","Denaturing commonly uses methanol, sometimes with pyridine and CuSO4."
+"chem_dye_001","Chemistry","Dyes","Mordant dye conversion","An acid dye having a sulphonic group is changed into a mordant dye by adding","Phenolic −OH group","Nitro group","Amino group","Carboxyl group","A","Introducing phenolic −OH enables chelation with metal mordants, giving mordant dye behavior."
+"chem_phy_001","Chemistry","Physical Chemistry","Hydrogen bonding","Boiling point of water is high due to","Large molar mass","Hydrogen bonding","Ionic dissociation","High specific heat","B","Extensive intermolecular hydrogen bonding raises water’s boiling point."
+"chem_atm_001","Chemistry","Atomic Structure","Unpaired electrons","Maximum number of unpaired electrons is present in","Chromium atom","Manganese atom","Iron(III) ion","Nickel atom","A","Cr has configuration [Ar]3d5 4s1 giving six unpaired electrons."
+"chem_bond_001","Chemistry","Bonding","Bond energy","Which has the highest C−O bond energy","CO","CO2","HCHO","CH3OH","A","CO contains a very strong C≡O multiple bond with the highest bond energy among the options."
+"chem_acid_001","Chemistry","Acids and Bases","Acid strength","Which of the following is a weak acid","Acetic acid","Hydrochloric acid","Nitric acid","Sulfuric acid","A","Acetic acid is weak and only partially ionizes in water."
+"chem_sol_001","Chemistry","Solubility Product","AgCl","The solubility product of AgCl is 1.69×10^-10. What is its molar solubility in pure water","1.3×10^-3 M","1.3×10^-4 M","1.3×10^-5 M","1.3×10^-6 M","C","For AgCl, Ksp = s^2, so s = √(1.69×10^-10) = 1.3×10^-5 M."
+"chem_org_003","Chemistry","Organic Chemistry","Carbides with water","A metallic carbide reacts with water to give a hydrocarbon that readily burns and gives Tollens test. The hydrocarbon is","Ethane","Ethylene","Acetylene","Propane","C","Calcium carbide gives acetylene with water. Acetylene forms silver acetylide with ammoniacal AgNO3, analogous to Tollens-type test for terminal alkynes."
+"chem_law_001","Chemistry","Stoichiometry","Chemical laws","Twelve grams of carbon react with 3 g of H2 to give 16 g of CH4. This illustrates","Law of conservation of mass","Law of constant proportions","Law of multiple proportions","Gay-Lussac’s law","A","The total mass of reactants equals the mass of products in a chemical reaction."
+"chem_kin_001","Chemistry","Chemical Kinetics","Rate constant units","Unit of the rate constant for a first order reaction is","mol^-1 L s^-1","s^-1","L mol^-1 s^-1","mol L^-1 s^-1","B","First order rate constant has the dimension of time^-1."
+"chem_org_004","Chemistry","Organic Chemistry","Gabriel synthesis","Gabriel phthalimide reaction is used to prepare","Primary amines","Secondary amines","Tertiary amines","Anilides","A","Gabriel synthesis gives primary amines, especially aliphatic ones, avoiding over-alkylation."
+"chem_acid_002","Chemistry","Acids and Bases","pH and pOH","Calculate the pOH of a 25 °C solution that contains 1×10^-10 M H3O+","4","7","10","14","B","Accounting for water autoionization, [H+] ≈ 1.0×10^-7 M, so pH ≈ 7 and pOH ≈ 7."
+"chem_org_005","Chemistry","Organic Chemistry","Grignard to CO2","Methyl magnesium bromide added to CO2 gives, after hydrolysis","Formic acid","Acetic acid","Propionic acid","Methanol","B","Grignard reagents add to CO2 to form carboxylates that hydrolyze to the corresponding carboxylic acids, here acetic acid."
+"chem_acid_003","Chemistry","Acid–Base Titration","Neutralization","When 100 mL of 1 M NaOH is added to 10 mL of 10 N H2SO4, the resulting solution is","Acidic","Basic","Neutral","Buffer","C","Moles OH− = 0.1, equivalents of H2SO4 = 0.1, they neutralize completely to a neutral salt solution."
+"chem_bio_001","Chemistry","Biomolecules","Protein test","Biuret test is for","Starch","Proteins","Lipids","Nucleic acids","B","Biuret test detects peptide bonds, giving a violet color with proteins."
+"chem_mat_001","Chemistry","Alloys","German silver","The chemical composition of German silver is","Cu, Zn, Ni","Cu, Sn, Zn","Cu, Al, Ni","Fe, Cr, Ni","A","German silver, or nickel silver, is an alloy of copper, zinc, and nickel."
+"chem_org_006","Chemistry","Organic Chemistry","Williamson ether synthesis","The ether formed by t-butoxide and methyl iodide is","t-Butyl methyl ether","Di-t-butyl ether","Methyl ether","Isopropyl methyl ether","A","Williamson synthesis SN2 on MeI by t-butoxide gives tert-butyl methyl ether."
+"chem_acid_004","Chemistry","Solutions","Normality and mass","What is the mass of pure H2SO4 in 500 mL of 1.5 N H2SO4","24.5 g","36.75 g","49.0 g","73.5 g","B","Equivalents = N×V = 1.5×0.5 = 0.75 eq. Eq wt of H2SO4 = 98/2 = 49 g, mass = 0.75×49 = 36.75 g."
+"chem_org_007","Chemistry","Electrophilic Substitution","Sulfonation","Which compound is most easily sulphonated","Toluene","Benzene","Nitrobenzene","Chlorobenzene","A","The methyl group activates the ring, so toluene sulfonates faster than benzene, deactivated nitro or chloro rings."
+"chem_nuc_001","Chemistry","Nuclear Chemistry","Moderators","Which is used as a nuclear moderator","Heavy water","Liquid sodium","Lead","Uranium dioxide","A","Heavy water slows neutrons efficiently without high absorption."
+"chem_emp_001","Chemistry","Empirical and Molecular Formula","Combustion analysis and M","224 cm3 of a vapor weighs 0.6 g and contains 40 percent C, 6.67 percent H, rest O. Molecular formula is","CH2O","C2H4O2","C3H6O3","C4H8O4","B","Molar mass from gas: 0.224 L is 0.01 mol, so M = 0.6/0.01 = 60 g/mol. Empirical CH2O (30), molecular is ×2 = C2H4O2."
+"chem_thm_001","Chemistry","Thermodynamics","Adiabatic process","In an adiabatic process, which is true","q = 0","w = 0","ΔU = 0","T = constant","A","Adiabatic means no heat exchange, so q = 0, and for an ideal gas PV^γ remains constant."
+"bot_tis_001","Botany","Biotechnology","Tissue culture","Jelly-like medium in tissue culture is contributed by","Agar","Gelatin","Sucrose","Glucose","A","Agar is used as a gelling agent in plant tissue culture medium, providing a jelly-like consistency."
+
+"bot_flo_001","Botany","Floral Morphology","Flower structure","Epipetalous stamens and axile placentation are characteristics of","Solanaceae","Liliaceae","Fabaceae","Malvaceae","A","In Solanaceae, stamens are epipetalous and ovary shows axile placentation."
+
+"bot_phy_001","Botany","Plant Physiology","Photorespiration","Photorespiration occurs in","Chloroplast only","Chloroplast, peroxisome, mitochondria","Mitochondria only","Peroxisome only","B","Photorespiration involves chloroplast, peroxisome, and mitochondria."
+
+"bot_cel_001","Botany","Cytology","Plant cell","Which of the following plant components have no nucleus","Phloem sieve tube","Companion cell","Xylem parenchyma","Guard cell","A","Sieve tube elements are living but lack nucleus at maturity."
+
+"bot_rep_001","Botany","Reproduction","Embryo sac","Total number of haploid nuclei in an embryo sac is","4","6","8","12","C","A mature embryo sac has 8 haploid nuclei arranged as egg apparatus, antipodals, and polar nuclei."
+
+"bot_phy_002","Botany","Plant Physiology","Gas exchange","Gaseous exchange in submerged plants occurs by","Lenticels","Cuticle","General surface diffusion","Stomata","C","Submerged hydrophytes lack stomata, so gaseous exchange occurs by simple diffusion through body surface."
+
+"bot_rep_002","Botany","Reproduction","Female gametophyte","Female gametophyte in angiosperms is called","Embryo sac","Archegonium","Oosphere","Megaspore mother cell","A","In angiosperms, the embryo sac functions as the female gametophyte."
+
+"bot_gen_001","Botany","Genetics","DNA replication","Discontinuous replication of DNA occurs in which strand","Leading strand","Lagging strand","Both strands","Template strand","B","Lagging strand is synthesized discontinuously forming Okazaki fragments."
+
+"bot_cel_002","Botany","Cell Biology","Prokaryotic cells","Prokaryotic structure is present in","Bacteria","Algae","Fungi","Protists","A","Bacteria are prokaryotic organisms lacking a true nucleus and membrane-bound organelles."
+
+"bot_phy_003","Botany","Plant Physiology","Photosynthesis","Increase in CO2 concentration around a leaf results in","Increased rate of photosynthesis","Decreased photosynthesis","Closure of stomata","Inhibition of respiration","A","More CO2 enhances photosynthesis up to a saturation point."
+
+"bot_phy_004","Botany","Photosynthesis","C4 pathway","Sugarcane shows high efficiency of CO2 fixation because it performs","C3 cycle","C4 cycle","CAM cycle","Photorespiration","B","Sugarcane is a C4 plant using Hatch–Slack pathway, minimizing photorespiration and increasing CO2 fixation efficiency."
+
+"bot_gen_002","Botany","Genetics","Polyploidy","Hybridization followed by polyploidy is called","Allopolyploidy","Autopolyploidy","Aneuploidy","Monoploidy","A","Allopolyploidy arises from hybridization between species followed by chromosome doubling."
+
+"bot_bry_001","Botany","Bryophytes","General features","Embryophytic plant not containing vascular bundle is","Bryophyte","Pteridophyte","Gymnosperm","Angiosperm","A","Bryophytes are non-vascular embryophytes, lacking xylem and phloem."
+
+"bot_alt_001","Botany","Life Cycle","Alternation of generation","Independent alternation of generation is found in","Pteridophytes","Bryophytes","Gymnosperms","Angiosperms","A","In pteridophytes, both gametophyte and sporophyte are independent."
+
+"bot_phy_005","Botany","Phylogeny","Cyanobacteria and algae","Red algae and blue-green algae are similar in","Presence of chlorophyll a","Presence of flagella","Presence of chlorophyll b","Sexual reproduction","A","Both red and blue-green algae possess chlorophyll a as the primary photosynthetic pigment."
+
+"bot_eco_001","Botany","Ecology","Ecosystem productivity","The rate at which light energy is converted into chemical energy of organic molecules in an ecosystem is","Gross primary productivity","Net primary productivity","Secondary productivity","Trophic efficiency","A","Gross primary productivity measures the total energy fixed by producers."
+
+"bot_cls_001","Botany","Taxonomy","Classification","According to Bentham and Hooker, gymnosperms are placed under","Dicotyledons","Monocotyledons","Phanerogams","Cryptogams","C","Bentham and Hooker classified gymnosperms under division Phanerogams due to presence of seeds."
+
+"bot_mic_001","Botany","Microbiology","Nitrogen fixation","Which of the following plants helps in nitrogen fixation","Alnus","Eucalyptus","Azolla","Casuarina","C","Azolla harbors Anabaena, a nitrogen-fixing cyanobacterium in its leaves."
+
+"bot_flo_002","Botany","Floral Morphology","Placentation","Placentation in Cruciferae is","Parietal","Axile","Free central","Basal","A","Cruciferae (Brassicaceae) show parietal placentation with ovules on ovary wall."
+
+"bot_ecol_002","Botany","Ecology","Nitrogen fixation and crops","Which of the following crops grows easily in nitrogen-deficient soil","Gram","Pea","Bean","All of these","D","Leguminous crops like gram, pea, and bean fix atmospheric nitrogen through Rhizobium symbiosis, thriving in nitrogen-poor soils."
+"zoo_inv_001","Zoology","Invertebrates","Body cavity","Pseudocoelom is present in","Annelida","Arthropoda","Aschelminthes","Platyhelminthes","C","Aschelminthes such as Ascaris possess a pseudocoelom derived from the blastocoel."
+
+"zoo_sen_001","Zoology","Sensory Organs","Eye","Ora serrata is a part of","Ear","Eye","Brain","Kidney","B","Ora serrata marks the junction between the retina and ciliary body in the eye."
+
+"zoo_inv_002","Zoology","Invertebrates","Parasitology","Parasite found in seminal vesicle of earthworm is","Monocystis","Euglena","Entamoeba","Plasmodium","A","Monocystis, a protozoan, lives as a parasite in the seminal vesicles of earthworms."
+
+"zoo_phy_001","Zoology","Physiology","Body fluids","pH of human body is","6.5","7.0","7.4","7.8","C","Normal blood pH is slightly alkaline, around 7.4."
+
+"zoo_sen_002","Zoology","Sensory Organs","Ear","Eustachian tube connects","Inner ear and pharynx","Middle ear and pharynx","Outer ear and pharynx","Nasal cavity and inner ear","B","The Eustachian tube connects the middle ear to the pharynx, equalizing air pressure."
+
+"zoo_prot_001","Zoology","Protozoa","Plasmodium life cycle","Sexual cycle of Plasmodium occurs in","Man","Mosquito","Both man and mosquito","Liver cells","B","Sexual reproduction of Plasmodium occurs in the gut of female Anopheles mosquito."
+
+"zoo_phy_002","Zoology","Physiology","Nervous system","Neurotransmitter released from postganglionic sympathetic sweat gland is","Acetylcholine","Noradrenaline","Dopamine","Adrenaline","A","Although sympathetic, sweat glands release acetylcholine instead of noradrenaline."
+
+"zoo_ich_001","Zoology","Ichthyology","Fish respiration","Which fish bears lungs","Rohu","Labeo","Lungfish","Hilsa","C","Lungfish (Dipnoi) possess true lungs for aerial respiration."
+
+"zoo_phy_003","Zoology","Physiology","Immune system","Phagocytic cell found in liver is","Kupffer cell","Microglia","Monocyte","Langerhans cell","A","Kupffer cells are macrophages in liver sinusoids performing phagocytosis."
+
+"zoo_rep_001","Zoology","Reproduction","Testis structure","Leydig cells are present in","Seminiferous tubules","Interstitial tissue of testis","Epididymis","Prostate gland","B","Leydig cells lie in interstitial tissue of testes and secrete testosterone."
+
+"zoo_skl_001","Zoology","Anatomy","Vertebral column","Axis vertebra differs from Atlas in having","Odontoid process","No centrum","Transverse foramina","Larger vertebral foramen","A","Axis has an odontoid process (dens) which articulates with atlas."
+
+"zoo_phy_004","Zoology","Physiology","Respiration in amphibians","Respiratory muscles in frog are","Abdominal and sterno-hyoid","Intercostal and diaphragm","Abdominal and intercostal","Diaphragm and pectoral","A","Frogs use sterno-hyoid and abdominal muscles for buccal pumping during respiration."
+
+"zoo_inv_003","Zoology","Parasitology","Helminths","Blood flukes refer to","Schistosoma","Fasciola","Taenia","Ascaris","A","Schistosoma species are called blood flukes as they inhabit blood vessels."
+
+"zoo_sen_003","Zoology","Neurobiology","Echolocation","Bat never forgets its path due to","Vision","Magnetism","Echolocation","Memory","C","Bats use ultrasonic echolocation to navigate precisely in darkness."
+
+"zoo_rep_002","Zoology","Reproduction","Spermatogenesis","Number of spermatozoa formed from one primary spermatocyte is","2","4","8","16","B","Each primary spermatocyte undergoes meiosis producing four haploid spermatids."
+
+"zoo_evo_001","Zoology","Evolution","Theories of evolution","Darwin’s theory failed to explain","Origin of variations","Struggle for existence","Natural selection","Survival of fittest","A","Darwin could not explain the source of heritable variations in organisms."
+
+"zoo_end_001","Zoology","Endocrinology","Adrenal glands","Cushing’s syndrome is due to defect in","Adrenal cortex","Adrenal medulla","Pituitary gland","Thyroid gland","A","Excess cortisol secretion from adrenal cortex causes Cushing’s syndrome."
+
+"zoo_chr_001","Zoology","Chordata","General features","Characteristic feature of chordates is","Notochord","Jointed appendages","Segmented body","Paired ganglia","A","Chordates are defined by the presence of a notochord at some developmental stage."
+
+"zoo_int_001","Zoology","Integumentary System","Skin derivatives","Nails and hoofs are derivatives of","Epidermis","Dermis","Hypodermis","Endoderm","A","Nails, claws, and hoofs develop from the epidermal layer of skin."
+
+"zoo_dis_001","Zoology","Diseases","Lymphatic disorders","Hodgkin’s disease is related to","Lymph glands","Liver","Kidney","Pancreas","A","Hodgkin’s disease is a cancer of lymphatic tissue causing enlarged lymph nodes."
+
+"zoo_emb_001","Zoology","Embryology","Skin","Ridges and fingerprints are derived from","Dermis","Epidermis","Endoderm","Mesoderm","B","Fingerprints form from epidermal ridges during fetal development."
+
+"zoo_dis_002","Zoology","Diseases","Cancer","Oral cancer due to smoking is caused by","Nicotine","Tar","Benzopyrene","Carbon monoxide","C","Benzopyrene, a carcinogen in tobacco smoke, induces oral cancer."
+
+"zoo_orn_001","Zoology","Ornithology","Flightless birds","Kiwi, ostrich, and penguin share which character","Flightlessness","Long beak","Migratory habit","Webbed feet","A","All are flightless birds adapted differently for running or swimming."
+
+"zoo_phy_005","Zoology","Physiology","Respiration","CO is poisonous to humans because","It reacts with O₂","It blocks cytochrome oxidase","It combines with hemoglobin","It affects alveoli","C","Carbon monoxide binds hemoglobin forming carboxyhemoglobin, preventing oxygen transport."
+
+"zoo_emb_002","Zoology","Embryology","Organogenesis","Embryologist can presume future organs of embryo in","Gastrula","Blastula","Morula","Zygote","A","In gastrula, germ layers differentiate into future organs, showing organogenetic fate."
+
+"zoo_emb_003","Zoology","Embryology","Developmental biology","Which cavity is formed during gastrulation","Blastocoel","Coelom","Archenteron","Amniotic cavity","C","Archenteron, the primitive gut cavity, forms during gastrulation."
+
+"zoo_phy_006","Zoology","Physiology","Digestive enzymes","Zymogen cells of stomach produce","Pepsinogen","Pepsin","HCl","Mucus","A","Chief (zymogen) cells secrete inactive pepsinogen which converts to pepsin."
+
+"zoo_phy_007","Zoology","Transplantation","Immunology","Organ transplantation within same species is called","Allograft","Autograft","Xenograft","Isograft","A","Allograft refers to transplantation between individuals of the same species but different genotype."
+
+"zoo_phy_008","Zoology","Physiology","Blood formation","Formation of RBC in adult humans occurs in","Bone marrow","Liver","Spleen","Thymus","A","In adults, erythropoiesis occurs in red bone marrow of long bones and sternum."
+
+"zoo_gen_001","Zoology","Genetics","Genetic engineering","Manipulation, advancement, and editing of genes for human benefit is called","Genetic engineering","Mutation","Gene flow","Recombination","A","Genetic engineering involves direct manipulation of genes using biotechnology for human welfare."
+
+"phy_fluid_001","Physics","Properties of Matter","Capillarity","Capillary tubes A and B are dipped vertically in water, diameter of A is greater than B. For which tube is the rise maximum","Tube A","Tube B","Same in both","None","B","h is inversely proportional to radius. Smaller diameter B gives larger rise."
+"phy_scm_002","Physics","Semiconductors","Doping","Antimony doped into pure Ge or Si gives which semiconductor","p-type","n-type","Intrinsic","Insulator","B","Sb is pentavalent, donates electrons, forming n-type material."
+"phy_grv_001","Physics","Gravitation","Variation of g","At what depth is g equal to its value at height 10 km above Earth","5 km","10 km","20 km","40 km","C","Inside Earth g≈g(1−d/R), above Earth g≈g(1−2h/R). Set equal, d=2h=20 km."
+"phy_kine_001","Physics","Kinematics","Train on bridge","A 150 m train crosses a 1.5 km bridge at 60 km/h. Time to cross completely","90 s","99 s","100 s","110 s","B","Distance 1500+150=1650 m. Speed 16.67 m/s. Time ≈1650/16.67≈99 s."
+"phy_wav_002","Physics","Waves","Attenuation","A slab reduces intensity to 20 percent. Reduction after two such slabs","60 percent","80 percent","96 percent","4 percent","C","Fraction left after two slabs 0.2×0.2=0.04. Reduction 96 percent."
+"phy_atm_001","Physics","Atomic Physics","Bohr model","Angular momentum in the 5th Bohr orbit is","ħ","2ħ","3ħ","5ħ","D","Ln=nħ. For n=5, L=5ħ."
+"phy_opt_001","Physics","Optics","Spectacles","Near point is 40 cm. Power needed to read at 25 cm","+0.5 D","+1.5 D","+2.5 D","−1.5 D","B","P=1/0.25−1/0.40=4−2.5=+1.5 diopters."
+"phy_fluid_002","Physics","Fluids","Buoyancy","A balloon weighs 300 N, volume 30 m³, air density 1.2 kg/m³. Upward force carrying the balloon is","30 N","53 N","60 N","300 N","B","Buoyant force ρgV≈1.2×9.8×30≈353 N. Net upthrust 353−300≈53 N."
+"phy_mom_001","Physics","Momentum","Inelastic collision","Four trucks each mass m at rest are hit by a truck of mass 2m at 5 m/s. All stick. Combined velocity","1.0 m/s","1.67 m/s","2.0 m/s","3.0 m/s","B","v=total p/total m=(2m×5)/(6m)=5/3≈1.67 m/s."
+"phy_elc_002","Physics","Magnetism","Tangent galvanometer","Tangent galvanometer constant depends on","Horizontal Earth’s field","Coil resistance","Cell EMF","Temperature only","A","K∝H and geometric factors. It varies with the horizontal component of Earth’s field."
+"phy_elm_002","Physics","Electricity","Potentiometer","Balancing length 50 cm for 1.02 V. New balancing length 75 cm. New EMF","1.28 V","1.40 V","1.53 V","1.70 V","C","E∝L. E₂=1.02×75/50=1.53 V."
+"phy_elm_003","Physics","Electricity","Galvanometer sensitivity","Two MC galvanometers A and B have same spring constant and area. A, 20 turns, 10 Ω. B, 10 turns, 4 Ω. Ratio of voltage sensitivities A:B","1:1","2:1","4:5","5:4","C","Voltage sensitivity ∝N/R. (20/10)/(10/4)=2/2.5=4/5."
+"phy_rot_001","Physics","Rotation","Rolling kinematics","A disc rolls without slipping with v_cm=√2 m/s. Speed of point on rim at top","√2 m/s","2 m/s","2√2 m/s","4 m/s","C","At top point v_top=v_cm+ωR=2v_cm=2√2 m/s."
+"phy_mod_002","Physics","Modern Physics","Photoelectric effect","Threshold wavelength for work function 2.8 eV","310 nm","443 nm","620 nm","700 nm","B","λ₀=hc/φ≈1240/2.8≈443 nm."
+"phy_elc_004","Physics","Electrostatics","Polarization","Bending of a water jet toward a charged rod is due to","Surface tension","Viscosity","Polarization of water","Cohesion","C","Field induces alignment of water dipoles, causing attraction."
+"phy_ac_001","Physics","AC Circuits","Capacitive reactance","R=10 kΩ series C=0.5 μF, I=1.5 mA, ω=100 rad/s. Vrms across capacitor","3 V","15 V","30 V","300 V","C","Xc=1/ωC=20000 Ω. Vc=I Xc=0.0015×20000=30 V."
+"phy_shm_002","Physics","SHM","Max speed","Pendulum m=20 g, amplitude 5 cm, period 2 s. Maximum speed of bob","0.10 m/s","0.157 m/s","0.20 m/s","0.314 m/s","B","v_max=ωA=(2π/T)A=π×0.05≈0.157 m/s."
+"phy_opt_002","Physics","Optics","Refraction","Critical angle for water–air is θ. Angular field at fish eye to view outside clearly","θ","90°−θ","2θ","180°−2θ","C","The cone of emergent rays has semi angle θ, full angle 2θ."
+"phy_dyn_001","Physics","Dynamics","Friction on curve","Car on a level curve, r=30 m, μ=0.4, g=10 m/s². Maximum speed without skidding","8.0 m/s","10.0 m/s","10.95 m/s","12.0 m/s","C","v_max=√(μgr)=√(0.4×10×30)=√120≈10.95 m/s."
+
+"chem_bond_001","Chemistry","Molecular Geometry","Bond angle","Which of the following has the maximum bond angle","CO2","CH4","NH3","H2O","A","CO2 is linear with 180 degrees. CH4 is 109.5 degrees, NH3 is about 107 degrees, H2O is about 104.5 degrees."
+"chem_phy_001","Chemistry","Periodic Properties","Melting point","Which of the following has the lowest melting point","Helium","Neon","Argon","Xenon","A","Helium has the lowest melting point among the noble gases."
+"chem_gas_001","Chemistry","Gaseous State","Molecular speeds","Hydrogen, helium, oxygen, and nitrogen at the same temperature, which has the maximum rms velocity","Hydrogen","Helium","Oxygen","Nitrogen","A","vrms is inversely proportional to the square root of molar mass. Hydrogen, M = 2 g mol^-1, is highest."
+"chem_env_001","Chemistry","Environmental Chemistry","Air quality","Atmospheric pollution is measured in","ppm","atmospheres","molarity","decibel","A","Pollutant concentrations are usually reported in parts per million."
+"chem_ng_001","Chemistry","Inert Gases","Reactivity","Only xenon forms stable chlorides because of its","Low ionization energy and large size","Highest electronegativity","Octet deficiency","Very small size","A","Xe has relatively low ionization energy and large size, allowing polarization and bonding with electronegative atoms."
+"chem_gas_002","Chemistry","Gaseous State","Avogadro and counting","Four vessels 4 L, 3 L, 2 L, 1 L contain He, Cl2, CO2, NH3 at the same P and T. Ratio of number of atoms","2:3:3:2","4:3:2:1","1:2:3:4","3:2:2:3","A","Atoms ∝ volume × atoms per molecule. 4×1, 3×2, 2×3, 1×4 gives 4:6:6:4, or 2:3:3:2."
+"chem_acid_001","Chemistry","Acid–Base","Buffer pH","40 mL of 0.5 M NH3 mixed with 20 mL of 0.1 M HCl. pKb = 4.74. The pH is","10.21","9.00","7.00","11.00","A","Moles NH3 = 0.02, HCl = 0.002, give NH4+ = 0.002 and NH3 = 0.018. pOH = 4.74 + log(0.002/0.018) ≈ 3.79, pH ≈ 10.21."
+"chem_phy_002","Chemistry","Intermolecular Forces","Boiling point order","The correct order of boiling point is","H2O > HF > NH3 > CH4","HF > H2O > NH3 > CH4","NH3 > H2O > HF > CH4","CH4 > NH3 > HF > H2O","A","Water forms extensive hydrogen bonding networks, giving the highest boiling point, then HF, then NH3, then CH4."
+"chem_titr_001","Chemistry","Titrations","Indicators","Indicator used in titration of a weak acid with a strong base","Phenolphthalein","Methyl orange","Methyl red","Bromothymol blue","A","The equivalence point is on the basic side, so phenolphthalein is suitable."
+"chem_drug_001","Chemistry","Medicinal Chemistry","Anticancer","An anti-cancer compound is","Cisplatin","Chloroquine","Paracetamol","Urea","A","Cisplatin is a platinum chemotherapeutic agent."
+"chem_cmplx_001","Chemistry","Coordination","Cyanide complexes","Excess KCN treated with CuSO4 gives","K3[Cu(CN)4]","CuCN","K[Cu(CN)2]","Cu2[Fe(CN)6]","A","Cu2+ forms a cuprous cyanide which, in excess CN−, gives the complex [Cu(CN)4]3−."
+"chem_qual_001","Chemistry","Qualitative Analysis","Precipitates","Compound X gives a white precipitate with AgNO3 and also a white precipitate with H2SO4. X is","PbCl2","NaCl","HCl","BaCl2","A","PbCl2 supplies Cl− for AgCl with AgNO3 and gives PbSO4 with H2SO4."
+"chem_env_002","Chemistry","Environmental Chemistry","Radiation","Radioactive pollutant in building materials that drew public attention","Radon","Tritium","Strontium-90","Iodine-131","A","Radon gas seeps from some building materials and can accumulate indoors."
+"chem_bond_002","Chemistry","Molecular Polarity","Dipole moment","Dipole moment is maximum for","H2O","NH3","CO2","CH4","A","H2O has about 1.85 D, larger than NH3 at about 1.47 D. CO2 and CH4 are nonpolar."
+"chem_water_001","Chemistry","Water Chemistry","Hardness","Which is not responsible for water hardness","NaCl","Ca2+","Mg2+","HCO3−","A","Hardness is due to Ca2+ and Mg2+ salts, not NaCl."
+"chem_redox_001","Chemistry","Electrochemistry","Displacement","Zn displaces Cu because Zn has","Higher oxidation tendency","Higher reduction potential","Higher ionization energy","Lower activity","A","Zn is above Cu in the activity series and is more easily oxidized."
+"chem_fuel_001","Chemistry","Industrial Chemistry","Fuels","Which has the highest knocking resistance","Isooctane","n-Heptane","Cyclohexane","Benzene","A","Isooctane defines the 100 point on the octane scale."
+"chem_org_001","Chemistry","Organic Effects","Electronic effects","Effect in a double bond in the presence of an attacking reagent","Electromeric effect","Inductive effect","Resonance effect","Hyperconjugation","A","The electromeric effect is temporary electron shift across a multiple bond during attack."
+"chem_base_001","Chemistry","Organic Chemistry","Basicity","Which is more basic","Methylamine","Aniline","Ammonia","Phenol","A","Alkyl amines are more basic than ammonia and far more than aniline or phenol."
+"chem_org_002","Chemistry","Organometallics","Grignard","Carbonyl chloride to acetone, use","CH3MgBr","C2H5MgBr","CH3Li only","RMgCl with phenyl","A","Two equivalents of CH3MgBr add to COCl2 to give acetone after workup."
+"chem_poly_001","Chemistry","Polymers","Thermosets","Bakelite is formed by polymerization of","Phenol and formaldehyde","Urea and formaldehyde","Styrene","Methyl methacrylate","A","Bakelite is a phenol-formaldehyde thermosetting resin."
+"chem_drug_002","Chemistry","Medicinal Chemistry","Anesthetics","An anesthetic agent is","Chloroform","Benzene","Ethanol","Acetone","A","Chloroform has been used as an anesthetic, though with safety concerns."
+"chem_acid_002","Chemistry","Carbonyl Compounds","Acidity and tests","Which compound has more acidic hydrogen and how to distinguish benzophenone and acetophenone","Acetophenone, iodoform test","Benzophenone, Tollens test","Both same, Fehling test","Acetophenone, Lucas test","A","Acetophenone has a methyl ketone group with acidic α-hydrogens and gives the iodoform test; benzophenone does not."
+"chem_ox_001","Chemistry","Alcohols","Oxidation","Initial product when a tertiary alcohol is treated with K2Cr2O7/H+","No reaction under mild conditions","Ketone","Aldehyde","Carboxylic acid","A","Tertiary alcohols resist oxidation without C–C bond cleavage, so no simple oxidation product forms."
+"chem_phyprop_001","Chemistry","Physical Properties","Lipophilicity","Relative to phenol, which is more lipophilic","Anisole","Phenol","Benzoic acid","Phenylamine","A","Anisole lacks the phenolic OH hydrogen bonding, increasing hydrophobicity and lipophilicity compared to phenol."
+
+"phy_vec_001","Physics","Vectors","Resultant perpendicular","Two forces F1 and F2 are inclined at angle θ. The resultant is perpendicular to F1. Find θ","θ = cos^-1(-F1/F2)","θ = cos^-1(F2/F1)","θ = sin^-1(F1/F2)","θ = tan^-1(F1/F2)","A","R·F1=0 gives F1^2+F1F2 cosθ=0, so cosθ=−F1/F2."
+"phy_prj_001","Physics","Projectile Motion","Range relation","Range at 15° is 50 m. Find range at 45° at same speed","50 m","75 m","100 m","150 m","C","R∝sin2θ. At 15°, sin30=0.5, so u^2/g=100. At 45°, sin90=1, R=100 m."
+"phy_prj_002","Physics","Projectile Motion","Find speed from R and H","Range 24 m and maximum height 8 m. Find the launch speed","14.0 m/s","15.7 m/s","18.0 m/s","20.0 m/s","B","tanθ=4/3, sinθ=4/5. From H= u^2 sin^2θ/(2g)=8, get u^2=25g, so u≈15.7 m/s for g=9.8."
+"phy_int_001","Physics","Waves and Optics","Young’s experiment","Torch light used instead of monochromatic light in Young’s double slit","No stable fringes","Very sharp fringes","Much brighter fringes","Double fringe spacing","A","Incoherent broad spectrum washes out interference. White central region only at best."
+"phy_dmp_001","Physics","SHM and Damping","Damped oscillations","In damping which quantity remains constant","Logarithmic decrement","Amplitude","Total energy","Natural frequency","A","The ratio of successive amplitudes is constant, so logarithmic decrement is constant."
+"phy_opt_003","Physics","Optics","Lens power","Combined power of convex and concave is 4 D. Convex is 5 D. Focal length of concave","−0.50 m","−1.0 m","−1.5 m","−2.0 m","B","P_total=P1+P2. So P2=−1 D. f=1/P=−1 m."
+"phy_scm_003","Physics","Semiconductors","Conduction","Conduction due to breaking of covalent bonds occurs by","Electrons only","Holes only","Electron–hole pairs","Ions","C","Thermal breaking creates electron–hole pairs in intrinsic semiconductors."
+"phy_pe_001","Physics","Photoelectric Effect","Threshold wavelength","Work function φ=3.6×10^-19 J. Maximum wavelength for emission","414 nm","552 nm","620 nm","700 nm","B","λ=hc/φ≈(6.626×10^-34×3×10^8)/(3.6×10^-19)≈5.52×10^-7 m."
+"phy_mag_001","Physics","Magnetism","Cyclotron radius","Electron enters B at right angle with radius R. If B halves and speed doubles, new radius","R","2R","3R","4R","D","r=mv/qB. With v→2v and B→B/2, r scales by 4."
+"phy_thm_001","Physics","Thermodynamics","Carnot efficiency","Carnot engine between 100°C and 0°C. Efficiency","18.2%","26.9%","36.5%","50.0%","B","η=1−Tc/Th=1−273/373≈0.2686."
+"phy_mom_002","Physics","Mechanics","Momentum vs KE","KE decreases by 19 percent. Momentum decreases by","8%","10%","12%","19%","B","p∝√KE. √0.81=0.9, so 10 percent drop."
+"phy_atm_002","Physics","Atomic Physics","Bohr postulate","According to Bohr, which is quantized","Energy of photon","Angular momentum","Radius of nucleus","Charge","B","mvr=nħ is discrete."
+"phy_mag_002","Physics","Geomagnetism","Dip circle","Dip circle perpendicular to magnetic meridian, apparent dip is","Zero","Equal to true dip","Ninety degrees","Doubles","A","In that orientation the needle shows zero dip."
+"phy_elm_004","Physics","Electricity","Ammeter conversion","Moving coil galvanometer converted to ammeter by","High series resistance","Low shunt resistance","Changing magnet","Increasing turns","B","A low shunt bypasses most current."
+"phy_gas_001","Physics","Thermal Physics","Charles law","Perfect gas at constant pressure, volume doubles from 27°C. Final temperature","127°C","227°C","300°C","327°C","D","T∝V at constant pressure. 300 K→600 K, so 327°C."
+"phy_opt_004","Physics","Light","Illumination","X rays in a room cause which type of illumination","Direct","Diffused","Fluorescent","Specular","C","X rays induce fluorescence in suitable materials."
+"phy_thm_002","Physics","Thermodynamics","First law","Adiabatic process with 90 J work done on system, change in internal energy","−90 J","+90 J","0 J","+180 J","B","q=0. ΔU=W_on=+90 J."
+"phy_ind_001","Physics","Electromagnetism","Self inductance scaling","A coil of radius r has 600 turns and L=108 mH. Self inductance of similar coil with 500 turns","50 mH","60 mH","75 mH","90 mH","C","L∝N^2. L2=108×(500/600)^2≈75 mH."
+
+"bot_misc_001","Botany","Plant Morphology","Common names","Which of the following is called vegetable chameleon","Bryophyllum","Boerhaavia","Selaginella","Alternanthera","D","Alternanthera is known as the vegetable chameleon because of its color-changing leaves."
+
+"bot_gen_001","Botany","Genetics","Meiosis","Synapsis occurs in","Leptotene","Zygotene","Pachytene","Diplotene","B","Synapsis, the pairing of homologous chromosomes, occurs during zygotene of prophase I in meiosis."
+
+"bot_cel_001","Botany","Cell Biology","Genetic material","Circular DNA is found in","Virus","Chloroplast and mitochondria","Nucleus","Cytoplasm only","B","Both mitochondria and chloroplasts contain circular DNA similar to bacterial DNA."
+
+"bot_phy_001","Botany","Plant Anatomy","Support tissue","Stele with pith is found in","Monocot stem","Dicot stem","Dicot root","Monocot root","A","Monocot stems have a distinct pith surrounded by vascular bundles in a ringless arrangement."
+
+"bot_flo_001","Botany","Floral Morphology","Stamens","Versatile stamens are found in","Lily","Pea","Sunflower","China rose","A","In lily, stamens are versatile as the anthers swing freely attached at the center."
+
+"bot_ecol_001","Botany","Ecology","Adaptations","Zero-fighting succulent (xerophyte) plant is","Opuntia","Eichhornia","Hydrilla","Lemna","A","Opuntia is a xerophytic succulent adapted to arid conditions, conserving water efficiently."
+
+"bot_phy_002","Botany","Plant Physiology","Transport","Mass flow hypothesis is associated with","Transpiration pull","Ascent of sap","Translocation of food","Guttation","C","The Munch mass flow hypothesis explains phloem translocation of organic solutes."
+
+"bot_eco_002","Botany","Economic Botany","Timber","Plant with hardest wood is","Acacia","Dalbergia","Eucalyptus","Guaiacum","D","Guaiacum officinale produces one of the hardest known woods, called lignum vitae."
+
+"bot_eco_003","Botany","Economic Botany","Fibres","Jute fibre is obtained from","Stem","Root","Leaf","Fruit","A","Jute fibre is obtained from the secondary phloem (bast) of the stem of Corchorus species."
+
+"bot_phy_003","Botany","Plant Physiology","Growth","Sprouting of potato during storage is due to","Low temperature","High moisture","Breaking of dormancy","Lack of oxygen","C","Dormancy ends during storage, causing sprouting due to hormonal changes."
+
+"bot_mic_001","Botany","Microbiology","Soil fertility","Biofertilizer is","Organic manure","Microbial culture","Compost","Green manure","B","Biofertilizers are microbial inoculants that enhance nutrient availability to plants."
+
+"bot_eco_004","Botany","Economic Botany","Cork","Commercial cork is obtained from","Quercus suber","Salix alba","Populus nigra","Pinus roxburghii","A","Cork is harvested from the bark of Quercus suber (cork oak)."
+
+"bot_phy_004","Botany","Plant Physiology","Respiration","Passive absorption of water occurs mainly due to","Root pressure","Osmotic pressure","Transpiration pull","Imbibition","C","Passive absorption is driven by transpiration pull through cohesion-tension."
+
+"bot_rep_001","Botany","Reproduction","Seed formation","Apomixis involves","Asexual seed formation","Fusion of gametes","Double fertilization","Cross-pollination","A","Apomixis produces seeds without fertilization, forming clones of the parent plant."
+
+"bot_rep_002","Botany","Reproduction","Ovule","Micropyle, funicle and chalaza in straight line — type of ovule","Orthotropous","Anatropous","Campylotropous","Amphitropous","A","In orthotropous ovules, micropyle, chalaza, and funicle lie in one straight line."
+
+"bot_flo_002","Botany","Floral Morphology","Androecium","Anthers united, filaments free condition is found in","Malvaceae","Fabaceae","Solanaceae","Asteraceae","A","In Malvaceae, stamens are monadelphous, meaning filaments are united into a tube but anthers are free."
+
+"bot_bry_001","Botany","Bryophytes","Reproduction","Peristome is found in","Moss","Liverwort","Pteridophyte","Algae","A","Moss capsules possess peristome teeth that help in spore dispersal."
+
+"bot_fungi_001","Botany","Fungi","Parasitism","Fungi that require two hosts to complete their life cycle are","Obligate parasites","Heteroecious fungi","Autoecious fungi","Saprophytes","B","Heteroecious fungi like Puccinia graminis need two hosts to complete their life cycle."
+
+"bot_phy_005","Botany","Plant Physiology","Photosynthesis","Pigment system is mainly for","Photosynthesis","Respiration","Transpiration","Fermentation","A","Pigment systems I and II in chloroplasts are responsible for capturing light during photosynthesis."
+
+"bot_gen_002","Botany","Genetics","Mendelian Genetics","Alternative or contrasting form of a gene is","Allele","Chromosome","Locus","Trait","A","Different forms of a gene that control contrasting traits are called alleles."
+"zoo_orn_002","Zoology","Ornithology","Bird anatomy","Sound box of bird is called","Syrinx","Larynx","Pharynx","Trachea","A","Birds produce sound through the syrinx, located at the junction of the trachea and bronchi."
+
+"zoo_amp_001","Zoology","Amphibians","Anatomy","Which of the following is not found in frog","Diaphragm","Nictitating membrane","Three-chambered heart","Kidney","A","Frogs lack a diaphragm; lungs expand through buccal pumping."
+
+"zoo_prot_002","Zoology","Protozoa","Reproduction","During conjugation in Paramecium which nucleus is not degenerated","Micronucleus","Macronucleus","Both degenerate","Neither degenerate","A","Micronucleus divides and fuses during conjugation, while the macronucleus degenerates."
+
+"zoo_skl_004","Zoology","Skeleton","Cartilage","Gristle cartilage is found in","Ear pinna","Nose tip","Trachea","Intervertebral disc","C","Gristle refers to hyaline cartilage found in trachea and larynx."
+
+"zoo_inv_005","Zoology","Annelida","Excretion","Nephridiopores are found in","Earthworm","Cockroach","Leech","Frog","A","Earthworm excretes waste through external nephridiopores."
+
+"zoo_inv_006","Zoology","Annelida","Excretory system","Type of nephridia not found in earthworm","Pharyngeal","Septal","Integumentary","Flame cell","D","Flame cells are found in flatworms, not in annelids."
+
+"zoo_orn_003","Zoology","Ornithology","Flight","Passive flight is observed in","Vulture","Crow","Sparrow","Parrot","A","Vultures glide without flapping, utilizing air currents for passive flight."
+
+"zoo_sen_004","Zoology","Sensation","Eye","Blind spot contains","Rods only","Cones only","Both rods and cones","No rods or cones","D","Blind spot lacks photoreceptor cells, hence insensitive to light."
+
+"zoo_sen_005","Zoology","Sensation","Ear","Organ of Corti is present in","Cochlea","Semicircular canal","Utriculus","Eustachian tube","A","The organ of Corti lies in the cochlea and contains sensory hair cells for hearing."
+
+"zoo_chr_002","Zoology","Chordata","General features","Unusual character of Ascidian as chordate is","Notochord in larva only","Closed circulation","Presence of lungs","Presence of vertebral column","A","In Ascidia, the notochord is present only in larval stage, absent in adult."
+
+"zoo_inv_007","Zoology","Invertebrates","Body cavity","Which phylum is acoelomate","Platyhelminthes","Annelida","Aschelminthes","Arthropoda","A","Platyhelminthes lack a true coelom and are acoelomate."
+
+"zoo_amp_002","Zoology","Amphibians","Behavior","Earthworm hides in burrow to","Maintain moisture","Escape heat","Escape predators","All of these","D","Burrowing helps earthworm maintain moisture and avoid light, heat, and predators."
+
+"zoo_beh_001","Zoology","Animal Behavior","Ethology","The study of animal behaviour is called","Ethology","Ecology","Taxonomy","Physiology","A","Ethology is the scientific study of animal behaviour."
+
+"zoo_amp_003","Zoology","Amphibians","Skeleton","Typical vertebrae of frog is","Amphicoelous","Procoelous","Acoelous","Opisthocoelous","B","Frog vertebrae are procoelous, concave anteriorly and convex posteriorly."
+
+"zoo_gen_001","Zoology","Genetics","Mutation","Genes are formed by acquiring","Mutations","Nucleotides","Chromosomes","RNA","A","Genes evolve through mutations in DNA sequences."
+
+"zoo_evo_002","Zoology","Evolution","Darwinism","Darwin proposed which process for transmission of character","Pangenesis","Germ plasm theory","Lamarckism","Mutation theory","A","Darwin suggested pangenesis for inheritance, though later disproven."
+
+"zoo_inv_008","Zoology","Arthropoda","Appendages","Poison claws of Chilopoda are modification of","First pair of legs","Antennae","Mandibles","Maxillae","A","In centipedes, first pair of legs forms poison claws (forcipules)."
+
+"zoo_phy_001","Zoology","Physiology","Enzymes","Carbonic anhydrase is found in","RBC","Liver","Kidney","Muscle","A","Carbonic anhydrase in red blood cells catalyzes CO2 hydration to carbonic acid."
+
+"zoo_phy_002","Zoology","Physiology","Liver","Liver cells are phagocytosed by Kupffer cells to produce pigment","Bilirubin","Bilirubinogen","Haematin","Melanin","A","Kupffer cells break down RBCs to release bilirubin pigment."
+
+"zoo_ecol_001","Zoology","Ecology","Symbiosis","Sea anemone and hermit crab exhibit","Commensalism","Mutualism","Parasitism","Competition","B","Both benefit—hermit crab gains protection, anemone gains mobility."
+
+"zoo_phy_003","Zoology","Physiology","Behavior","Animals that eat their own feces are","Coprophagous","Omnivorous","Herbivorous","Carnivorous","A","Coprophagy is practiced to recover nutrients, seen in rabbits."
+
+"zoo_end_001","Zoology","Endocrinology","Hormones","ICSH is secreted by","Anterior pituitary","Posterior pituitary","Thyroid","Adrenal cortex","A","Interstitial cell stimulating hormone (LH in males) is secreted by anterior pituitary."
+
+"zoo_emb_001","Zoology","Embryology","Development","Archenteron is found in which stage","Gastrula","Blastula","Morula","Zygote","A","The gastrula stage develops the archenteron or primitive gut cavity."
+
+"zoo_rep_001","Zoology","Reproduction","Spermatogenesis","Secondary spermatocytes or spermatids are formed from","Primary spermatocyte","Spermatogonium","Sertoli cell","Germinal cell","A","Primary spermatocyte divides meiotically to form two secondary spermatocytes and then spermatids."
+
+"zoo_gen_002","Zoology","Genetics","Chromosomal disorders","Mongolism (Down’s syndrome) is due to","Trisomy of chromosome 21","Monosomy of X","Deletion mutation","Polyploidy","A","Down’s syndrome results from trisomy of chromosome 21."
+
+"zoo_inv_009","Zoology","Annelida","Circulation","Closed vascular system is found in","Earthworm","Cockroach","Starfish","Leech","A","Earthworm shows closed circulation with dorsal, ventral, and lateral vessels."
+
+"chem_mag_001","Chemistry","Magnetism","Magnetic moment","Which has maximum magnetic moment","Fe2+","Mn2+","Cu2+","Zn2+","B","Mn2+ has five unpaired electrons (5 μB), giving maximum magnetic moment."
+
+"chem_org_001","Chemistry","Organic Chemistry","Electronics","Phenol acts as o- and p-directing group because of","+M effect of −OH","−I effect of −OH","Hyperconjugation","Steric effect","A","Lone pair on oxygen participates by resonance (+M), activating ortho and para positions."
+
+"chem_carbo_001","Chemistry","Carbohydrates","Hydrolysis","Sucrose on hydrolysis gives","Glucose and fructose","Glucose and galactose","Two glucose","Two fructose","A","Sucrose hydrolyzes to form one molecule each of glucose and fructose."
+
+"chem_acid_001","Chemistry","Physical Chemistry","Concentration","Acetic acid 2 m, sp. gravity 1.7 g/cm³. Find molarity","2.0 M","1.7 M","3.4 M","1.2 M","C","Molarity = (m × d × 1000)/(M × 1000). For acetic acid, ≈3.4 M."
+
+"chem_thm_001","Chemistry","Thermodynamics","Hess law","Hess’s law is associated with","Enthalpy change","Entropy change","Internal energy","Free energy","A","Hess’s law states total enthalpy change is path independent."
+
+"chem_thm_002","Chemistry","Thermodynamics","Phase change","When ice melts at 273 K","ΔH > 0, ΔS > 0","ΔH < 0, ΔS < 0","ΔH > 0, ΔS < 0","ΔH = 0, ΔS = 0","A","Melting absorbs heat and increases disorder, both positive."
+
+"chem_cat_001","Chemistry","Catalysis","Effect","A catalyst changes","Activation energy","Enthalpy change","Equilibrium constant","Product composition","A","A catalyst lowers activation energy without changing ΔH or K."
+
+"chem_kin_001","Chemistry","Kinetics","Half-life","Half-life of first order reaction is","Independent of concentration","Directly proportional to concentration","Inversely proportional to concentration","Zero","A","For first-order kinetics, t½ = 0.693/k, independent of concentration."
+
+"chem_ind_001","Chemistry","Industrial Chemistry","Contact process","Arsenic impurity is removed by","Fe(OH)3","Manganese dioxide","Activated charcoal","Chromic oxide","A","Ferric hydroxide removes arsenic from SO2 gas before oxidation."
+
+"chem_col_001","Chemistry","Surface Chemistry","Testing box","Scattering phenomenon in testing box identifies suspended impurities by","Tyndall effect","Brownian motion","Adsorption","Diffusion","A","The Tyndall effect is used to detect colloidal impurities."
+
+"chem_ind_002","Chemistry","Industrial Chemistry","Solvay process","Brine saturated with ammonia gives","Ammonium bicarbonate","Ammonium chloride","Sodium bicarbonate","Sodium carbonate","C","Ammonia and CO2 form ammonium bicarbonate, which reacts with NaCl to yield sodium bicarbonate."
+
+"chem_kin_002","Chemistry","Kinetics","Activation energy","Activation energy is","Minimum energy required for reaction","Heat of reaction","Bond energy","Internal energy","A","Activation energy is the minimum energy molecules need to react."
+
+"chem_org_002","Chemistry","Organic Chemistry","Williamson synthesis","Methyl iodide reacts with sodium ethoxide to give","Ethyl methyl ether","Dimethyl ether","Diethyl ether","Methanol","A","Williamson synthesis forms ethyl methyl ether."
+
+"chem_rxn_001","Chemistry","Chemical Reactions","Combustion","Which is a combustion reaction","CH4 + 2O2 → CO2 + 2H2O","2AgNO3 → 2Ag + 2NO2 + O2","NaCl + AgNO3 → AgCl + NaNO3","N2 + 3H2 → 2NH3","A","Combustion involves reaction with oxygen forming CO2 and H2O."
+
+"chem_org_003","Chemistry","Organic Chemistry","Food industry","Flavouring agent in jam industry","Esters","Alcohols","Aldehydes","Ketones","A","Esters provide fruity flavors used in jams and beverages."
+
+"chem_atom_001","Chemistry","Atomic Structure","Ionization energy","Which configuration has highest first ionization energy","1s²2s²2p⁶","1s²2s²2p¹","1s²2s²2p³","1s²2s²2p⁵","A","A filled shell (noble gas configuration) has the highest ionization energy."
+
+"chem_org_004","Chemistry","Organic Chemistry","Carbylamine","Chloroform with aniline and KOH gives","Phenyl isocyanide","Aniline chloride","Aniline cyanide","Diphenyl amine","A","This is the carbylamine reaction forming phenyl isocyanide (offensive odor)."
+
+"chem_qual_002","Chemistry","Qualitative Analysis","Color test","Which gives blue coloration with starch","Iodine","Copper","Iron","Bromine","A","Iodine reacts with starch to produce blue color."
+
+"chem_phy_001","Chemistry","Physical Chemistry","Conductivity","Unit of specific conductivity is","S m⁻¹","S m² mol⁻¹","Ω m","S mol⁻¹","A","Conductivity (κ) is measured in siemens per meter (S/m)."
+
+"chem_org_005","Chemistry","Organic Chemistry","Formic acid formation","Formic acid is formed by","Oxidation of formaldehyde","Reduction of CO2","Hydration of CO","Hydrolysis of methyl formate","A","Formic acid results from oxidation of formaldehyde (HCHO)."
+
+"chem_sol_001","Chemistry","Solutions","Electrolytes","Ionic movement is greater in","Dilute solution","Concentrated solution","Solid state","Colloid","A","Ions move more freely in dilute solutions due to less interionic attraction."
+
+"chem_org_006","Chemistry","Organic Chemistry","Carbonyl group","Characteristic reaction of carbonyl group is","Nucleophilic addition","Electrophilic addition","Substitution","Elimination","A","Carbonyl carbon is electrophilic and undergoes nucleophilic addition reactions."
+
+"phy_circ_001","Physics","Circular Motion","Vertical loop","For vertical circular motion of radius 1 m, the critical speed at the lowest point to complete the loop is","3.1 m/s","5.0 m/s","7.0 m/s","9.8 m/s","C","Minimum speed at the lowest point u_min = √(5 g r). With g = 9.8 m/s² and r = 1 m, u_min = √49 = 7.0 m/s."
+"phy_thm_003","Physics","Thermodynamics","Power and latent heat","Latent heat of fusion of ice is 80 cal/g. A man melts 60 g ice in 1 minute. What is his power output","168 W","252 W","335 W","420 W","C","Heat = 60×80 cal = 4800 cal ≈ 2.01×10^4 J. Power = 2.01×10^4 J ÷ 60 s ≈ 335 W."
+"phy_fluid_003","Physics","Fluids","Hydrometer scale","A common hydrometer reads specific gravity 1.6 at one mark. The 1.5 mark lies","Above 1.6","Below 1.6","At the same level","Cannot be on the stem","B","Lower density needs deeper immersion, so the 1.5 mark is below the 1.6 mark on the stem."
+"phy_kine_003","Physics","Kinematics","Trajectory under forces","A stone is dropped from a tower while a constant horizontal force from wind acts. Its path is","Straight line","Circle","Parabola","Ellipse","C","Constant horizontal acceleration with vertical g gives a parabolic trajectory."
+"phy_wav_003","Physics","Waves on Strings","Frequency and density","Two wires of same length, tension, and diameter have density ratio 1:3. The ratio of their fundamental frequencies f1:f2 is","1:√3","√3:1","1:3","3:1","B","f ∝ 1/√ρ for same L and T, so f1/f2 = √(ρ2/ρ1) = √3."
+"phy_elst_001","Physics","Elasticity","Wave speed in rod","Young’s modulus of steel is 2×10^11 N/m² and density 7.8×10^3 kg/m³. Speed of sound in steel is","3.5 km/s","4.5 km/s","5.1 km/s","6.0 km/s","C","v = √(E/ρ) ≈ √(2×10^11 ÷ 7.8×10^3) ≈ √(2.56×10^7) ≈ 5.06×10^3 m/s."
+"phy_snd_001","Physics","Sound","Organ pipe","Speed of sound 350 m/s. An open pipe of length 50 cm has fundamental frequency","175 Hz","262 Hz","350 Hz","700 Hz","C","f = v/(2L) = 350 ÷ (2×0.5) = 350 Hz."
+"phy_dop_001","Physics","Waves","Doppler effect","Both source and observer move in the same direction with speed equal to half the sound speed. Percentage change in observed frequency is","0%","25%","33%","50%","A","f' = f (v − vo)/(v − vs). With vo = vs = v/2, the ratio is 1, so no change."
+"phy_elm_005","Physics","Electricity","Resistance and stretching","A wire has R = 32 Ω. If its length is doubled by stretching at constant volume, the percentage increase in R is","100%","200%","300%","400%","C","R ∝ L² for constant volume. New R = 4R = 128 Ω, increase = 300%."
+"phy_opt_005","Physics","Wave Optics","Young’s fringes","In Young’s experiment, replacing red light with violet light causes","Fringe width increases","Fringe width decreases","No change","Fringes disappear","B","β ∝ λ. Violet has smaller λ than red, so β decreases."
+"phy_opt_006","Physics","Geometrical Optics","Prism, minimum deviation","For a prism with A = 60° and μ = 1.5, the angle of emergence at minimum deviation is","30.0°","41.8°","48.6°","60.0°","C","At minimum deviation, r = A/2 = 30°. i = e with sin i = μ sin r = 1.5×0.5 = 0.75, so e ≈ 48.6°."
+"phy_fluid_004","Physics","Fluids","Bernoulli","Bernoulli’s equation applies to","Turbulent compressible flow","Steady incompressible non-viscous flow along a streamline","Any viscous flow","Static fluids only","B","It holds for steady, incompressible, non-viscous flow along a streamline."
+"phy_circ_002","Physics","Circular Motion","Force from angular momentum","A particle of mass m moves in a circle of radius r with angular momentum L. The centripetal force is","L²/(m r³)","L/(m r²)","m L²/r","m r/L²","A","Use L = m v r, so v = L/(m r). Then Fc = m v²/r = L²/(m r³)."
+"phy_thm_004","Physics","Thermodynamics","Entropy","Entropy does not change during a","Reversible adiabatic process","Isothermal process","Free expansion","Irreversible adiabatic process","A","A reversible adiabatic process is isentropic, so ΔS = 0."
+"phy_ht_001","Physics","Heat Transfer","Cooling law","Newton’s law of cooling applies for","Large temperature differences","Vacuum only","Small temperature differences","Only gases","C","Valid for small temperature differences between body and surroundings."
+"phy_elm_006","Physics","Electricity","Wire folding","A wire of 4 Ω is folded into two equal halves and twisted together in parallel. New resistance is","0.5 Ω","1.0 Ω","2.0 Ω","4.0 Ω","B","Each half is 2 Ω. Two 2 Ω in parallel give 1 Ω."
+"phy_atm_003","Physics","Atomic Physics","Ionization energy","Ionization energy of hydrogen is 13.6 eV. For He⁺ it is","27.2 eV","40.8 eV","54.4 eV","68.0 eV","C","For hydrogen-like ions, E ∝ Z². With Z = 2, E = 13.6×4 = 54.4 eV."
+
+"chem_kin_003","Chemistry","Chemical Kinetics","Arrhenius factor","In a simple molecular reaction, the Arrhenius constant A is","Temperature-independent factor","Activation energy","Rate constant","Collision energy","A","A is the frequency or pre-exponential factor, reflecting collision frequency and orientation, weakly T-dependent compared to Ea."
+
+"chem_int_001","Chemistry","Intermolecular Forces","Hydrogen bonding","Intermolecular hydrogen bonding is strongest in","HF","H2O","NH3","HCl","A","HF forms very strong H bonds due to high electronegativity and small size of F, giving the strongest intermolecular H-bonding among these."
+
+"chem_kin_004","Chemistry","Chemical Kinetics","Reaction order","Radioactive decay follows which order","Zero order","First order","Second order","Third order","B","Radioactive decay is a first-order process, rate ∝ number of nuclei present."
+
+"chem_org_021","Chemistry","Organic Chemistry","Side-chain chlorination","Toluene on free-radical chlorination in light and heat followed by heating with aqueous NaOH gives","Benzyl alcohol","Benzaldehyde","Benzoic acid","Phenol","C","Extensive side-chain chlorination yields benzotrichloride, which hydrolyzes with aqueous base to benzoic acid."
+
+"chem_kin_005","Chemistry","Chemical Kinetics","Half-life","If half-life is independent of initial concentration, the reaction is","Zero order","First order","Second order","Fractional order","B","For first-order kinetics, t½=0.693/k, independent of initial concentration."
+
+"chem_env_003","Chemistry","Environmental/Applied","Uses of fluorinated compounds","Fluorinated compounds are used as","Refrigerants","Fertilizers","Explosives","Indicators","A","CFCs and related fluorinated compounds have been widely used as refrigerants and propellants."
+
+"chem_org_022","Chemistry","Aromatic Substitution","Phenol directing effects","In electrophilic substitution, phenol is","Deactivating, m-director","Activating, o,p-director","Neutral, random","Deactivating, o-director only","B","+M effect of −OH activates the ring and directs incoming electrophiles to ortho and para positions."
+
+"chem_gas_003","Chemistry","Gaseous State","Diffusion rate","Order of diffusion rates at same T and P is","H2 > He > N2 > O2","He > H2 > O2 > N2","O2 > N2 > He > H2","N2 > O2 > He > H2","A","By Graham’s law, rate ∝ 1/√M, so lighter gases diffuse faster."
+
+"chem_thm_003","Chemistry","Thermodynamics","Joule–Thomson","For an ideal gas, the Joule–Thomson effect is","Cooling","Heating","Zero","Unpredictable","C","Ideal gases have μJT=0, so no temperature change on throttling."
+
+"chem_gas_004","Chemistry","Gaseous State","Ideal behavior","A real gas shows ideal behavior best at","Low T, high P","High T, low P","Low T, low P","High T, high P","B","High temperature and low pressure minimize interactions, approximating ideal gas behavior."
+
+"chem_thm_004","Chemistry","Thermodynamics","Inversion temperature","Temperature at which an expanding gas just begins to cool is","Critical temperature","Boyle temperature","Inversion temperature","Boiling point","C","Below inversion temperature most real gases cool on expansion."
+
+"chem_org_023","Chemistry","Organic Chemistry","Oxidation","Oxidation product of aldehydes and primary alcohols is","Alkenes","Ketones","Carboxylic acids","Ethers","C","Aldehydes oxidize to acids, and primary alcohols oxidize via aldehyde to acids."
+
+"chem_thm_005","Chemistry","Thermodynamics","Phase change enthalpy","When a solid melts, what happens to enthalpy","Decreases","Increases","Zero change","Becomes negative","B","Fusion absorbs heat, so ΔH is positive."
+
+"chem_org_024","Chemistry","Organic Analysis","Amine differentiation","Primary, secondary, tertiary, and aromatic amines are distinguished by","Hinsberg reagent","Lucas reagent","Tollens’ reagent","Fehling’s solution","A","Benzenesulfonyl chloride (Hinsberg test) differentiates amines by solubility of sulfonamides."
+
+"chem_water_002","Chemistry","Water Chemistry","Borax in water","Borax cleans water because its solution becomes","Acidic","Neutral","Alkaline","Amphiprotic","C","Borax hydrolyzes to give an alkaline solution that helps remove hardness."
+
+"chem_phy_006","Chemistry","Physical Chemistry","Spin isomers","Ortho and para hydrogen are separated by","Electrolysis","Adsorption on charcoal at low T","Fractional crystallization","Distillation at 1 atm","B","Different spin isomers are separated via selective adsorption at low temperatures."
+
+"chem_atom_002","Chemistry","Atomic Structure","Orbital shapes","Shape of orbital with azimuthal quantum number l = 1 is","spherical","dumbbell (p)","clover (d)","linear","B","l=1 corresponds to p orbitals with dumbbell shape."
+
+"chem_atom_003","Chemistry","Atomic Structure","Electron capacity","Maximum electrons in all orbitals with n=2 and l=1","2","4","6","8","C","The 2p subshell has three orbitals, holding up to 6 electrons."
+
+"chem_met_001","Chemistry","Metallurgy","Processes","Metallurgical process where metal is obtained in fused state is","Roasting","Calcination","Smelting","Leaching","C","Smelting reduces the ore at high temperature to give metal in the molten state."
+
+"chem_org_025","Chemistry","Organometallics","Grignard with carbonyl","MgCH3Br reacts with which to give an alcohol","Formaldehyde","CO2","Acetone","Benzaldehyde","A","CH3MgBr + HCHO → after workup gives ethanol, a primary alcohol."
+
+"chem_org_026","Chemistry","Organic Reactions","Transesterification","Splitting of an ester by an alcohol is called","Hydrolysis","Saponification","Transesterification","Esterification","C","Alcoholysis of an ester forming a new ester is transesterification."
+
+"chem_qual_003","Chemistry","Qualitative Tests","Alkene vs alkyne","Propene and propyne can be distinguished by","Bromine water","Baeyer’s reagent","Ammoniacal AgNO3","HCl gas","C","Terminal alkynes give precipitate with ammoniacal AgNO3, alkenes do not."
+
+"chem_org_027","Chemistry","Ether Synthesis","Williamson","Alkyl chlorides are converted to ethers by","Hydrogenation","Williamson synthesis with sodium alkoxide","Friedel–Crafts","Ozonolysis","B","SN2 of RO− on R-Cl yields ROR′ in Williamson synthesis."
+
+"chem_acid_003","Chemistry","Acid–Base","pH calculation","0.040 g NaOH in 100 cm³ water, pH is","10","11","12","13","C","Moles = 0.001, volume 0.1 L, [OH−]=0.01 M, pOH=2, pH=12."
+
+"chem_nuc_002","Chemistry","Nuclear Chemistry","Weapons","Principle of the hydrogen bomb is","Fission","Fusion","Chain inhibition","Beta decay","B","Thermonuclear weapon uses uncontrolled nuclear fusion."
+
+"chem_ele_001","Chemistry","Electrochemistry","Salt bridge choice","KNO3 is used in a salt bridge because","It is colored","It is volatile","Ions have nearly equal mobilities, minimizing junction potential","It reacts with electrodes","C","K+ and NO3− have similar transport numbers, reducing liquid junction potential."
+
+"chem_atom_004","Chemistry","Atomic Structure","Pauli principle","Two electrons in the same orbital differ in","Principal quantum number","Azimuthal quantum number","Magnetic quantum number","Spin quantum number","D","Pauli exclusion requires opposite spins, so ms differs."
+"zoo_skl_001","Zoology","Skeletal System","Appendicular skeleton","Appendicular skeleton consists of","Limbs and girdles","Skull and vertebral column","Ribs and sternum","Skull and jaw","A","Appendicular skeleton includes pectoral and pelvic girdles and limbs."
+
+"zoo_amp_004","Zoology","Amphibians","Excretion","Excretion in frog tadpole is","Ammonotelic","Ureotelic","Uricotelic","Mixed type","A","Ammonia is the chief nitrogenous waste in tadpoles, which live in water."
+
+"zoo_rep_002","Zoology","Reproduction","Female reproductive system","Graafian follicle is found in","Ovary","Uterus","Fallopian tube","Vagina","A","Graafian follicle is a mature ovarian follicle that releases the ovum during ovulation."
+
+"zoo_vit_001","Zoology","Vitamins","Vitamin synthesis","Vitamin A is synthesized in the body from","Carotene","Riboflavin","Niacin","Calciferol","A","β-carotene from vegetables is converted to vitamin A in the liver."
+
+"zoo_imm_001","Zoology","Immunity","Lymphoid tissue","Peyer’s patches produce","Lymphocytes","Insulin","Bile","Pepsin","A","Peyer’s patches in the small intestine produce lymphocytes for immune defense."
+
+"zoo_end_002","Zoology","Endocrine System","Hormones","FSH is secreted by","Anterior pituitary","Posterior pituitary","Thyroid gland","Pancreas","A","Follicle-stimulating hormone is secreted by the anterior pituitary gland."
+
+"zoo_end_003","Zoology","Endocrine System","Hormone storage","Which secretion is stored in extracellular fluid then released into blood","Thyroxine","Adrenaline","Insulin","Oxytocin","A","Thyroid hormones are stored in colloid of follicles before secretion into blood."
+
+"zoo_vir_001","Zoology","Virology","Virus structure","A virion is","Complete virus particle","Viral DNA only","Viral RNA only","Protein coat only","A","A virion is a complete, infectious virus particle with nucleic acid and protein coat."
+
+"zoo_gen_003","Zoology","Genetics","Inheritance","X-linked inheritance means","Gene present on X chromosome","Gene present on Y chromosome","Autosomal inheritance","Mitochondrial inheritance","A","X-linked inheritance refers to traits controlled by genes on the X chromosome."
+
+"bot_eco_005","Botany","Economic Botany","Plants and minerals","Vegetable gold refers to","Soybean","Maize","Banana","Mustard","A","Soybean is rich in protein and oil, called vegetable gold."
+
+"bot_cel_003","Botany","Cell Division","Cytokinesis","Cell plate formation is seen in","Plant cells","Animal cells","Both","Bacteria","A","Plant cells form a cell plate during cytokinesis due to rigid cell wall."
+
+"bot_cel_004","Botany","Cytology","Cell organelles","Which helps in protein synthesis and transport","Endoplasmic reticulum","Golgi apparatus","Lysosome","Peroxisome","A","Rough ER is responsible for protein synthesis and transport."
+
+"bot_rep_003","Botany","Reproduction","Plant sexuality","Male and female flowers on same plant indicate","Monoecious plant","Dioecious plant","Bisexual flower","Polygamous plant","A","Monoecious plants like maize have separate male and female flowers on the same plant."
+
+"bot_rep_004","Botany","Reproduction","Parthenogenesis","Development of egg without fertilization is","Parthenogenesis","Apomixis","Polyembryony","Autogamy","A","Parthenogenesis is development of embryo without fertilization."
+
+"bot_tis_002","Botany","Plant Anatomy","Simple tissue","Prosenchyma is present in","Mechanical tissue","Meristematic tissue","Parenchyma","Phloem","A","Prosenchyma are elongated cells providing mechanical strength."
+
+"bot_cel_005","Botany","Cell Biology","Cell types","Prokaryotes differ from eukaryotes in","Lack of true nucleus","Presence of mitochondria","Presence of DNA","Presence of cell wall","A","Prokaryotes lack a membrane-bound nucleus and organelles."
+
+"bot_env_001","Botany","Ecology","Pollution","Best indicator of SO2 pollution","Lichens","Algae","Moss","Fungi","A","Lichens are very sensitive to sulfur dioxide pollution."
+
+"bot_cls_002","Botany","Taxonomy","Classification","Five kingdom classification is based on","Cell structure and nutrition","Reproduction only","Habitat","Chromosome number","A","Whittaker’s classification is based on cell structure, body organization, nutrition, and reproduction."
+
+"bot_alg_001","Botany","Algae","Habitats","Algae found in thermal springs is","Cyanobacteria","Red algae","Brown algae","Green algae","A","Thermophilic blue-green algae like Oscillatoria grow in hot springs."
+
+"zoo_mic_001","Zoology","Microbiology","Bacteria","E. coli is easily extracted from","Human intestine","Air","Water","Soil","A","E. coli is abundant in human intestinal tract, used for biological studies."
+
+"bot_mod_001","Botany","Morphology","Stem modification","Most reduced stem is found in","Cactus","Onion","Potato","Ginger","B","In onion, the stem is a reduced disc bearing fleshy scales."
+
+"bot_fru_001","Botany","Fruits","Grasses","Fruit of family Poaceae is","Caryopsis","Achene","Berry","Nut","A","Grasses have caryopsis fruit with fused seed and pericarp."
+
+"bot_phy_006","Botany","Plant Physiology","Transpiration","Ganong’s potometer measures","Rate of transpiration","Rate of respiration","Photosynthesis","Osmosis","A","Potometer measures rate of water uptake, indicating transpiration rate."
+
+"bot_mer_001","Botany","Meristem","Growth","In grasses, size of leaf and stem increases by","Intercalary meristem","Apical meristem","Lateral meristem","Parenchyma","A","Intercalary meristems cause growth at leaf base and nodes in grasses."
+
+"zoo_gen_004","Zoology","Genetics","Protein synthesis","Sequence of amino acids is determined by","mRNA","tRNA","rRNA","DNA polymerase","A","mRNA codons determine the amino acid sequence during translation."
+
+"bot_rep_005","Botany","Reproduction","Embryo sac","Monosporic, 8-nucleate embryo sac is called","Polygonum type","Oenothera type","Adoxa type","Fritillaria type","A","Polygonum type is most common with one megaspore forming 8 nuclei."
+
+"bot_rep_006","Botany","Reproduction","Double fertilization","Triple fusion is characteristic of","Angiosperms","Gymnosperms","Pteridophytes","Bryophytes","A","Triple fusion occurs only in angiosperms forming endosperm nucleus."
+
+"zoo_sen_006","Zoology","Sensation","Ear","Tectorial membrane is found in","Cochlea","Ear pinna","Middle ear","Tympanum","A","Tectorial membrane lies over the organ of Corti in cochlea."
+
+"zoo_rep_003","Zoology","Reproduction","Gonads","Terminal cells of gonads are lined by","Germinal epithelium","Cuboidal epithelium","Columnar cells","Sertoli cells","A","Gonads are lined by germinal epithelium that produces gametes."
+
+"zoo_orn_004","Zoology","Ornithology","Skeleton","Pneumatic bones are found in","Birds","Reptiles","Mammals","Amphibians","A","Bird bones are hollow and air-filled to reduce weight for flight."
+
+"zoo_inv_010","Zoology","Platyhelminthes","Excretion","Protonephridia function in","Excretion and osmoregulation","Respiration","Reproduction","Nutrient absorption","A","Protonephridia with flame cells help excretion and osmoregulation."
+
+"zoo_prot_003","Zoology","Protozoa","Parasitology","Schizont stage of Plasmodium occurs in","Liver and RBC","Stomach of mosquito","Salivary gland of mosquito","Spleen","A","Schizogony occurs in liver cells and RBCs of human host."
+
+"zoo_prot_004","Zoology","Protozoa","Reproduction","Sexual reproduction in protozoa is by","Conjugation","Budding","Binary fission","Multiple fission","A","Conjugation is the sexual process involving exchange of nuclei."
+
+"zoo_ins_001","Zoology","Insects","Mouthparts","Mouthparts of cockroach are","Biting and chewing type","Sucking type","Piercing type","Sponging type","A","Cockroach has biting and chewing mouthparts adapted for omnivory."
+
+"zoo_chr_003","Zoology","Chordata","General features","Which of the following are characters of vertebrates","Notochord, dorsal nerve cord, closed circulation","Exoskeleton, open circulation","Ventral nerve cord, no skull","Triploblastic, open system","A","All vertebrates have notochord, dorsal nerve cord, and closed blood system."
+
+"zoo_chr_004","Zoology","Chordata","Notochord","Primary function of notochord is","Support and flexibility","Food storage","Blood formation","Reproduction","A","Notochord provides axial support and flexibility to the embryo."
+
+"zoo_prot_005","Zoology","Protozoa","Cilia","Cilia of Paramecium arise from","Basal bodies (kinetosomes)","Pellicle","Cytopharynx","Cytoplasm","A","Each cilium originates from a basal body in the cortex of Paramecium."
+
+"zoo_evo_003","Zoology","Evolution","Speciation","Same species differing by geographic isolation are","Subspecies","Siblings","Hybrids","Polyploids","A","Geographic isolation forms subspecies through allopatric speciation."
+
+"zoo_prot_006","Zoology","Protozoa","Structures","Chief function of trichocyst in Paramecium is","Defense","Digestion","Reproduction","Movement","A","Trichocysts discharge threads for protection and anchoring."
+
+"zoo_skl_002","Zoology","Skeleton","Support","Main supporting tissue of vertebrae is","Cartilage","Bone","Ligament","Muscle","B","Vertebrae consist mainly of bone tissue providing rigidity and protection."
+
+"zoo_brn_001","Zoology","Nervous System","Brain","Mammalian brain differs by presence of","Corpus callosum","Olfactory lobe","Cerebellum","Midbrain","A","Corpus callosum connects two hemispheres, unique in mammals."
+
+"zoo_ecol_002","Zoology","Ecology","Symbiosis","Relationship where one benefits, other unaffected is","Commensalism","Mutualism","Parasitism","Competition","A","Commensalism benefits one without harming the other."
+
+"zoo_por_001","Zoology","Porifera","Reproduction","Gemmules form by aggregation of","Amoebocytes","Choanocytes","Pinacocytes","Scleroblasts","A","Amoebocytes aggregate and form gemmules as resistant reproductive bodies."
+
+"zoo_phy_004","Zoology","Physiology","Heart","Heartbeat initiates after depolarization of","Sinoatrial node","Atrioventricular node","Purkinje fibres","Ventricles","A","SA node acts as pacemaker initiating depolarization and contraction."
+
+"zoo_evo_004","Zoology","Evolution","Biogenetic law","Biogenetic law ‘ontogeny recapitulates phylogeny’ means","Embryo repeats ancestral stages","Embryo forms new organs","Adult resembles ancestor","Evolution is linear","A","Embryonic development passes through stages resembling ancestral forms."
+
+"bot_phy_007","Botany","Plant Physiology","Nastic movements","Opening and closing of flowers is a type of","Photonastic movement","Seismonastic movement","Tigmonastic movement","Hydronastic movement","A","Opening and closing of flowers depends on light, a photonastic movement."

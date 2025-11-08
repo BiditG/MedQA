@@ -6,6 +6,7 @@ import { AppSidebar } from './AppSidebar'
 import SubscriptionModal from '@/components/SubscriptionModal'
 import useUser from '@/hooks/useUser'
 import { usePathname } from 'next/navigation'
+import ChatWidget from '@/components/ChatWidget'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
@@ -32,6 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         onClose={() => setOpen(false)}
         onLockedClick={() => setSubOpen(true)}
       />
+      {(!pathname || !pathname.startsWith('/weekly-exam')) && <ChatWidget />}
       <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
       <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl gap-0 px-4 md:pl-64">
         <div className="flex w-full flex-col py-6 md:py-8">{children}</div>

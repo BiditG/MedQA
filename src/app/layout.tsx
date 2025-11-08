@@ -44,6 +44,11 @@ export const metadata = {
       'MCQ practice, Nepali glossary, and progress tracking — MEDQAS helps Nepali medical students master exams faster.',
     images: [`${defaultUrl}/opengraph-image.png`],
   },
+  icons: {
+    icon: '/data/logo.jpg',
+    shortcut: '/data/logo.jpg',
+    apple: '/data/logo.jpg',
+  },
   keywords: [
     'medical app Nepal',
     'Nepali medical students',
