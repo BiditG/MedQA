@@ -597,3 +597,258 @@ id,subject,chapter,topic,question,optionA,optionB,optionC,optionD,answer,explana
 "zoo_evo_004","Zoology","Evolution","Biogenetic law","Biogenetic law ‘ontogeny recapitulates phylogeny’ means","Embryo repeats ancestral stages","Embryo forms new organs","Adult resembles ancestor","Evolution is linear","A","Embryonic development passes through stages resembling ancestral forms."
 
 "bot_phy_007","Botany","Plant Physiology","Nastic movements","Opening and closing of flowers is a type of","Photonastic movement","Seismonastic movement","Tigmonastic movement","Hydronastic movement","A","Opening and closing of flowers depends on light, a photonastic movement."
+
+"phy_scm_004","Physics","Superconductivity","Low temperature metals","Mercury is cooled to 4 K. It behaves as","Conductor","Insulator","Superconductor","Semiconductor","C","Mercury becomes superconducting below about 4.2 K."
+
+"phy_kine_004","Physics","Kinematics","Relative velocity","A person walks east at 4 m/s. Rain appears vertical at 3 m/s downward relative to him. What is the actual speed of rain","3 m/s","4 m/s","5 m/s","7 m/s","C","Actual components are 4 m/s east and 3 m/s down, so speed √(4²+3²)=5 m/s."
+
+"phy_dyn_002","Physics","Dynamics","Turning on curves","A cyclist overturns at 15 mph. If speed doubles, the chance of overturning becomes","Same","Twice","Three times","Four times","D","Overturning tendency ∝ v². Doubling v makes it 4 times."
+
+"phy_thm_005","Physics","Thermodynamics","P–V slope","Ratio of slopes dP/dV of adiabatic to isothermal curves is","1/γ","1","γ","γ²","C","For isothermal dP/dV=−P/V, adiabatic dP/dV=−γP/V, ratio is γ."
+
+"phy_wav_004","Physics","Waves","Doppler echo","Car moves toward a rock at 30 m/s, horn 600 Hz, v=300 m/s. Echo frequency heard by driver","660 Hz","700 Hz","733 Hz","800 Hz","C","f' = f (v+v₀)/(v−v_s)=600×330/270≈733 Hz."
+
+"phy_opt_007","Physics","Wave Optics","Thin films","Soap bubbles shine due to","Diffraction","Thin film interference","Scattering","Polarization","B","Colors arise from interference in the thin film."
+
+"phy_fluid_005","Physics","Viscous Flow","Poiseuille in series","Two pipes in series with lengths L and 2L and radii r and 2r carry the same flow. The pressure drops are in ratio","1:1","2:1","4:1","8:1","D","ΔP ∝ L/r⁴, so L/r⁴ : 2L/(2r)⁴ = 1 : 1/8 = 8 : 1."
+
+"phy_elst_002","Physics","Elasticity","Temperature effect","With increase in temperature, Young’s modulus of a solid","Increases","Decreases","Unchanged","First increases then decreases","B","Thermal agitation weakens interatomic restoring forces."
+
+"phy_opt_008","Physics","Geometrical Optics","Refractive index","Diamond has n=2.4. Speed of light in diamond is","1.00×10^8 m/s","1.25×10^8 m/s","1.50×10^8 m/s","2.40×10^8 m/s","B","v=c/n≈3×10^8/2.4≈1.25×10^8 m/s."
+
+"phy_mom_003","Physics","Momentum","Explosion at rest","A body breaks into three. Two equal masses m move at 30 m/s at right angles. Third mass is 3m. Its speed is","10 m/s","10√2 m/s","20 m/s","30/√2 m/s","B","Resultant of first two momenta = m·30√2. Third has 3m v opposite, so v=10√2 m/s."
+
+"phy_ht_002","Physics","Heat","Geyser power","Water 22°C to 37°C at 1 L per min. Power of geyser","700 W","900 W","1050 W","1500 W","C","P= m c ΔT / t = 1 kg×4200×15 / 60 ≈ 1050 W."
+
+"phy_opt_009","Physics","Optical Instruments","Telescopes","A reflecting telescope uses","Convex lens objective","Concave mirror objective","Plane mirror objective","Concave lens eyepiece only","B","Objective is a concave mirror; eyepiece is a lens."
+
+"phy_dyn_003","Physics","Dynamics","Non-inertial frames","Centrifugal force is","Real force outward","Frictional force","Pseudo force in rotating frame","Coriolis force","C","It is a fictitious outward force mrω² in a rotating frame."
+
+"phy_kine_005","Physics","Kinematics","Average speed","Train goes 40 km at 80 km/h, then 40 km at 40 km/h. Average speed","40 km/h","50 km/h","53.33 km/h","60 km/h","C","Equal distances, harmonic mean: 2v₁v₂/(v₁+v₂)=53.33 km/h."
+
+"phy_wav_005","Physics","Waves","Doppler effect","Stationary observer hears twice the source frequency from an approaching source, v=332 m/s. Source speed","83 m/s","111 m/s","166 m/s","332 m/s","C","2 = v/(v−v_s) ⇒ v_s = v/2 = 166 m/s."
+
+"phy_circ_003","Physics","Circular Motion","Centripetal acceleration","Disc of radius 0.25 m rotates at 2 rev/s. Acceleration of rim point","9.87 m/s²","19.7 m/s²","39.5 m/s²","78.9 m/s²","C","a=ω²r=(4π)²×0.25=4π²≈39.5 m/s²."
+
+"phy_em_001","Physics","Electromagnetic Induction","Max emf","Horizontal axis coil perpendicular to B. Angle between B and plane of coil for maximum induced emf","0°","30°","60°","90°","A","Max emf when plane is parallel to B, i.e., angle 0° between B and plane."
+
+"phy_ac_002","Physics","AC Circuits","Impedance","AC circuit with R=4 Ω and capacitive reactance Xc=3 Ω. Impedance Z","3 Ω","4 Ω","5 Ω","7 Ω","C","Z=√(R²+Xc²)=√(16+9)=5 Ω."
+"chem_bond_003","Chemistry","Chemical Bonding","Octet rule","Which of the following does not obey the octet rule","BF3","CH4","NH4+","H2O","A","Boron in BF3 is electron deficient with only six valence electrons."
+
+"chem_titr_001","Chemistry","Acid–Base","Equivalence pH","The highest pH at the equivalence point occurs for the titration between","Weak acid and strong base","Strong acid and strong base","Weak base and strong acid","Weak acid and weak base","A","At equivalence, the conjugate base of a weak acid hydrolyzes to give basic pH."
+
+"chem_salt_001","Chemistry","Acid–Base","Salt hydrolysis","Which of the following salts is most acidic in aqueous solution","NH4Cl","NaCl","CH3COONa","Na2CO3","A","NH4+ is a weak acid and Cl− is neutral, so the solution is acidic."
+
+"chem_pH_001","Chemistry","Acid–Base","Solution pH","Which has the highest pH for its 0.1 M solution","Na2CO3","NaCl","NH4Cl","KNO3","A","CO3^2− is a strong base by hydrolysis, giving the most basic solution."
+
+"chem_redox_001","Chemistry","Redox","Oxidation number","The oxidation number of S in SO4^2− is","+4","+5","+6","+2","C","x+4(−2)=−2 gives x=+6."
+
+"chem_elc_006","Chemistry","Electrochemistry","CuSO4 electrolysis","During electrolysis of CuSO4 with copper electrodes, the solution density","Increases","Decreases","Remains constant","Becomes zero","C","Cu dissolves at anode and deposits at cathode, keeping solution composition nearly constant."
+
+"chem_spec_001","Chemistry","Atomic Spectra","Hydrogen spectrum","The hydrogen spectrum falling in the visible region is the","Lyman series","Balmer series","Paschen series","Brackett series","B","Balmer lines lie in the visible region."
+
+"chem_org_031","Chemistry","Organic Chemistry","Dehydrogenation","Vapour of alcohol is easily dehydrogenated by passing over","Copper","Nickel","Platinum","Iron","A","Heated Cu catalyzes dehydrogenation of alcohols to carbonyls."
+
+"chem_org_032","Chemistry","Biochemistry","Fermentation","Glucose or fructose is converted into ethyl alcohol in presence of","Zymase","Invertase","Diastase","Urease","A","Yeast enzyme zymase catalyzes alcoholic fermentation."
+
+"chem_org_033","Chemistry","Electro-organic","Kolbe electrolysis","Electrolysis of sodium succinate gives","Ethane","Ethylene","Propane","Butane","B","Kolbe electrolysis of dicarboxylate produces ethylene."
+
+"chem_poly_002","Chemistry","Polymers","Natural polymer","A natural polymer is","Polyethylene","Polystyrene","Natural rubber","PVC","C","Natural rubber is a naturally occurring polymer of isoprene."
+
+"chem_red_002","Chemistry","Organic Reduction","Carbonyl to hydrocarbon","Which reagent reduces carbonyl compounds directly to hydrocarbons","Zn–Hg/HCl","LiAlH4","NaBH4","H2/Ni","A","Clemmensen reduction converts aldehydes and ketones to hydrocarbons."
+
+"chem_org_034","Chemistry","Organic Reactions","Cannizzaro","Formaldehyde reacts with Ca(OH)2 to give","Calcium formate and methanol","Formic acid only","Methane","Acetal","A","Disproportionation of HCHO yields formate and methanol."
+
+"chem_org_035","Chemistry","Hydrocarbons","Saturation","Which of the following is unsaturated","Ethene","Methane","Cyclohexane","Ethane","A","Ethene contains a C=C double bond."
+
+"chem_org_036","Chemistry","Hydrocarbons","Volatility","Most volatile alkane among the following is","Methane","Ethane","Propane","Butane","A","Lower molar mass alkane is most volatile."
+
+"chem_drug_003","Chemistry","Medicinal","Aspirin","Acetyl salicylic acid is used as","Analgesic and antipyretic","Antibiotic","Antacid","Sedative","A","Aspirin relieves pain and reduces fever."
+
+"chem_org_037","Chemistry","Named Reactions","Reimer–Tiemann","Phenol with CHCl3/aq. NaOH giving salicylaldehyde is called","Reimer–Tiemann reaction","Gattermann reaction","Kolbe reaction","Cannizzaro reaction","A","The Reimer–Tiemann formylates phenol to o-hydroxybenzaldehyde."
+
+"chem_red_003","Chemistry","Reductions","Carboxylic to alkane","Which reagent reduces carboxylic acids directly to alkanes","HI/red P","LiAlH4","NaBH4","H2/Ni","A","Hot HI with red P can reduce RCOOH to RH."
+
+"chem_org_038","Chemistry","Organometallics","Grignard + CO2","Methyl magnesium iodide after CO2 addition and hydrolysis forms","Formic acid","Acetic acid","Propionic acid","Methanol","B","R–MgX + CO2 → RCOO−, on acid workup gives carboxylic acid, here CH3COOH."
+
+"chem_qual_004","Chemistry","Qualitative Analysis","Halides","The compound that gives a white precipitate with AgNO3 is","NaCl","NaBr","NaI","NaNO3","A","AgCl is a white precipitate."
+
+"chem_cat_002","Chemistry","Catalysis","Raney nickel","Raney Ni is an alloy of","Ni–Al","Ni–Cu","Ni–Cr","Ni–Zn","A","Raney nickel is prepared from a Ni–Al alloy."
+
+"chem_met_002","Chemistry","Metallurgy","Heat treatment","Railway wagon axles made by heating iron rods embedded in charcoal is","Case hardening (carburizing)","Annealing","Tempering","Nitriding","A","Carburizing increases surface carbon to harden the exterior."
+
+"chem_atom_005","Chemistry","Periodic Trends","Ionization energy","The second ionization energy is highest for","Na","Mg","Al","Si","A","After losing one electron, Na attains a noble gas configuration, making IE2 very high."
+
+"chem_met_003","Chemistry","Metallurgy","Copper extraction","In copper extraction, the Bessemer/Pierce-Smith reaction is","Cu2S + O2 → 2Cu + SO2","CuO + C → Cu + CO","2Cu + O2 → 2CuO","CuSO4 → CuO + SO3","A","Blowing air oxidizes Cu2S to Cu with SO2 evolution."
+
+"chem_grp_001","Chemistry","Periodic Table","Halogens","Group 17 are called halogens due to their property of forming","Salts","Peroxides","Hydrides only","Superoxides","A","Halogen means salt-former."
+
+"chem_med_001","Chemistry","Medicinal/Applied","Astringent","Very dilute ZnSO4 solution is used as","Eye lotion","Antacid","Antiseptic for wounds","Expectorant","A","A mild astringent eye wash."
+
+"chem_acid_005","Chemistry","Industrial","Oleum","The chemical composition of fuming sulfuric acid is","H2S2O7 (oleum)","H2SO3","H2S","S2O3","A","Fuming sulfuric acid is oleum, mainly H2S2O7."
+
+"chem_inorg_001","Chemistry","Inorganic","Zincate formation","Excess NaOH with ZnSO4 forms","Sodium zincate","Zn(OH)2 precipitate only","Na2SO4","ZnO","A","Zn(OH)2 dissolves in excess base to give sodium zincate."
+
+"chem_ind_003","Chemistry","Industrial","Solvay process","In Solvay process, sodium bicarbonate is precipitated by","Passing CO2 into ammoniated brine","Adding NaOH","Boiling off NH3","Adding CaO","A","CO2 bubbled through NH3-saturated brine precipitates NaHCO3."
+
+"bot_mod_002","Botany","Morphology","Bud types","Epiphyllous buds are characteristic of","Bryophyllum","Zamia","Potato","Onion","A","In Bryophyllum, buds arise on leaf margins and grow into new plantlets, called epiphyllous buds."
+
+"bot_phy_008","Botany","Plant Physiology","Metabolism","Which of the following involves both photosynthesis and respiration","Photorespiration","Photolysis","Fermentation","Calvin cycle","A","Photorespiration involves both chloroplast and mitochondria, using products of photosynthesis and respiration."
+
+"bot_phy_009","Botany","Photosynthesis","Light reaction","The first step in photosynthesis is","Excitation of chlorophyll by light","Photolysis of water","Reduction of CO2","ATP synthesis","A","Light energy excites chlorophyll molecules to release electrons."
+
+"bot_phy_010","Botany","Plant Physiology","Electron transport","Cytochrome helps in","Electron transport","ATP hydrolysis","Oxygen evolution","Carbon fixation","A","Cytochromes are electron carriers in respiration and photosynthesis electron transport chains."
+
+"bot_rep_007","Botany","Reproduction","Microsporangium","Nutrition to developing microspores is provided by","Tapetum","Endothecium","Epidermis","Middle layer","A","Tapetum nourishes microspores and secretes sporopollenin precursors."
+
+"bot_rep_008","Botany","Reproduction","Pollination","Flowers that remain closed until seed set are","Cleistogamous","Chasmogamous","Monoecious","Dioecious","A","Cleistogamous flowers self-pollinate without opening."
+
+"bot_mic_002","Botany","Microbiology","Nitrogen fixation","Atmospheric nitrogen is converted into nitrogenous compounds by","Nitrogen-fixing bacteria","Denitrifying bacteria","Ammonifying bacteria","Saprophytes","A","Rhizobium and Azotobacter fix nitrogen into usable forms like ammonia."
+
+"bot_mic_003","Botany","Microbiology","Bacteria","Bacteria without flagella are","Atrichous","Monotrichous","Lophotrichous","Peritrichous","A","Atrichous bacteria lack flagella and are non-motile."
+
+"bot_rep_009","Botany","Pollination","Pollination agents","Ornithophily refers to pollination by","Birds","Bats","Insects","Wind","A","Ornithophilous plants are adapted for bird pollination."
+
+"bot_eco_006","Botany","Economic Botany","Fibre plants","Jute fibre is obtained from","Stem","Root","Leaf","Fruit","A","Jute is obtained from the stem bast fibres of Corchorus species."
+
+"bot_cls_003","Botany","Taxonomy","Angiosperm distinction","Angiosperms differ from gymnosperms by","Presence of ovary","Absence of seeds","Absence of flowers","Lack of vascular tissue","A","Angiosperms have enclosed ovules within an ovary, unlike gymnosperms."
+
+"bot_gen_003","Botany","Genetics","DNA discovery","First evidence of DNA as genetic material was given by","Avery, MacLeod and McCarty","Griffith","Hershey and Chase","Watson and Crick","A","Avery, MacLeod, and McCarty proved DNA carries genetic information using pneumococcus transformation."
+
+"bot_cel_006","Botany","Cell Biology","Osmosis","Plasmolysis occurs when a cell is placed in","Hypertonic solution","Hypotonic solution","Isotonic solution","Distilled water","A","Water leaves the cell in hypertonic medium, shrinking cytoplasm from the wall."
+
+"bot_ecol_003","Botany","Ecology","Temperature tolerance","Plants that tolerate narrow temperature range are","Stenothermal","Eurythermal","Mesothermal","Thermophilic","A","Stenothermal species survive only within a limited temperature range."
+
+"bot_anat_001","Botany","Anatomy","Growth rings","Annual rings help determine","Age of plant","Height of plant","Diameter of plant","Number of branches","A","Each annual ring represents one year of secondary growth, indicating plant age."
+
+"bot_rep_010","Botany","Vegetative Propagation","Methods","Ginger is propagated by","Rhizome","Bulb","Corm","Stem cutting","A","Ginger reproduces vegetatively through underground rhizomes."
+
+"bot_phy_011","Botany","Plant Physiology","Symbiosis","Mycorrhiza is","Symbiotic association between fungus and root","Parasitic fungus on leaves","Fungal infection","Epiphytic growth","A","Mycorrhiza is a mutualistic association where fungi aid in nutrient absorption for roots."
+
+"bot_gen_004","Botany","Genetics","Meiosis","Terminalization occurs in","Diplotene","Zygotene","Leptotene","Pachytene","A","In diplotene, chiasmata shift towards chromosome ends in terminalization."
+
+"zoo_gen_005","Zoology","Genetics","Chromosomal disorders","Down syndrome is caused by","Trisomy of chromosome 21","Monosomy of X","Deletion of chromosome 5","Triploidy","A","Down syndrome results from an extra copy of chromosome 21."
+
+"zoo_cel_001","Zoology","Cell Biology","Mitochondria","Oxysomes are present on","Inner mitochondrial membrane","Outer mitochondrial membrane","Ribosome","Endoplasmic reticulum","A","Oxysomes (F₁ particles) are on the inner mitochondrial membrane and form part of ATP synthase."
+
+"zoo_inv_011","Zoology","Parasitology","Fish parasites","Ectoparasite of fish falls under","Copepoda","Trematoda","Cestoda","Nematoda","A","Fish ectoparasites like Argulus belong to class Copepoda, external crustaceans."
+
+"zoo_prot_007","Zoology","Protozoology","Polymorphism","Which of the following is dimorphic protozoa","Entamoeba histolytica","Trypanosoma","Plasmodium","Euglena","A","Entamoeba histolytica shows two forms, trophozoite and cyst, hence dimorphic."
+
+"zoo_vir_002","Zoology","Virology","Viral diseases","Zika virus is transmitted by","Aedes mosquito","Anopheles mosquito","Culex mosquito","Ticks","A","Zika virus spreads through Aedes mosquito bite, same as dengue vector."
+
+"zoo_prot_008","Zoology","Protozoa","Trematodes","Blood fluke parasite is","Schistosoma","Taenia","Fasciola","Ascaris","A","Schistosoma is the human blood fluke causing schistosomiasis."
+
+"zoo_rep_004","Zoology","Reproduction","Spermatogenesis","Time from spermatogonia to mature spermatozoa is","64 days","28 days","90 days","10 days","A","Human spermatogenesis takes about 64 days."
+
+"zoo_tis_001","Zoology","Histology","Epithelia","Endothelium is","Simple squamous epithelium lining blood vessels","Cuboidal epithelium of glands","Columnar epithelium of intestine","Ciliated epithelium of trachea","A","Endothelium lines the inner walls of blood vessels and heart chambers."
+
+"zoo_phy_005","Zoology","Physiology","Excretion","Blood in urine is called","Hematuria","Glycosuria","Albuminuria","Ketonuria","A","Hematuria indicates presence of red blood cells in urine."
+
+"zoo_par_001","Zoology","Parasitology","Helminths","Hookworm infection causes deficiency of","Iron","Calcium","Vitamin B12","Iodine","A","Hookworms feed on blood, causing iron deficiency anemia."
+
+"zoo_prot_009","Zoology","Protozoology","Blood parasites","Which of the following is not a blood parasite","Entamoeba histolytica","Plasmodium","Trypanosoma","Leishmania","A","E. histolytica is intestinal, not a blood parasite."
+
+"zoo_par_002","Zoology","Parasitology","Nematodes","Filariform larva is infective stage of","Ancylostoma","Ascaris","Enterobius","Fasciola","A","Filariform larva of Ancylostoma penetrates skin to infect humans."
+
+"zoo_skl_003","Zoology","Skeletal System","Pelvic girdle","Ischium and ilium form the","Pelvic girdle","Pectoral girdle","Vertebral column","Rib cage","A","Ilium, ischium, and pubis together make the hip or pelvic girdle."
+
+"zoo_phy_006","Zoology","Physiology","Digestive system","Pancreatic secretion is stimulated by","Secretin and cholecystokinin","Gastrin","Pepsin","Trypsin","A","These hormones released from duodenum stimulate pancreatic juice secretion."
+
+"zoo_tis_002","Zoology","Histology","Muscles","Cardiac muscle is","Striated and involuntary","Non-striated and voluntary","Striated and voluntary","Non-striated and involuntary","A","Cardiac muscle shows striations but is involuntary in control."
+
+"zoo_end_004","Zoology","Endocrine System","Hormones","Addison’s disease is due to deficiency of","Cortisol (adrenal cortex hormone)","Thyroxine","Insulin","Aldosterone only","A","Adrenal cortex failure reduces cortisol secretion causing Addison’s disease."
+
+"zoo_phy_007","Zoology","Physiology","Blood","Organism with red blood but no RBCs","Earthworm","Cockroach","Frog","Hydra","A","Earthworm’s hemoglobin is dissolved in plasma, not in cells."
+
+"zoo_tis_003","Zoology","Histology","Epithelium","Ciliated epithelium is found in","Trachea","Liver","Stomach","Esophagus","A","Ciliated columnar epithelium lines respiratory passages to move mucus."
+
+"zoo_par_003","Zoology","Parasitology","Intestinal parasites","Which of the following is an intestinal parasite","Ascaris lumbricoides","Leishmania donovani","Wuchereria bancrofti","Schistosoma","A","Ascaris is a large intestinal roundworm."
+
+"zoo_phy_008","Zoology","Physiology","Blood composition","If iron is removed from hemoglobin, the remaining part is","Globin","Porphyrin","Myoglobin","Albumin","A","Hemoglobin minus heme iron is called globin."
+
+"zoo_tis_004","Zoology","Histology","Tissues","Principal tissues in human body are","Epithelial, connective, muscular, nervous","Epithelial only","Bone and cartilage only","Lymph and blood","A","Four main tissue types perform body functions."
+
+"zoo_nrv_001","Zoology","Nervous System","Brain lobes","Damage to occipital lobe affects","Vision","Hearing","Speech","Touch","A","Occipital lobe controls visual perception."
+
+"zoo_phy_009","Zoology","Digestive System","Digestion","Semi-digested food entering duodenum is","Chyme","Bolus","Chyle","Food mass","A","Chyme is semi-digested acidic food from stomach entering duodenum."
+
+"zoo_inv_012","Zoology","Comparative Anatomy","Glands","Sting gland of honeybee and venom gland of scorpion are","Homologous","Analogous","Vestigial","Accessory glands","B","They have similar function (defense), not origin, hence analogous."
+
+"zoo_vir_003","Zoology","Virology","Human diseases","Parasite transmitted through kissing","Trypanosoma cruzi","Plasmodium vivax","Giardia lamblia","Toxoplasma gondii","A","Trypanosoma cruzi (Chagas disease) spreads via kissing bug."
+
+"zoo_urs_001","Zoology","Excretory System","Nephrons","Podocyte cells are found in","Bowman’s capsule","Loop of Henle","Collecting duct","Glomerulus capillaries","A","Podocytes line Bowman’s capsule forming filtration slits."
+
+"zoo_evo_005","Zoology","Evolution","Transitional forms","Connecting link between reptiles and birds is","Archaeopteryx","Ichthyostega","Peripatus","Neopilina","A","Archaeopteryx shows reptilian and avian features."
+
+"zoo_coe_001","Zoology","Reproduction","Fertilization","In Hydra, cross-fertilization occurs because they are","Unisexual","Hermaphrodite with separate maturation","Asexual","Colonial","B","Hydra has both gonads but male and female gametes mature separately ensuring cross-fertilization."
+
+"zoo_phy_010","Zoology","Physiology","Digestive Glands","Which salivary gland is absent in humans","Infra-orbital gland","Parotid gland","Sublingual gland","Submandibular gland","A","Humans have three pairs but lack infra-orbital salivary glands."
+
+"zoo_end_005","Zoology","Endocrine System","Gland types","Which is a heterocrine gland","Pancreas","Liver","Thyroid","Adrenal","A","Pancreas has both endocrine (islets) and exocrine (enzymes) parts."
+
+"zoo_end_006","Zoology","Endocrine System","Pituitary hormones","Posterior pituitary releases","Oxytocin and vasopressin","Growth hormone","ACTH","TSH","A","Posterior lobe stores and releases ADH and oxytocin."
+
+"zoo_nrv_002","Zoology","Nervous System","Brain control","The center for body temperature and hunger is located in","Hypothalamus","Cerebrum","Cerebellum","Medulla oblongata","A","Hypothalamus regulates temperature, hunger, and thirst."
+
+"zoo_por_002","Zoology","Porifera","Asexual reproduction","Gemmule formation is the means of reproduction in","Sponges","Hydra","Earthworm","Amoeba","A","Sponges form gemmules (internal buds) for asexual reproduction and survival in adverse conditions."
+
+"zoo_imm_002","Zoology","Immunity","Transplant rejection","Rejection of transplanted organs is due to","Immune response","Nerve damage","Hormonal imbalance","Lack of oxygen","A","The immune system recognizes transplanted tissue as foreign and attacks it."
+
+"zoo_phy_011","Zoology","Physiology","Nervous System","Neurotransmitter released from postganglionic sympathetic fibers in sweat glands is","Acetylcholine","Adrenaline","Noradrenaline","Dopamine","A","Sweat glands are an exception; they use acetylcholine instead of noradrenaline."
+
+"zoo_phy_012","Zoology","Physiology","Circulatory System","The total duration of a cardiac cycle in humans is","0.4 s","0.6 s","0.8 s","1.0 s","C","At 75 beats per minute, each cardiac cycle lasts about 0.8 seconds."
+
+"zoo_cmp_001","Zoology","Comparative Anatomy","Common features","What is common in man and earthworm","Closed circulatory system","Open circulatory system","Lungs","Jointed appendages","A","Both have a closed circulatory system with blood confined to vessels."
+
+"zoo_end_007","Zoology","Endocrine System","Reproductive hormones","Progesterone which thickens endometrium for implantation is secreted by","Corpus luteum","Graafian follicle","Pituitary","Placenta","A","After ovulation, corpus luteum secretes progesterone for uterine preparation."
+
+"zoo_phy_013","Zoology","Physiology","Excretion","Conversion of ammonia to urea in the liver is called","Urea cycle","Deamination","Transamination","Gluconeogenesis","A","In the ornithine (urea) cycle, ammonia and CO₂ combine to form urea in the liver."
+
+"zoo_vir_004","Zoology","Virology","HIV structure","HIV has a protein coat and genetic material of type","RNA","DNA","Both RNA and DNA","Peptide","A","HIV is an RNA virus with a protein coat (retrovirus)."
+
+"zoo_imm_003","Zoology","Immunity","Vaccines","A second-generation vaccine produced by genetic engineering is","Hepatitis B vaccine","Polio vaccine","Rabies vaccine","Smallpox vaccine","A","Recombinant Hepatitis B vaccine is produced using yeast by genetic engineering."
+
+"zoo_vit_002","Zoology","Vitamins","Deficiency diseases","Deficiency of which substance causes pellagra","Niacin (Vitamin B3)","Thiamine","Riboflavin","Vitamin B6","A","Niacin deficiency causes pellagra characterized by dermatitis, diarrhea, and dementia."
+
+"zoo_phy_014","Zoology","Physiology","Ageing","Study of ageing is called","Gerontology","Morphology","Cytology","Neurology","A","Gerontology deals with the study of aging and its biological effects."
+
+"zoo_cel_002","Zoology","Cell Biology","Mitochondria","ATP synthesis takes place in","Mitochondria","Ribosome","Cytoplasm","Nucleus","A","Mitochondria are the sites of oxidative phosphorylation and ATP formation."
+
+"zoo_cel_003","Zoology","Cell Biology","Cell organelles","The largest cell organelle is","Nucleus","Mitochondria","Chloroplast","Golgi body","A","The nucleus is the largest organelle controlling all cellular activities."
+
+"zoo_phy_015","Zoology","Cellular Respiration","ATP yield","Maximum ATP is formed during","Electron transport chain","Glycolysis","Krebs cycle","Fermentation","A","Most ATP molecules are produced in the electron transport chain of mitochondria."
+
+"bot_cls_004","Botany","Taxonomy","Scientific names","Scientific name of rice is","Oryza sativa","Triticum aestivum","Zea mays","Cicer arietinum","A","Rice is scientifically named Oryza sativa."
+
+"bot_mic_004","Botany","Microbiology","Fermentation","Enzyme secreted by yeast for fermentation is","Zymase","Invertase","Amylase","Pepsin","A","Zymase complex in yeast catalyzes alcoholic fermentation."
+
+"bot_bryo_001","Botany","Bryophytes","Life cycle","Protonema is a stage in the life cycle of","Moss","Fern","Liverwort","Alga","A","Protonema is the filamentous gametophytic stage of mosses."
+
+"bot_flr_001","Botany","Pollination","Flower structure","Unique floral character preventing self-pollination is","Herkogamy","Autogamy","Cleistogamy","Homogamy","A","Herkogamy involves spatial separation of anthers and stigma favoring cross-pollination."
+
+"zoo_vir_005","Zoology","Virology","Viral replication","Viral infection where viral DNA integrates into bacterial DNA is called","Lysogenic cycle","Lytic cycle","Retrogression","Fusion cycle","A","In lysogeny, phage DNA integrates with host genome as a prophage."
+
+"bot_mic_005","Botany","Mycology","Fungal product","Secretory product of green molds (Penicillium) is","Penicillin","Cephalosporin","Erythromycin","Tetracycline","A","Penicillin was first antibiotic obtained from Penicillium mold."
+
+"bot_rep_011","Botany","Reproduction","Apomixis","Development of zygote without fertilization is called","Parthenogenesis","Polyembryony","Asexual budding","Fission","A","Parthenogenesis involves development from an unfertilized egg cell."
+
+"bot_cls_005","Botany","Taxonomy","Medicinal plants","Scientific name of Yarsagumba is","Cordyceps sinensis","Datura stramonium","Rauwolfia serpentina","Ocimum sanctum","A","Yarsagumba (Cordyceps sinensis) is a medicinal fungus-parasite on caterpillars."
+
+"bot_mod_003","Botany","Morphology","Stem modification","Phylloclade is modified part of","Stem","Leaf","Root","Flower","A","Phylloclade is a flattened or fleshy stem performing photosynthesis."
+
+"bot_rep_012","Botany","Reproduction","Double fertilization","Double fertilization is characteristic of","Angiosperms","Gymnosperms","Ferns","Mosses","A","Only angiosperms exhibit double fertilization forming zygote and endosperm."
+
+"bot_rep_013","Botany","Pollination","Pollen entry","Entry of pollen tube through micropyle is","Porogamy","Chalazogamy","Mesogamy","Syngamy","A","Porogamy is pollen tube entry through the micropyle of ovule."
+
+"bot_cls_006","Botany","Taxonomy","Plant classification","Vascular cryptogams are","Pteridophytes","Bryophytes","Algae","Gymnosperms","A","Pteridophytes are non-seed vascular plants called vascular cryptogams."
+
+"bot_eco_007","Botany","Agriculture","Green manure","Most commonly used green manure crop in India is","Sesbania","Crotalaria","Alfalfa","Sunhemp","A","Sesbania (Dhaincha) is widely used as green manure for soil enrichment."
+
+"bot_env_002","Botany","Conservation","Red Data Book","Red Data Book contains","Endangered species","Medicinal plants","Agricultural crops","Common species","A","It lists threatened and endangered species of plants and animals."
+
+"eco_sys_001","Ecology","Ecosystem","Energy flow","Flow of energy in ecosystem is","Unidirectional","Cyclic","Bidirectional","Multidirectional","A","Energy flows in one direction, from producers to consumers to decomposers."
+
+"zoo_cel_004","Zoology","Cell Biology","Cell structure","Largest cell component is","Nucleus","Cytoplasm","Mitochondria","Golgi body","B","Cytoplasm occupies the largest volume in a cell, containing organelles."
+
+"zoo_cel_005","Zoology","Cell Biology","ATP synthesis site","ATP is formed inside mitochondria at","Cristae","Matrix","Outer membrane","Intermembrane space","A","ATP synthase is located on the cristae (inner membrane folds) of mitochondria."

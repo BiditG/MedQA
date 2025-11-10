@@ -1,5 +1,6 @@
 import { GeistSans } from 'geist/font/sans'
 import ThemeProvider from '@/providers/ThemeProvider'
+import Script from 'next/script'
 import NextTopLoader from 'nextjs-toploader'
 import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
@@ -93,7 +94,21 @@ export default function RootLayout({
       style={{ colorScheme: 'light' }}
       suppressHydrationWarning
     >
+      <head>
+        <meta
+          name="google-site-verification"
+          content="03vsygovTI0osOJ9DE7g0rD33dOaNp6__r24cvFMFRM"
+        />
+      </head>
       <body className="bg-background text-foreground">
+        {/* Google tag (gtag.js) - Global site tag for Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-Y1T8QNPR2E"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Y1T8QNPR2E');`}
+        </Script>
         <NextTopLoader showSpinner={false} height={2} color="#2acf80" />
         <ThemeProvider
           attribute="class"
