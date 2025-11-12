@@ -99,6 +99,9 @@ export default function RootLayout({
           name="google-site-verification"
           content="03vsygovTI0osOJ9DE7g0rD33dOaNp6__r24cvFMFRM"
         />
+        {/* favicon: use logo.jpg from public/data */}
+        <link rel="icon" href="/data/logo.jpg" />
+        <link rel="apple-touch-icon" href="/data/logo.jpg" />
       </head>
       <body className="bg-background text-foreground">
         {/* Google tag (gtag.js) - Global site tag for Google Analytics */}
