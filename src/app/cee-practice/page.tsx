@@ -11,6 +11,7 @@ type MCQ = {
   subject: string
   chapter?: string
   topic?: string
+  exam?: string
   question: string
   optionA?: string
   optionB?: string
@@ -61,6 +62,7 @@ function parseCSV(text: string): MCQ[] {
       id: obj.id ?? `${r}`,
       subject: obj.subject ?? '',
       chapter: obj.chapter ?? '',
+      exam: obj.exam ?? '',
       topic: obj.topic ?? '',
       question: obj.question ?? obj.q ?? '',
       optionA: obj.optionA ?? obj.optiona ?? '',
@@ -464,6 +466,7 @@ export default function CeePracticePage() {
 
               <>
                 <QuestionCard
+                  exam={questions[index]?.exam}
                   q={questions[index]?.question || ''}
                   options={[
                     questions[index]?.optionA || '',

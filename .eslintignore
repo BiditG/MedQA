@@ -1,0 +1,7 @@
+# Ignore developer scripts that are not part of the app bundle
+scripts/
+
+# Keep other ignores in sync with .gitignore
+node_modules/
+.next/
+out/

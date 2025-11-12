@@ -1,0 +1,145 @@
+{
+  "totalRows": 11679,
+  "subjectsTop": [
+    [
+      "(empty)",
+      5812
+    ],
+    [
+      "Biology",
+      2895
+    ],
+    [
+      "Physics",
+      2479
+    ],
+    [
+      "Chemistry",
+      493
+    ]
+  ],
+  "chaptersTop": [
+    [
+      "(empty)",
+      3278
+    ],
+    [
+      "Acids & Bases",
+      2773
+    ],
+    [
+      "Mechanics",
+      2376
+    ],
+    [
+      "Cell Biology",
+      768
+    ],
+    [
+      "Human Anatomy & Physiology",
+      688
+    ],
+    [
+      "Genetics",
+      501
+    ],
+    [
+      "Waves & Sound",
+      378
+    ],
+    [
+      "Electricity & Circuits",
+      269
+    ],
+    [
+      "Thermodynamics",
+      254
+    ],
+    [
+      "Optics",
+      146
+    ],
+    [
+      "Organic Chemistry",
+      145
+    ],
+    [
+      "Ecology",
+      103
+    ]
+  ],
+  "topicsTop": [
+    [
+      "(empty)",
+      3885
+    ],
+    [
+      "Acid-Base",
+      3245
+    ],
+    [
+      "Mechanics",
+      1181
+    ],
+    [
+      "Human Physiology",
+      556
+    ],
+    [
+      "Photosynthesis",
+      434
+    ],
+    [
+      "Cell Division",
+      426
+    ],
+    [
+      "Enzymes",
+      356
+    ],
+    [
+      "Electricity",
+      323
+    ],
+    [
+      "Periodic Trends",
+      240
+    ],
+    [
+      "Waves & Sound",
+      231
+    ],
+    [
+      "Evolution",
+      202
+    ],
+    [
+      "Microbiology",
+      125
+    ],
+    [
+      "Organic Chemistry",
+      104
+    ],
+    [
+      "Magnetism",
+      103
+    ],
+    [
+      "Optics",
+      84
+    ],
+    [
+      "Genetics",
+      77
+    ],
+    [
+      "Ecology",
+      76
+    ],
+    [
+      "Gas Laws",
+      31
+    ]
+  ]
+}

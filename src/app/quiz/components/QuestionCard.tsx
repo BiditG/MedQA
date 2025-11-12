@@ -34,6 +34,11 @@ export function QuestionCard({
       <CardContent className="pt-6">
         {/* Badges */}
         <div className="mb-2 flex flex-wrap gap-2 text-xs">
+          {exam && (
+            <Badge className="border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
+              {exam}
+            </Badge>
+          )}
           {subject && (
             <Badge className="border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-300">
               {subject}

@@ -61,9 +61,9 @@ function PricingPage() {
   ]
 
   const plans = [
-    { id: '1m', name: '1 Month', original: 1299, price: 999, save: 300 },
-    { id: '3m', name: '3 Months', original: 2499, price: 1499, save: 1000 },
-    { id: '1y', name: '1 Year', original: 9999, price: 4999, save: 5000 },
+    { id: '1m', name: '1 Month', original: 1299, price: 499, save: 800 },
+    { id: '3m', name: '3 Months', original: 2499, price: 999, save: 1500 },
+    { id: '1y', name: '1 Year', original: 9999, price: 2499, save: 7500 },
   ]
   const [selected, setSelected] = useState(plans[0])
   const fmt = (n: number) => `रु ${n.toLocaleString('en-IN')}`

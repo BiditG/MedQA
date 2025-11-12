@@ -5,7 +5,12 @@ import path from 'path'
 function inferLabel(rel: string, name: string): boolean | null {
   const parent = (rel.split(path.sep).filter(Boolean).pop() || '').toLowerCase()
   const fname = name.toLowerCase()
-  if (/pneumonia|pnm/.test(parent) || /pneumonia/.test(fname)) return true
+  // Accept a few common variants/misspellings and related folder names so files are not left unlabeled
+  // Examples handled: "pneumonia", "pnemonia", "pnumonia", "pneumon", "pnm",
+  // and common dataset folder names like "infected", "infect" or "positive".
+  const pneumoniaRe =
+    /(pneumonia|pnemonia|pnumonia|pneumon|pnm|infect|infected|positive)/i
+  if (pneumoniaRe.test(parent) || pneumoniaRe.test(fname)) return true
   if (
     /normal|no|neg|not|healthy/.test(parent) ||
     /normal|healthy|no|neg|not/.test(fname)

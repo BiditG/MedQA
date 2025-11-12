@@ -217,12 +217,91 @@ export default function WeeklyExam() {
       if (question.includes('auto-generated placeholder')) return false
       return true
     })
-    const poolSource = real.length >= totalQuestions ? real : items
-    const pool = shuffle(poolSource).slice(
-      0,
-      Math.min(totalQuestions, poolSource.length),
-    )
-    setExamQuestions(pool)
+
+    // Syllabus-driven default distribution. These are relative weights and
+    // will be normalized to allocate slots from totalQuestions.
+    const weights: Record<string, number> = {
+      life: 0.8, // biology + botany + zoology combined
+      physics: 0.5,
+      chemistry: 0.5,
+      mat: 0.2,
+    }
+
+    const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0)
+
+    // Build subject -> items map (lowercased keys)
+    const pools: Record<string, MCQ[]> = {}
+    for (const it of real) {
+      const s =
+        ((it.subject || '') as string).toString().trim().toLowerCase() ||
+        'unspecified'
+      if (!pools[s]) pools[s] = []
+      pools[s].push(it)
+    }
+
+    const lifeSubjects = ['biology', 'botany', 'zoology']
+    const matSubjects = ['mat', 'reasoning']
+
+    function takeFromPool(arr: MCQ[], n: number, takenIds: Set<string>) {
+      const a = shuffle(arr.slice()).filter((x) => !takenIds.has(x.id))
+      const sel = a.slice(0, Math.max(0, n))
+      for (const q of sel) takenIds.add(q.id)
+      return sel
+    }
+
+    const targets: Record<string, number> = {}
+    for (const k of Object.keys(weights)) {
+      targets[k] = Math.round((weights[k] / totalWeight) * totalQuestions)
+    }
+
+    const taken = new Set<string>()
+    const selected: MCQ[] = []
+
+    // LIFE group (biology/botany/zoology)
+    const lifePool: MCQ[] = []
+    for (const ls of lifeSubjects) if (pools[ls]) lifePool.push(...pools[ls])
+    if (lifePool.length > 0)
+      selected.push(...takeFromPool(lifePool, targets.life, taken))
+
+    // Physics
+    if (pools['physics'])
+      selected.push(...takeFromPool(pools['physics'], targets.physics, taken))
+
+    // Chemistry
+    if (pools['chemistry'])
+      selected.push(
+        ...takeFromPool(pools['chemistry'], targets.chemistry, taken),
+      )
+
+    // MAT / reasoning
+    const matPool: MCQ[] = []
+    for (const m of matSubjects) if (pools[m]) matPool.push(...pools[m])
+    if (matPool.length > 0)
+      selected.push(...takeFromPool(matPool, targets.mat, taken))
+
+    // Fill remaining slots from remaining real items
+    const remainingNeeded = Math.max(0, totalQuestions - selected.length)
+    if (remainingNeeded > 0) {
+      const remainingPool = shuffle(real.filter((q) => !taken.has(q.id)))
+      const extra = remainingPool.slice(0, remainingNeeded)
+      for (const q of extra) taken.add(q.id)
+      selected.push(...extra)
+    }
+
+    // Trim if overfull due to rounding
+    let finalPool = selected
+    if (finalPool.length > totalQuestions)
+      finalPool = shuffle(finalPool).slice(0, totalQuestions)
+
+    // Fallback: if still short (very small dataset), fall back to shuffled real/items
+    if (finalPool.length < totalQuestions) {
+      const fallback = shuffle(
+        real.length >= totalQuestions ? real : items,
+      ).slice(0, Math.min(totalQuestions, real.length || items.length))
+      finalPool = fallback
+    }
+
+    setExamQuestions(finalPool)
     setAnswers({})
     setIndex(0)
     setStarted(true)

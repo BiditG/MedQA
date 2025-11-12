@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 
@@ -50,7 +51,12 @@ export default function HeartReport() {
 
   const fieldMeta: Record<
     string,
-    { label: string; desc?: string; fmt?: (v: string) => string }
+    {
+      label: string
+      desc?: string
+      fmt?: (v: string) => string
+      render?: (v: string) => React.ReactNode
+    }
   > = {
     age: { label: 'Age' },
     sex: {
@@ -71,6 +77,55 @@ export default function HeartReport() {
     slope: { label: 'ST slope' },
     num_major_vessels: { label: 'Major vessels' },
     thal: { label: 'Thal' },
+  }
+
+  // Add more readable mappings
+  fieldMeta.chest_pain_type.render = (v: string) => {
+    // Common encoding: 1=typical angina,2=atypical angina,3=non-anginal pain,4=asymptomatic
+    if (v === '1') return 'Typical angina'
+    if (v === '2') return 'Atypical angina'
+    if (v === '3') return 'Non-anginal pain'
+    if (v === '4') return 'Asymptomatic'
+    return v || 'Unknown'
+  }
+
+  fieldMeta.restecg.render = (v: string) => {
+    if (v === '0') return 'Normal'
+    if (v === '1') return 'ST-T abnormality'
+    if (v === '2') return 'Left ventricular hypertrophy'
+    return v || 'Unknown'
+  }
+
+  fieldMeta.slope.render = (v: string) => {
+    if (v === '1') return 'Upsloping'
+    if (v === '2') return 'Flat'
+    if (v === '3') return 'Downsloping'
+    return v || 'Unknown'
+  }
+
+  fieldMeta.num_major_vessels.render = (v: string) => {
+    const n = Number(v)
+    const cls =
+      n === 0
+        ? 'border-emerald-500 bg-emerald-100 text-emerald-700'
+        : n === 1
+          ? 'border-amber-500 bg-amber-100 text-amber-700'
+          : n === 2
+            ? 'border-orange-500 bg-orange-100 text-orange-700'
+            : 'border-rose-500 bg-rose-100 text-rose-700'
+    return (
+      <Badge className={`${cls} px-2 py-0.5`}>
+        {isNaN(n) ? v || '—' : String(n)}
+      </Badge>
+    )
+  }
+
+  fieldMeta.thal.render = (v: string) => {
+    // User-provided mapping: 0 = normal; 1 = fixed defect; 2 = reversable defect
+    if (v === '0') return 'Normal'
+    if (v === '1') return 'Fixed defect'
+    if (v === '2') return 'Reversible defect'
+    return v || 'Unknown'
   }
 
   function makePrediction(predYes: boolean) {
@@ -160,12 +215,19 @@ export default function HeartReport() {
               ].map((k) => {
                 const meta = fieldMeta[k]
                 const label = meta?.label ?? k
-                const fmt = meta && meta.fmt
-                const formatted = fmt ? fmt(row[k]) : row[k]
+                const rendered = meta?.render
+                  ? meta.render(row[k])
+                  : meta?.fmt
+                    ? meta.fmt(row[k])
+                    : row[k]
+                const isString =
+                  typeof rendered === 'string' || typeof rendered === 'number'
                 return (
                   <div key={k} className="rounded border p-3">
                     <div className="text-xs text-muted-foreground">{label}</div>
-                    <div className="font-mono text-sm">{formatted}</div>
+                    <div className={isString ? 'font-mono text-sm' : ''}>
+                      {rendered}
+                    </div>
                   </div>
                 )
               })}
@@ -186,12 +248,19 @@ export default function HeartReport() {
               ].map((k) => {
                 const meta = fieldMeta[k]
                 const label = meta?.label ?? k
-                const fmt = meta && meta.fmt
-                const formatted = fmt ? fmt(row[k]) : row[k]
+                const rendered = meta?.render
+                  ? meta.render(row[k])
+                  : meta?.fmt
+                    ? meta.fmt(row[k])
+                    : row[k]
+                const isString =
+                  typeof rendered === 'string' || typeof rendered === 'number'
                 return (
                   <div key={k} className="rounded border p-3">
                     <div className="text-xs text-muted-foreground">{label}</div>
-                    <div className="font-mono text-sm">{formatted}</div>
+                    <div className={isString ? 'font-mono text-sm' : ''}>
+                      {rendered}
+                    </div>
                   </div>
                 )
               })}
@@ -228,7 +297,11 @@ export default function HeartReport() {
       {prediction !== null && (
         <div className="mt-4 rounded border p-3">
           <div
-            className={`font-medium ${String(row['target']) === (prediction ? '1' : '0') ? 'text-green-600' : 'text-red-600'}`}
+            className={`font-medium ${
+              String(row['target']) === (prediction ? '1' : '0')
+                ? 'text-green-600'
+                : 'text-red-600'
+            }`}
           >
             {String(row['target']) === (prediction ? '1' : '0')
               ? 'Prediction correct'

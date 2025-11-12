@@ -157,7 +157,7 @@ export default function SubscriptionModal({
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold">रु 999</div>
+                        <div className="text-2xl font-bold">रु 499</div>
                         <div className="text-xs text-muted-foreground">
                           / month
                         </div>
@@ -202,7 +202,7 @@ export default function SubscriptionModal({
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold">रु 1499</div>
+                        <div className="text-2xl font-bold">रु 999</div>
                         <div className="text-xs text-muted-foreground">
                           / 3 months
                         </div>
@@ -252,7 +252,7 @@ export default function SubscriptionModal({
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold">रु 4999</div>
+                        <div className="text-2xl font-bold">रु 2499</div>
                         <div className="text-xs text-muted-foreground">
                           / year
                         </div>
