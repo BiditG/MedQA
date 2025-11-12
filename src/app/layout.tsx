@@ -99,11 +99,61 @@ export default function RootLayout({
           name="google-site-verification"
           content="03vsygovTI0osOJ9DE7g0rD33dOaNp6__r24cvFMFRM"
         />
-        {/* favicon files: prefer /favicon.ico and /favicon.png, fall back to /data/logo.jpg */}
+        {/* favicon and platform meta tags */}
         <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
-        <link rel="shortcut icon" href="/data/logo.jpg" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="48x48"
+          href="/favicon-48x48.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="64x64"
+          href="/favicon-64x64.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="128x128"
+          href="/favicon-128x128.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/android-chrome-192x192.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="512x512"
+          href="/android-chrome-512x512.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#ffffff" />
+        {/* Windows tile */}
+        <meta name="msapplication-TileColor" content="#2acf80" />
+        <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
       </head>
       <body className="bg-background text-foreground">
         {/* Google tag (gtag.js) - Global site tag for Google Analytics */}

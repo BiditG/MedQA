@@ -19,14 +19,38 @@ async function main() {
   const pngToIcoModule = await import('png-to-ico')
   const pngToIco = pngToIcoModule.default || pngToIcoModule
 
-  // create a 32x32 PNG for modern browsers
+  // generate a set of PNG favicons for various platforms
+  const pngSizes = [16, 32, 48, 64, 128, 180, 192, 256, 512]
+  for (const s of pngSizes) {
+    const outP = path.join(__dirname, '..', 'public', `favicon-${s}x${s}.png`)
+    await sharp(src).resize(s, s, { fit: 'cover' }).png().toFile(outP)
+    console.log('Wrote', outP)
+  }
+
+  // also write canonical favicon.png (32x32) and apple/android filenames
   await sharp(src).resize(32, 32, { fit: 'cover' }).png().toFile(outPng)
   console.log('Wrote', outPng)
+  await sharp(src)
+    .resize(180, 180, { fit: 'cover' })
+    .png()
+    .toFile(path.join(__dirname, '..', 'public', 'apple-touch-icon.png'))
+  await sharp(src)
+    .resize(192, 192, { fit: 'cover' })
+    .png()
+    .toFile(path.join(__dirname, '..', 'public', 'android-chrome-192x192.png'))
+  await sharp(src)
+    .resize(512, 512, { fit: 'cover' })
+    .png()
+    .toFile(path.join(__dirname, '..', 'public', 'android-chrome-512x512.png'))
+  await sharp(src)
+    .resize(150, 150, { fit: 'cover' })
+    .png()
+    .toFile(path.join(__dirname, '..', 'public', 'mstile-150x150.png'))
 
-  // prepare PNG buffers at multiple sizes for ICO
-  const sizes = [16, 32, 48, 64, 128, 256]
+  // prepare PNG buffers at several sizes for ICO (common sizes)
+  const icoSizes = [16, 32, 48, 64, 128, 256]
   const buffers = []
-  for (const s of sizes) {
+  for (const s of icoSizes) {
     const buf = await sharp(src).resize(s, s, { fit: 'cover' }).png().toBuffer()
     buffers.push(buf)
   }
