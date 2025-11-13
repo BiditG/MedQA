@@ -1,114 +1,122 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
+import * as React from 'react'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 
-export default function SubscriptionModal({
-  open,
-  onClose,
-  onSubscribe,
-}: {
-  open: boolean
-  onClose: () => void
-  onSubscribe?: () => void
-}) {
-  const [container] = useState(() =>
-    typeof document !== 'undefined' ? document.createElement('div') : null,
-  )
+import { cn } from '@/utils/tailwind'
 
-  useEffect(() => {
-    if (!container) return
-    document.body.appendChild(container)
-    return () => {
-      if (container.parentNode) container.parentNode.removeChild(container)
-    }
-  }, [container])
+const Dialog = DialogPrimitive.Root
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [open])
+const DialogTrigger = DialogPrimitive.Trigger
 
-  if (!open || !container) return null
+const DialogPortal = DialogPrimitive.Portal
 
-  const modal = (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={onClose}
+const DialogClose = DialogPrimitive.Close
+
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={cn(
+      'fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      className,
+    )}
+    {...props}
+  />
+))
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+
+const DialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg',
+        className,
+      )}
+      {...props}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      {children}
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
+    </DialogPrimitive.Content>
+  </DialogPortal>
+))
+DialogContent.displayName = DialogPrimitive.Content.displayName
 
-      {/* Modal */}
-      <div
-        className="relative z-10 w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100"
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </button>
+const DialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      'flex flex-col space-y-1.5 text-center sm:text-left',
+      className,
+    )}
+    {...props}
+  />
+)
+DialogHeader.displayName = 'DialogHeader'
 
-        {/* Content */}
-        <div className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-bold">Unlock Premium Features</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Get unlimited access to all medical learning tools
-            </p>
-          </div>
+const DialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+      className,
+    )}
+    {...props}
+  />
+)
+DialogFooter.displayName = 'DialogFooter'
 
-          <ul className="space-y-2 text-sm">
-            <li className="flex items-center gap-2">
-              <span className="text-green-500">✓</span> Unlimited AI Tutor
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-green-500">✓</span> All Clinical Checks
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-green-500">✓</span> PDF to MCQ Generator
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-green-500">✓</span> AI Diagnosis Tool
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-green-500">✓</span> 3D Visualizations
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-green-500">✓</span> Drug & Device Lookup
-            </li>
-          </ul>
+const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cn(
+      'text-lg font-semibold leading-none tracking-tight',
+      className,
+    )}
+    {...props}
+  />
+))
+DialogTitle.displayName = DialogPrimitive.Title.displayName
 
-          <button
-            onClick={() => {
-              onSubscribe?.()
-            }}
-            className="w-full rounded-lg bg-gradient-to-r from-primary to-amber-500 px-4 py-3 font-semibold text-white hover:brightness-95"
-          >
-            Subscribe Now
-          </button>
+const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description
+    ref={ref}
+    className={cn('text-sm text-muted-foreground', className)}
+    {...props}
+  />
+))
+DialogDescription.displayName = DialogPrimitive.Description.displayName
 
-          <p className="text-center text-xs text-muted-foreground">
-            Questions or problems? Email{' '}
-            <a href="mailto:medqas.np@gmail.com" className="underline">
-              medqas.np@gmail.com
-            </a>
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-
-  return createPortal(modal, container)
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
 }

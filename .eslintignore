@@ -5,3 +5,9 @@ scripts/
 node_modules/
 .next/
 out/
+
+# Ignore public directory files (vendor libraries, etc.)
+public/
+
+# Ignore config files
+.lintstagedrc.js

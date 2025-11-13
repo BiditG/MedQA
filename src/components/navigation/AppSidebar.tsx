@@ -12,6 +12,7 @@ import {
   Stethoscope,
   Pill,
   Coffee,
+  BookOpen,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -49,6 +50,10 @@ export function AppSidebar({
       ],
     },
     {
+      title: 'Diagrams',
+      items: [{ href: '/diagrams', label: 'Medical Diagrams', icon: BookOpen }],
+    },
+    {
       title: 'Checks',
       items: [
         { href: '/heart-check', label: 'Heart Check', icon: Activity },
@@ -66,6 +71,10 @@ export function AppSidebar({
         { href: '/devices', label: 'Device Lookup', icon: Box },
         { href: '/disease-glossary', label: 'Glossary', icon: FileUp },
       ],
+    },
+    {
+      title: 'Diagrams',
+      items: [{ href: '/diagrams', label: 'Medical Diagrams', icon: BookOpen }],
     },
     {
       title: 'AI',
