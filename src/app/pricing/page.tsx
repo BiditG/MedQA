@@ -14,11 +14,6 @@ function PricingPage() {
       desc: 'Stepwise clinical reasoning, evidence-backed answers, adaptive follow-ups.',
     },
     {
-      emoji: '📄',
-      title: 'PDF → MCQ Generator',
-      desc: 'Convert notes, lectures and PDFs into exam-style practice questions.',
-    },
-    {
       emoji: '🫀',
       title: '3D Organ Models',
       desc: 'High-quality 3D anatomy: rotate, zoom, annotate and compare organs.',

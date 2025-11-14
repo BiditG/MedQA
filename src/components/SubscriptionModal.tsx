@@ -84,10 +84,6 @@ export default function SubscriptionModal({
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="mt-1 inline-block h-3 w-3 rounded-full bg-green-500" />
-                    PDF → MCQ: convert notes & lectures into practice questions
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="mt-1 inline-block h-3 w-3 rounded-full bg-green-500" />
                     Advanced visualization: 3D previews, annotated images, and
                     flowcharts
                   </li>

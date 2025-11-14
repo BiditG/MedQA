@@ -13,6 +13,9 @@ import {
   Pill,
   Coffee,
   BookOpen,
+  Atom,
+  FlaskConical,
+  Dna,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -49,6 +52,15 @@ export function AppSidebar({
         { href: '/pomodoro', label: 'Pomodoro', icon: Coffee },
       ],
     },
+    // New Notes group under Practice
+    {
+      title: 'Notes',
+      items: [
+        { href: '/notes/physics', label: 'Physics', icon: Atom },
+        { href: '/notes/chemistry', label: 'Chemistry', icon: FlaskConical },
+        { href: '/notes/biology', label: 'Biology', icon: Dna },
+      ],
+    },
     {
       title: 'Diagrams',
       items: [{ href: '/diagrams', label: 'Medical Diagrams', icon: BookOpen }],
@@ -80,7 +92,6 @@ export function AppSidebar({
       title: 'AI',
       items: [
         { href: '/tutor', label: 'Tutor', icon: Bot },
-        { href: '/pdf-to-mcq', label: 'PDF → MCQ', icon: FileUp },
         { href: '/visualize', label: '3D Viz', icon: Box },
         { href: '/diagnose', label: 'Diagnose', icon: Stethoscope },
         { href: '/pathogenesis', label: 'Pathogenesis', icon: Activity },
