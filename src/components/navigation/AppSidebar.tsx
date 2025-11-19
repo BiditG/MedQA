@@ -85,10 +85,6 @@ export function AppSidebar({
       ],
     },
     {
-      title: 'Diagrams',
-      items: [{ href: '/diagrams', label: 'Medical Diagrams', icon: BookOpen }],
-    },
-    {
       title: 'AI',
       items: [
         { href: '/tutor', label: 'Tutor', icon: Bot },
