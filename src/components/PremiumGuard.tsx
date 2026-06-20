@@ -43,7 +43,8 @@ export function PremiumGuard({ children }: { children: React.ReactNode }) {
     return (
       <div className="p-6 text-sm">
         To access this feature, you need to purchase a package. After purchase,
-        login credentials will be provided by the admin.{' '}
+        login credentials will be provided by the admin. For account
+        information, contact +977 9803526374 or medqas.np@gmail.com.{' '}
         <Link href="/pricing" className="underline">
           View Plans
         </Link>

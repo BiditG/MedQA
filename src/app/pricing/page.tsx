@@ -393,7 +393,7 @@ function PricingPage() {
 
             {/* Google Form Button */}
             <a
-              href="https://forms.gle/JPVGJtaC5Uj3zaep6"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSe49scpgfJJoP9aB9kpSW0uQaa-gqIcNbpGqJeQp5zJkD1IQw/viewform"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-semibold text-primary-foreground hover:brightness-95"
