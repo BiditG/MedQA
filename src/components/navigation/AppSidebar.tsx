@@ -16,6 +16,8 @@ import {
   Atom,
   FlaskConical,
   Dna,
+  BookOpenCheck,
+  GraduationCap,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -46,9 +48,17 @@ export function AppSidebar({
       title: 'Practice',
       items: [
         { href: '/quiz', label: 'AIIMS/NEET PG MCQs', icon: Brain },
+        { href: '/cee-mcqs', label: 'CEE MCQs', icon: BookOpenCheck },
+        { href: '/cee-guide', label: 'CEE Guide', icon: BookOpen },
+        {
+          href: '/cee-online-class',
+          label: 'CEE Online Class',
+          icon: GraduationCap,
+        },
         { href: '/cee-practice', label: 'CEE Practice', icon: Brain },
         { href: '/cee-exam', label: 'CEE Full Exam', icon: Brain },
         { href: '/cee-past-practice', label: 'Past Questions', icon: Brain },
+        { href: '/visualize', label: '3D Anatomy', icon: Box },
         { href: '/pomodoro', label: 'Pomodoro', icon: Coffee },
       ],
     },
@@ -88,7 +98,6 @@ export function AppSidebar({
       title: 'AI',
       items: [
         { href: '/tutor', label: 'Tutor', icon: Bot },
-        { href: '/visualize', label: '3D Viz', icon: Box },
         { href: '/diagnose', label: 'Diagnose', icon: Stethoscope },
         { href: '/pathogenesis', label: 'Pathogenesis', icon: Activity },
       ],

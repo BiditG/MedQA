@@ -22,6 +22,9 @@ import {
   Pill,
   Box,
   Lock,
+  BookOpenCheck,
+  BookOpen,
+  GraduationCap,
 } from 'lucide-react'
 import { useId } from 'react'
 import SubscriptionModal from '@/components/SubscriptionModal'
@@ -139,8 +142,35 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             onLockedClick={() => setSubOpen(true)}
           />
           <TopbarLink
+            href="/cee-mcqs"
+            label="CEE MCQs"
+            Icon={BookOpenCheck}
+            profile={profile}
+            isAuthed={isAuthed}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
+          />
+          <TopbarLink
+            href="/cee-guide"
+            label="CEE Guide"
+            Icon={BookOpen}
+            profile={profile}
+            isAuthed={isAuthed}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
+          />
+          <TopbarLink
+            href="/cee-online-class"
+            label="CEE Class"
+            Icon={GraduationCap}
+            profile={profile}
+            isAuthed={isAuthed}
+            loading={loading}
+            onLockedClick={() => setSubOpen(true)}
+          />
+          <TopbarLink
             href="/visualize"
-            label="3D Viz"
+            label="3D Anatomy"
             Icon={Box}
             profile={profile}
             isAuthed={isAuthed}
