@@ -55,7 +55,6 @@ export function AppSidebar({
           label: 'CEE Online Class',
           icon: GraduationCap,
         },
-        { href: '/cee-practice', label: 'CEE Practice', icon: Brain },
         { href: '/cee-exam', label: 'CEE Full Exam', icon: Brain },
         { href: '/cee-past-practice', label: 'Past Questions', icon: Brain },
         { href: '/visualize', label: '3D Anatomy', icon: Box },

@@ -1,44 +1,33 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useId } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { useProfile } from '@/hooks/useProfile'
 import useUser from '@/hooks/useUser'
-import { Loader2, LogOut, User } from 'lucide-react'
+import {
+  Instagram,
+  Loader2,
+  LogOut,
+  Menu,
+  Stethoscope,
+  User,
+  Youtube,
+} from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import {
-  Menu,
-  Stethoscope,
-  Brain,
-  FileText,
-  Activity,
-  Pill,
-  Box,
-  Lock,
-  BookOpenCheck,
-  BookOpen,
-  GraduationCap,
-} from 'lucide-react'
-import { useId } from 'react'
-import SubscriptionModal from '@/components/SubscriptionModal'
 
 export function AppTopbar({ onMenu }: { onMenu: () => void }) {
   const brandId = useId()
   const { profile, loading: profileLoading } = useProfile()
   const { user, loading: userLoading } = useUser()
-  const [subOpen, setSubOpen] = useState(false)
 
   const loading = profileLoading || userLoading
-  const isAuthed = !!user
-
-  // Merge user metadata with profile (our user shape is simpler)
   const displayName = user?.name || profile?.full_name || user?.email
   const avatarUrl = null
 
@@ -73,124 +62,30 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
           </span>
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="ml-2 hidden items-center gap-1 md:flex"
-        >
-          {/* Lookup */}
-          <TopbarDropdown
-            label="Lookup"
-            Icon={Pill}
-            items={[
-              { href: '/drugs', label: 'Drug Lookup' },
-              { href: '/devices', label: 'Device Lookup' },
-            ]}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-
-          {/* Checks */}
-          <TopbarDropdown
-            label="Checks"
-            Icon={Activity}
-            items={[
-              { href: '/heart-check', label: 'Heart Check' },
-              { href: '/stroke-check', label: 'Stroke Check' },
-              { href: '/bacteria-check', label: 'Bacteria Quiz' },
-              { href: '/pneumonia-check', label: 'Pneumonia Check' },
-              { href: '/mri-check', label: 'Tumour Check' },
-            ]}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-
-          {/* AI */}
-          <TopbarDropdown
-            label="AI"
-            Icon={Brain}
-            items={[
-              { href: '/tutor', label: 'AI Tutor' },
-              { href: '/pdf-to-mcq', label: 'PDF → MCQ' },
-              { href: '/diagnose', label: 'Diagnose' },
-            ]}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-
-          <TopbarLink
-            href="/quiz"
-            label="Practice"
-            Icon={Brain}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-          <TopbarLink
-            href="/cee-practice"
-            label="CEE Practice"
-            Icon={Brain}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-          <TopbarLink
-            href="/cee-mcqs"
-            label="CEE MCQs"
-            Icon={BookOpenCheck}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-          <TopbarLink
-            href="/cee-guide"
-            label="CEE Guide"
-            Icon={BookOpen}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-          <TopbarLink
-            href="/cee-online-class"
-            label="CEE Class"
-            Icon={GraduationCap}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-          <TopbarLink
-            href="/visualize"
-            label="3D Anatomy"
-            Icon={Box}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-          <TopbarLink
-            href="/disease-glossary"
-            label="Glossary"
-            Icon={FileText}
-            profile={profile}
-            isAuthed={isAuthed}
-            loading={loading}
-            onLockedClick={() => setSubOpen(true)}
-          />
-        </nav>
-
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <button
-            onClick={() => setSubOpen(true)}
+          <nav
+            aria-label="Social media"
+            className="hidden items-center gap-1 sm:flex"
+          >
+            <SocialLink
+              href="https://www.tiktok.com/@medqas.np"
+              label="TikTok"
+              icon={<TikTokIcon className="h-4 w-4" />}
+            />
+            <SocialLink
+              href="https://www.youtube.com/@medqas_np"
+              label="YouTube"
+              icon={<Youtube className="h-4 w-4" aria-hidden />}
+            />
+            <SocialLink
+              href="https://www.instagram.com/medqas.np/"
+              label="Instagram"
+              icon={<Instagram className="h-4 w-4" aria-hidden />}
+            />
+          </nav>
+
+          <Link
+            href="/pricing"
             aria-label="Subscribe"
             className="vibrant-btn inline-flex items-center gap-2 ring-1 ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70"
           >
@@ -204,12 +99,13 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
               <path d="M8.5 3.5l1.2 2.9 2.9 1.2-2.9 1.2-1.2 2.9-1.2-2.9L4.4 7.6l2.9-1.2 1.2-2.9zM17 6l.9 2.1L20 9l-2.1.9L17 12l-.9-2.1L14 9l2.1-.9L17 6zM16 14.5l1.4 3.3 3.3 1.4-3.3 1.4L16 24l-1.4-3.3L11.3 19l3.3-1.4L16 14.5z" />
             </svg>
             <span className="hidden sm:inline">Subscribe</span>
-          </button>
+          </Link>
+
           <div>
             {loading ? (
               <div className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                <span className="hidden sm:inline">Loading…</span>
+                <span className="hidden sm:inline">Loading...</span>
                 <span className="sr-only">Loading profile</span>
               </div>
             ) : user ? (
@@ -272,159 +168,43 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
             )}
           </div>
         </div>
-        <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
       </div>
     </header>
   )
 }
 
-function TopbarLink({
+function SocialLink({
   href,
   label,
-  Icon,
-  profile,
-  isAuthed,
-  loading,
-  onLockedClick,
+  icon,
 }: {
   href: string
   label: string
-  Icon: React.ComponentType<{ className?: string }>
-  profile?: any
-  isAuthed?: boolean
-  loading?: boolean
-  onLockedClick?: () => void
+  icon: React.ReactNode
 }) {
-  function isRestricted(_gTitle: string, _itemHref: string) {
-    // Non-logged-in users: lock everything except weekly-exam and pricing
-    const publicPaths = ['/weekly-exam', '/pricing', '/']
-    if (loading) return false
-    if (!profile && !isAuthed) {
-      return !publicPaths.some(
-        (p) => _itemHref === p || _itemHref.startsWith(p),
-      )
-    }
-    return false
-  }
-
-  const restricted = isRestricted(
-    label === 'Practice'
-      ? 'Practice'
-      : label === 'Glossary'
-        ? 'Lookup'
-        : label === 'CEE Practice'
-          ? 'Practice'
-          : 'Lookup',
-    href,
-  )
-
-  const disabled = Boolean(restricted)
-
-  if (disabled || loading) {
-    return (
-      <button
-        onClick={() => onLockedClick?.()}
-        className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary/5"
-      >
-        <Icon className="h-4 w-4" aria-hidden />
-        <span className="underline-animate hidden sm:inline">{label}</span>
-        <Lock className="h-4 w-4 text-muted-foreground" />
-      </button>
-    )
-  }
-
   return (
-    <Link
+    <a
       href={href}
-      className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      title={label}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
     >
-      <Icon className="h-4 w-4" aria-hidden />
-      <span className="underline-animate hidden sm:inline">{label}</span>
-      <span className="sr-only">{label}</span>
-    </Link>
+      {icon}
+    </a>
   )
 }
 
-function TopbarDropdown({
-  label,
-  Icon,
-  items,
-  profile,
-  isAuthed,
-  loading,
-  onLockedClick,
-}: {
-  label: string
-  Icon: React.ComponentType<{ className?: string }>
-  items: { href: string; label: string }[]
-  profile?: any
-  isAuthed?: boolean
-  loading?: boolean
-  onLockedClick?: () => void
-}) {
-  function isRestricted(_gTitle: string, _itemHref: string) {
-    const publicPaths = ['/weekly-exam', '/pricing', '/']
-    if (loading) return false
-    if (!profile && !isAuthed) {
-      return !publicPaths.some(
-        (p) => _itemHref === p || _itemHref.startsWith(p),
-      )
-    }
-    return false
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const anyRestricted = items.some((it) => isRestricted(label, it.href))
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const allRestricted = items.every((it) => isRestricted(label, it.href))
-
-  if (false) {
-    return (
-      <Button
-        variant="ghost"
-        onClick={() => onLockedClick?.()}
-        className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary/5 hover:text-foreground"
-      >
-        <Icon className="h-4 w-4" />
-        <span className="underline-animate hidden sm:inline">{label}</span>
-      </Button>
-    )
-  }
-
+function TikTokIcon({ className }: { className?: string }) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary/5 hover:text-foreground"
-        >
-          <Icon className="h-4 w-4" />
-          <span className="underline-animate hidden sm:inline">{label}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {items.map((it) => {
-          const itemRestricted = isRestricted(label, it.href)
-          if (itemRestricted) {
-            return (
-              <DropdownMenuItem key={it.href}>
-                <button
-                  onClick={() => onLockedClick?.()}
-                  className="flex w-full items-center justify-between"
-                >
-                  <span>{it.label}</span>
-                  <Lock className="h-4 w-4 text-muted-foreground" />
-                </button>
-              </DropdownMenuItem>
-            )
-          }
-          return (
-            <DropdownMenuItem asChild key={it.href}>
-              <Link href={it.href}>{it.label}</Link>
-            </DropdownMenuItem>
-          )
-        })}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden
+    >
+      <path d="M16.6 3c.3 2.4 1.6 3.9 4 4.1v3.2c-1.4.1-2.7-.3-4-1.1v6.1c0 3.1-2.1 5.7-5.5 5.7-3.1 0-5.6-2.2-5.6-5.2 0-3.4 2.8-5.6 6.1-5.3v3.3c-1.5-.3-2.8.5-2.8 1.9 0 1.2 1 2 2.2 2 1.4 0 2.2-.9 2.2-2.5V3h3.4z" />
+    </svg>
   )
 }
