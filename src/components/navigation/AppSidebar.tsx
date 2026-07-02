@@ -18,6 +18,7 @@ import {
   Dna,
   BookOpenCheck,
   GraduationCap,
+  ClipboardList,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -50,6 +51,13 @@ export function AppSidebar({
         { href: '/quiz', label: 'AIIMS/NEET PG MCQs', icon: Brain },
         { href: '/cee-mcqs', label: 'CEE MCQs', icon: BookOpenCheck },
         { href: '/cee-guide', label: 'CEE Guide', icon: BookOpen },
+        { href: '/exam-planner', label: 'Exam Tracker', icon: ClipboardList },
+        { href: '/formula-bank', label: 'Formula Bank', icon: FlaskConical },
+        {
+          href: '/organic-reactions',
+          label: 'Organic Reactions',
+          icon: FlaskConical,
+        },
         {
           href: '/cee-online-class',
           label: 'CEE Online Class',
