@@ -20,7 +20,12 @@ function b64urlDecode(input: string): string {
   return Buffer.from(base64, 'base64').toString('utf8')
 }
 
-export function signExamToken(payload: { code: string; exp: number }) {
+export function signExamToken(payload: {
+  code: string
+  exp: number
+  name?: string
+  anonymous?: boolean
+}) {
   const header = { alg: 'HS256', typ: 'JWT' }
   const h = b64url(JSON.stringify(header))
   const p = b64url(JSON.stringify(payload))
@@ -32,7 +37,7 @@ export function signExamToken(payload: { code: string; exp: number }) {
 
 export function verifyExamToken(
   token: string,
-): { code: string; exp: number } | null {
+): { code: string; exp: number; name?: string; anonymous?: boolean } | null {
   if (!token || token.split('.').length !== 3) return null
   const [h, p, s] = token.split('.')
   const data = `${h}.${p}`
@@ -44,7 +49,12 @@ export function verifyExamToken(
     const payload = JSON.parse(b64urlDecode(p))
     if (!payload?.code || !payload?.exp) return null
     if (payload.exp * 1000 < Date.now()) return null
-    return payload
+    return {
+      code: String(payload.code),
+      exp: Number(payload.exp),
+      name: payload.name ? String(payload.name) : undefined,
+      anonymous: Boolean(payload.anonymous),
+    }
   } catch {
     return null
   }

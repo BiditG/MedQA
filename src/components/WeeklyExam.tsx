@@ -1,9 +1,10 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { endExamSession } from '@/lib/examClient'
 
-// Minimal duplication of CeeExam with title tweaks for Weekly Exam
+// Minimal duplication of CeeExam with title tweaks for Mock Exam
 // Uses same CSV (public/data/ceemcq.csv) and syllabus file.
 
 type MCQ = {
@@ -91,7 +92,7 @@ export default function WeeklyExam() {
   const [topicMap, setTopicMap] = useState<Record<string, string> | null>(null)
   const [syllabus, setSyllabus] = useState<Record<string, any> | null>(null)
 
-  // Weekly exam settings (as specified): 200 Qs, 3 hours, +1 / -0.25, no backtracking after answer
+  // Mock exam settings: 200 Qs, 3 hours, +1 / -0.25, no backtracking after answer
   const [durationMin] = useState<number>(180)
   const [marksPerCorrect] = useState<number>(1)
   const [negativePerWrong] = useState<number>(0.25)
@@ -106,6 +107,9 @@ export default function WeeklyExam() {
   const [index, setIndex] = useState(0)
   const [started, setStarted] = useState(false)
   const [finished, setFinished] = useState(false)
+  const [resultSubmitted, setResultSubmitted] = useState(false)
+  const [resultSubmitting, setResultSubmitting] = useState(false)
+  const [resultError, setResultError] = useState<string | null>(null)
   // Per-question choice
   const [choice, setChoice] = useState<string | null>(null)
 
@@ -141,6 +145,11 @@ export default function WeeklyExam() {
     }, 1000)
     return () => clearInterval(id)
   }, [started, finished])
+
+  useEffect(() => {
+    if (!started || finished || secondsLeft !== 0) return
+    finishExam(answers)
+  }, [secondsLeft, started, finished, answers])
 
   useEffect(() => {
     let cancelled = false
@@ -317,16 +326,13 @@ export default function WeeklyExam() {
   async function submitCurrent() {
     const q = examQuestions[index]
     if (!q || !choice) return
-    setAnswers((prev) => ({ ...prev, [q.id]: choice }))
+    const nextAnswers = { ...answers, [q.id]: choice }
+    setAnswers(nextAnswers)
     const next = index + 1
     if (next < examQuestions.length) {
       setIndex(next)
     } else {
-      setFinished(true)
-      // Delete the cookie immediately on the final submit
-      try {
-        await endExamSession()
-      } catch {}
+      await finishExam(nextAnswers)
     }
   }
 
@@ -336,17 +342,12 @@ export default function WeeklyExam() {
     if (next < examQuestions.length) {
       setIndex(next)
     } else {
-      setFinished(true)
-      // Delete the cookie immediately on the final skip
-      try {
-        await endExamSession()
-      } catch {}
+      await finishExam(answers)
     }
   }
 
   function submitExam() {
-    setFinished(true)
-    setStarted(false)
+    finishExam(answers)
   }
 
   function goNext() {
@@ -357,9 +358,13 @@ export default function WeeklyExam() {
   }
 
   function calculateScore() {
+    return calculateScoreFromAnswers(answers)
+  }
+
+  function calculateScoreFromAnswers(answerSet: Record<string, string>) {
     let score = 0
     for (const q of examQuestions) {
-      const sel = answers[q.id]
+      const sel = answerSet[q.id]
       if (!sel) continue
       if ((q.answer ?? '').toUpperCase() === sel.toUpperCase())
         score += marksPerCorrect
@@ -369,6 +374,10 @@ export default function WeeklyExam() {
   }
 
   function perSubjectResults() {
+    return perSubjectResultsFromAnswers(answers)
+  }
+
+  function perSubjectResultsFromAnswers(answerSet: Record<string, string>) {
     const res: Record<
       string,
       { correct: number; wrong: number; total: number; marks: number }
@@ -377,7 +386,7 @@ export default function WeeklyExam() {
       const subj = q.subject || 'Unspecified'
       if (!res[subj]) res[subj] = { correct: 0, wrong: 0, total: 0, marks: 0 }
       res[subj].total++
-      const sel = answers[q.id]
+      const sel = answerSet[q.id]
       if (!sel) continue
       if ((q.answer ?? '').toUpperCase() === sel.toUpperCase()) {
         res[subj].correct++
@@ -388,6 +397,70 @@ export default function WeeklyExam() {
       }
     }
     return res
+  }
+
+  function buildLeaderboardPayload(answerSet: Record<string, string>) {
+    const subjectScores = perSubjectResultsFromAnswers(answerSet)
+    const biologyScore = Object.entries(subjectScores).reduce(
+      (sum, [subject, value]) => {
+        const key = subject.toLowerCase()
+        if (
+          key.includes('biology') ||
+          key.includes('botany') ||
+          key.includes('zoology')
+        ) {
+          return sum + value.marks
+        }
+        return sum
+      },
+      0,
+    )
+    const answeredCount = Object.keys(answerSet).length
+    const correctCount = examQuestions.reduce((sum, q) => {
+      const selected = answerSet[q.id]
+      return selected &&
+        (q.answer ?? '').toUpperCase() === selected.toUpperCase()
+        ? sum + 1
+        : sum
+    }, 0)
+    const wrongCount = Math.max(0, answeredCount - correctCount)
+
+    return {
+      totalScore: calculateScoreFromAnswers(answerSet),
+      biologyScore,
+      answeredCount,
+      correctCount,
+      wrongCount,
+      unansweredCount: Math.max(0, examQuestions.length - answeredCount),
+      totalQuestions: examQuestions.length,
+      subjectScores,
+    }
+  }
+
+  async function finishExam(answerSet: Record<string, string>) {
+    if (finished || resultSubmitting) return
+    setResultSubmitting(true)
+    setResultError(null)
+    setFinished(true)
+    setStarted(false)
+
+    try {
+      const resp = await fetch('/api/weekly-exam/leaderboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildLeaderboardPayload(answerSet)),
+      })
+      const data = await resp.json().catch(() => ({}))
+      if (!resp.ok) throw new Error(data?.error || 'Could not submit ranking')
+      setResultSubmitted(true)
+    } catch (e: any) {
+      setResultError(e?.message || 'Could not submit ranking')
+    } finally {
+      setResultSubmitting(false)
+      try {
+        await endExamSession()
+      } catch {}
+    }
   }
 
   async function onExitEarly() {
@@ -401,9 +474,7 @@ export default function WeeklyExam() {
 
   return (
     <div className="mx-auto max-w-5xl p-4">
-      <h2 className="mb-4 text-2xl font-semibold">
-        Weekly Exam — 200 Questions
-      </h2>
+      <h2 className="mb-4 text-2xl font-semibold">Mock Exam - 200 Questions</h2>
 
       {!started && !finished && (
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -538,6 +609,15 @@ export default function WeeklyExam() {
           <div className="mb-4">
             Answered: {Object.keys(answers).length} / {examQuestions.length}
           </div>
+          <div className="mb-4 rounded-md border bg-muted/30 p-3 text-sm">
+            {resultSubmitting
+              ? 'Submitting your score to rankings...'
+              : resultSubmitted
+                ? 'Your score has been added to rankings.'
+                : resultError
+                  ? `Leaderboard submission failed: ${resultError}`
+                  : 'Leaderboard submission pending.'}
+          </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <h4 className="mb-2 font-medium">Per Subject</h4>
@@ -576,7 +656,13 @@ export default function WeeklyExam() {
               </div>
             </div>
           </div>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/mock-exam/rankings"
+              className="inline-flex items-center justify-center rounded bg-primary px-3 py-2 text-primary-foreground hover:bg-primary/90"
+            >
+              View Rankings
+            </Link>
             <button
               className="rounded bg-primary px-3 py-2 text-white"
               onClick={onExitEarly}

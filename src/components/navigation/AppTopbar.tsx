@@ -63,6 +63,13 @@ export function AppTopbar({ onMenu }: { onMenu: () => void }) {
         </Link>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/blog"
+            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 md:inline-flex"
+          >
+            Blog
+          </Link>
+
           <nav
             aria-label="Social media"
             className="hidden items-center gap-1 sm:flex"

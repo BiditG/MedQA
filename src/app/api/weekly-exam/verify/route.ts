@@ -6,7 +6,7 @@ export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
   try {
-    const { code } = await req.json()
+    const { code, name, anonymous } = await req.json()
     const res = await verifyExamCode(code)
     if (!res.ok || !res.code) {
       return NextResponse.json({ ok: false, error: res.error }, { status: 401 })
@@ -22,6 +22,10 @@ export async function POST(req: Request) {
     const token = signExamToken({
       code: res.code.code,
       exp: Math.floor(expMs / 1000),
+      name: String(name || '')
+        .trim()
+        .slice(0, 80),
+      anonymous: Boolean(anonymous),
     })
 
     const resp = NextResponse.json({

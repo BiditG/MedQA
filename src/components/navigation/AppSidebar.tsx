@@ -19,6 +19,9 @@ import {
   BookOpenCheck,
   GraduationCap,
   ClipboardList,
+  Newspaper,
+  Trophy,
+  CalendarCheck,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -42,8 +45,25 @@ export function AppSidebar({
       items: [{ href: '/pricing', label: 'Subscribe', icon: Crown }],
     },
     {
-      title: 'Weekly Exam',
-      items: [{ href: '/weekly-exam', label: 'Weekly Exam', icon: Brain }],
+      title: 'Blog',
+      items: [{ href: '/blog', label: 'CEE Blog', icon: Newspaper }],
+    },
+    {
+      title: 'Mock Exam',
+      items: [
+        { href: '/mock-exam', label: 'Mock Exam', icon: Brain },
+        { href: '/mock-exam/rankings', label: 'Rankings', icon: Trophy },
+      ],
+    },
+    {
+      title: 'Free Daily MCQs',
+      items: [
+        {
+          href: '/mock-exam/free-daily-mcqs',
+          label: 'Free Daily MCQs',
+          icon: CalendarCheck,
+        },
+      ],
     },
     {
       title: 'Practice',
@@ -51,6 +71,7 @@ export function AppSidebar({
         { href: '/quiz', label: 'AIIMS/NEET PG MCQs', icon: Brain },
         { href: '/cee-mcqs', label: 'CEE MCQs', icon: BookOpenCheck },
         { href: '/cee-guide', label: 'CEE Guide', icon: BookOpen },
+        { href: '/flashcards', label: 'Flashcards', icon: Brain },
         { href: '/exam-planner', label: 'Exam Tracker', icon: ClipboardList },
         { href: '/formula-bank', label: 'Formula Bank', icon: FlaskConical },
         {
@@ -130,7 +151,7 @@ export function AppSidebar({
   function isRestricted(_gTitle: string, _itemHref: string) {
     // Non-logged-in users: lock everything except the weekly exam and pricing/subscribe
     // If profile is null (not signed in) then restrict unless the item is allowed publicly.
-    const publicPaths = ['/weekly-exam', '/pricing', '/']
+    const publicPaths = ['/weekly-exam', '/mock-exam', '/pricing', '/blog', '/']
     if (loading) return false
     if (!profile) {
       return !publicPaths.some(

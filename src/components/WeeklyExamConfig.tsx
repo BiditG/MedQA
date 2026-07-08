@@ -22,7 +22,7 @@ export default function WeeklyExamConfig() {
       if (!res.ok) {
         setMessage(json?.error || 'Failed to save code')
       } else {
-        setMessage('Weekly exam code created')
+        setMessage('Mock exam code created')
         setCode('')
         setExpiresAt('')
         setActive(true)
@@ -36,9 +36,9 @@ export default function WeeklyExamConfig() {
 
   return (
     <div className="rounded-md border bg-card p-4">
-      <h2 className="text-lg font-semibold">Weekly Exam</h2>
+      <h2 className="text-lg font-semibold">Mock Exam</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Create access codes that unlock the Weekly Exam for guests.
+        Create access codes that unlock the Mock Exam for guests.
       </p>
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div>

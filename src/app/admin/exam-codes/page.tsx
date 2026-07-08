@@ -17,6 +17,7 @@ export default function AdminExamCodes() {
   const [codes, setCodes] = useState<ExamCode[]>([])
   const [fetching, setFetching] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [resettingLeaderboard, setResettingLeaderboard] = useState(false)
 
   const [form, setForm] = useState<{ label: string; expiresAt: string }>({
     label: '',
@@ -131,13 +132,59 @@ export default function AdminExamCodes() {
     }
   }
 
+  async function resetLeaderboard() {
+    if (
+      !confirm(
+        'Reset the mock exam leaderboard? Existing rows will be hidden from rankings.',
+      )
+    )
+      return
+    setResettingLeaderboard(true)
+    setMessage(null)
+    try {
+      const token =
+        typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const resp = await fetch('/api/admin/weekly-exam/leaderboard/reset', {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
+      const data = await resp.json().catch(() => ({}))
+      if (!resp.ok) throw new Error(data?.error || 'Reset failed')
+      setMessage('Mock exam leaderboard reset')
+    } catch (e: any) {
+      setMessage(e?.message || 'Reset failed')
+    } finally {
+      setResettingLeaderboard(false)
+    }
+  }
+
   if (loading) return <div>Loading…</div>
   if (!user) return <div>Please sign in as admin to manage codes.</div>
   if (user.role !== 'admin') return <div>Access denied — admin only.</div>
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-xl font-semibold">Admin — Exam Codes</h1>
+      <h1 className="mb-4 text-xl font-semibold">Admin - Mock Exam Codes</h1>
+
+      <div className="mb-6 rounded-md border bg-card p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-medium">Leaderboard</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Reset hides current mock exam rankings without deleting the
+              historical rows.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={resetLeaderboard}
+            disabled={resettingLeaderboard}
+            className="rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50"
+          >
+            {resettingLeaderboard ? 'Resetting...' : 'Reset leaderboard'}
+          </button>
+        </div>
+      </div>
 
       <form
         onSubmit={createCode}
