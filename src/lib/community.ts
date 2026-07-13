@@ -169,6 +169,7 @@ export async function getCommunityPosts(options?: {
   pinnedOnly?: boolean
   dailyQuestionOnly?: boolean
   postType?: string
+  excludePostType?: string
 }) {
   const supabase = getDataClient()
   let query = supabase.from('community_posts').select(postSelect)
@@ -180,6 +181,8 @@ export async function getCommunityPosts(options?: {
   if (options?.dailyQuestionOnly)
     query = query.eq('post_type', 'Daily Question')
   if (options?.postType) query = query.eq('post_type', options.postType)
+  if (options?.excludePostType)
+    query = query.neq('post_type', options.excludePostType)
 
   const { data, error } = await query
     .order('is_pinned', { ascending: false })

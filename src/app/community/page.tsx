@@ -19,25 +19,19 @@ export const metadata = {
 export default async function CommunityPage() {
   let categories: CommunityCategory[] = []
   let latest: CommunityPost[] = []
-  let announcements: CommunityPost[] = []
   let dailyQuestion: CommunityPost | null = null
   let loadError = false
 
   try {
-    const [categoryRows, latestRows, announcementRows, dailyRows] =
-      await Promise.all([
-        getCommunityCategories(),
-        getCommunityPosts({ limit: 80 }),
-        getCommunityPosts({
-          categorySlug: 'medqas-announcements',
-          pinnedOnly: true,
-          limit: 4,
-        }),
-        getCommunityPosts({ dailyQuestionOnly: true, limit: 1 }),
-      ])
-    categories = categoryRows
+    const [categoryRows, latestRows, dailyRows] = await Promise.all([
+      getCommunityCategories(),
+      getCommunityPosts({ limit: 80, excludePostType: 'Announcement' }),
+      getCommunityPosts({ dailyQuestionOnly: true, limit: 1 }),
+    ])
+    categories = categoryRows.filter(
+      (category) => category.slug !== 'medqas-announcements',
+    )
     latest = latestRows
-    announcements = announcementRows
     dailyQuestion = dailyRows[0] || null
   } catch {
     loadError = true
@@ -47,7 +41,7 @@ export default async function CommunityPage() {
     <main className="w-full">
       <CommunityHeader
         title="CEE Community"
-        description="Focused doubts, daily questions, announcements, and study progress for CEE preparation."
+        description="Focused doubts, daily questions, and study progress for CEE preparation."
         compact
       />
 
@@ -66,7 +60,6 @@ export default async function CommunityPage() {
       <CommunityFeed
         categories={categories}
         posts={latest}
-        announcements={announcements}
         dailyQuestion={dailyQuestion}
       />
     </main>

@@ -29,12 +29,10 @@ type SortMode = 'latest' | 'answered' | 'unanswered' | 'popular'
 export function CommunityFeed({
   categories,
   posts,
-  announcements,
   dailyQuestion,
 }: {
   categories: CommunityCategory[]
   posts: CommunityPost[]
-  announcements: CommunityPost[]
   dailyQuestion: CommunityPost | null
 }) {
   const router = useRouter()
@@ -155,7 +153,9 @@ export function CommunityFeed({
                 onChange={setPostType}
                 options={[
                   { label: 'All post types', value: 'all' },
-                  ...postTypes.map((item) => ({ label: item, value: item })),
+                  ...postTypes
+                    .filter((item) => item !== 'Announcement')
+                    .map((item) => ({ label: item, value: item })),
                 ]}
               />
               <FilterSelect
@@ -208,29 +208,6 @@ export function CommunityFeed({
             </Link>
           </RailSection>
         ) : null}
-
-        <RailSection title="Pinned MEDQAS">
-          {announcements.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No pinned announcements yet.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {announcements.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/community/post/${post.id}`}
-                  className="block rounded-md border bg-background p-3 text-sm transition-colors hover:border-primary/50"
-                >
-                  <span className="line-clamp-2 font-medium">{post.title}</span>
-                  <span className="mt-1 block text-xs text-muted-foreground">
-                    {formatDate(post.created_at)}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </RailSection>
 
         <RailSection title="Browse Categories">
           <div className="grid gap-1">
