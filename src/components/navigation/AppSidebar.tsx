@@ -22,6 +22,8 @@ import {
   Newspaper,
   Trophy,
   CalendarCheck,
+  Megaphone,
+  MessageSquareText,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -46,7 +48,19 @@ export function AppSidebar({
     },
     {
       title: 'Blog',
-      items: [{ href: '/blog', label: 'CEE Blog', icon: Newspaper }],
+      items: [
+        { href: '/blog', label: 'CEE Blog', icon: Newspaper },
+        {
+          href: '/announcements',
+          label: 'Announcements',
+          icon: Megaphone,
+        },
+        {
+          href: '/community',
+          label: 'CEE Community',
+          icon: MessageSquareText,
+        },
+      ],
     },
     {
       title: 'Mock Exam',

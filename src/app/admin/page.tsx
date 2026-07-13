@@ -7,6 +7,7 @@ import {
   BookOpenText,
   KeyRound,
   LayoutDashboard,
+  MessageSquareText,
   ShieldCheck,
   Users,
 } from 'lucide-react'
@@ -18,6 +19,13 @@ const adminTools = [
     description:
       'Create SEO posts for CEE syllabus 2026, best books for CEE Nepal, and mock quiz searches.',
     icon: BookOpenText,
+  },
+  {
+    href: '/admin/community',
+    title: 'Community Manager',
+    description:
+      'Create announcements and moderate CEE forum posts, categories, and status.',
+    icon: MessageSquareText,
   },
   {
     href: '/admin/users',
