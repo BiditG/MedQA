@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/mock-exam-code",
+      "schedule": "15 12 * * *"
+    },
+    {
+      "path": "/api/cron/expire-mock-exam-codes",
+      "schedule": "15 18 * * *"
+    }
+  ]
+}

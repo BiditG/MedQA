@@ -104,7 +104,7 @@ export type CommunityPost = {
   title: string
   slug: string | null
   body: string
-  author_id: string
+  author_id: string | null
   author_name: string | null
   category_id: string | null
   category_slug: string
