@@ -60,6 +60,7 @@
     "react-dom": "18.2.0",
     "react-markdown": "^10.1.0",
     "react-pdf": "^10.2.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.2.0",
     "three": "^0.159.0",
     "undici": "^5.28.2",

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/utils/tailwind'
 import { ceeMcqSyllabus } from '@/data/ceeMcqSyllabus'
+import { CeeAiExplanationPanel } from './CeeAiExplanationPanel'
 
 type Mode = 'casual' | 'timed' | 'negative'
 type Screen = 'setup' | 'quiz' | 'results'
@@ -527,6 +528,17 @@ export function CeeMcqSelector() {
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {currentQuestion.explanation || 'No explanation available.'}
                 </p>
+                <CeeAiExplanationPanel
+                  questionId={currentQuestion.id}
+                  subject={currentQuestion.subject}
+                  chapter={currentQuestion.chapter}
+                  topic={currentQuestion.topic}
+                  question={currentQuestion.question}
+                  options={options}
+                  answer={currentQuestion.answer}
+                  explanation={currentQuestion.explanation}
+                  selectedOption={currentAnswer.selected}
+                />
               </div>
             ) : null}
 

@@ -37,6 +37,80 @@ export function getGeminiKeys(): string[] {
   }
 }
 
+export type AiChatMessage = {
+  role: 'system' | 'user' | 'assistant'
+  content: string
+}
+
+export function getOllamaConfig() {
+  const host = (
+    process.env.OLLAMA_HOST ||
+    process.env.OLLAMA_BASE_URL ||
+    (process.env.OLLAMA_API_KEY
+      ? 'https://ollama.com'
+      : 'http://localhost:11434')
+  ).replace(/\/$/, '')
+
+  return {
+    host,
+    apiKey: process.env.OLLAMA_API_KEY || '',
+    model: process.env.OLLAMA_MODEL || 'gpt-oss:120b',
+  }
+}
+
+export async function callOllamaChat(
+  messages: AiChatMessage[],
+  temperature = 0.25,
+  maxTokens = 650,
+  model = getOllamaConfig().model,
+) {
+  const { host, apiKey } = getOllamaConfig()
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+  if (apiKey) headers.Authorization = `Bearer ${apiKey}`
+
+  try {
+    const resp = await fetch(`${host}/api/chat`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false,
+        options: {
+          temperature,
+          num_predict: maxTokens,
+        },
+      }),
+    })
+
+    if (!resp.ok) {
+      const body = await resp.text().catch(() => '')
+      return {
+        ok: false as const,
+        details: `status=${resp.status} body=${body}`,
+      }
+    }
+
+    const data: any = await resp.json().catch(() => null)
+    const text =
+      data?.message?.content ??
+      data?.response ??
+      data?.choices?.[0]?.message?.content ??
+      ''
+
+    return {
+      ok: true as const,
+      text: String(text || ''),
+      raw: data,
+      usedModel: data?.model ?? model,
+    }
+  } catch (e: any) {
+    return { ok: false as const, details: String(e) }
+  }
+}
+
 export async function callGeminiWithKey(
   key: string,
   prompt: string,
