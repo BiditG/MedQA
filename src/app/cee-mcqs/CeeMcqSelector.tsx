@@ -154,6 +154,32 @@ function shuffle<T>(items: T[]) {
   return next
 }
 
+function shuffleQuestionOptions(question: CeeMcq): CeeMcq {
+  const options = optionKeys.map((key) => ({
+    key,
+    text: question[`option${key}` as keyof CeeMcq] as string,
+  }))
+  const correctOption = options.find((option) => option.key === question.answer)
+
+  if (!correctOption) return question
+
+  const shuffled = shuffle(options)
+  const remappedAnswerIndex = shuffled.findIndex(
+    (option) => option === correctOption,
+  )
+
+  if (remappedAnswerIndex < 0) return question
+
+  return {
+    ...question,
+    optionA: shuffled[0]?.text ?? '',
+    optionB: shuffled[1]?.text ?? '',
+    optionC: shuffled[2]?.text ?? '',
+    optionD: shuffled[3]?.text ?? '',
+    answer: optionKeys[remappedAnswerIndex],
+  }
+}
+
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60)
   const remainder = seconds % 60
@@ -327,7 +353,9 @@ export function CeeMcqSelector() {
   function startPractice() {
     if (!actualCount) return
 
-    const selectedQuestions = shuffle(filteredItems).slice(0, actualCount)
+    const selectedQuestions = shuffle(filteredItems)
+      .slice(0, actualCount)
+      .map(shuffleQuestionOptions)
     setQuestions(selectedQuestions)
     setAnswers({})
     setCurrentIndex(0)
