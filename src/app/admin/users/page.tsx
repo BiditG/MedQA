@@ -15,6 +15,7 @@ type UserRow = {
 export default function AdminUsers() {
   const { user, loading } = useUser()
   const [users, setUsers] = useState<UserRow[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [fetching, setFetching] = useState(false)
   const [form, setForm] = useState({
     name: '',
@@ -124,6 +125,15 @@ export default function AdminUsers() {
   if (!user) return <div>Please sign in as admin to manage users.</div>
   if (user.role !== 'admin') return <div>Access denied — admin only.</div>
 
+  const normalizedSearch = searchQuery.trim().toLowerCase()
+  const filteredUsers = normalizedSearch
+    ? users.filter((u) =>
+        [u.name, u.email, u.role, u.id].some((value) =>
+          (value || '').toLowerCase().includes(normalizedSearch),
+        ),
+      )
+    : users
+
   return (
     <div className="p-4">
       <div className="mb-2 flex items-center justify-between">
@@ -195,7 +205,15 @@ export default function AdminUsers() {
         </form>
 
         <div className="rounded-md border bg-card p-4">
-          <h2 className="text-lg font-medium">Users</h2>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-lg font-medium">Users</h2>
+            <input
+              className="w-full rounded-md border px-3 py-2 text-sm sm:max-w-xs"
+              placeholder="Search users..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           {fetching ? (
             <div>Loading…</div>
           ) : (
@@ -210,7 +228,7 @@ export default function AdminUsers() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => (
+                  {filteredUsers.map((u) => (
                     <tr key={u.id} className="border-t align-top">
                       <td className="py-2">
                         {editingId === u.id ? (
@@ -319,6 +337,16 @@ export default function AdminUsers() {
                       </td>
                     </tr>
                   ))}
+                  {filteredUsers.length === 0 ? (
+                    <tr>
+                      <td
+                        className="border-t py-4 text-center text-muted-foreground"
+                        colSpan={4}
+                      >
+                        No users found.
+                      </td>
+                    </tr>
+                  ) : null}
                 </tbody>
               </table>
             </div>

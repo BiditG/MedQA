@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react'
+import { CheckCircle2, RotateCcw } from 'lucide-react'
 
 type MCQ = {
   id: string
@@ -25,13 +24,11 @@ const sources = [
 ]
 
 export default function FreeDailyMcqsPage() {
-  const router = useRouter()
   const [questions, setQuestions] = useState<MCQ[]>([])
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [finished, setFinished] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [redirectSeconds, setRedirectSeconds] = useState(8)
 
   useEffect(() => {
     let cancelled = false
@@ -69,18 +66,6 @@ export default function FreeDailyMcqsPage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!finished) return
-    if (redirectSeconds <= 0) {
-      router.push('/pricing')
-      return
-    }
-    const timer = setTimeout(() => {
-      setRedirectSeconds((value) => value - 1)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [finished, redirectSeconds, router])
-
   const answeredCount = Object.keys(answers).length
   const score = useMemo(
     () =>
@@ -102,7 +87,6 @@ export default function FreeDailyMcqsPage() {
   function reset() {
     setAnswers({})
     setFinished(false)
-    setRedirectSeconds(8)
   }
 
   if (loading) return <div className="p-6">Loading daily MCQs...</div>
@@ -157,16 +141,8 @@ export default function FreeDailyMcqsPage() {
                 Result: {score} / {questions.length}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Redirecting to subscription plans in {redirectSeconds}s.
+                Review the correct answers and explanations below.
               </p>
-              <button
-                type="button"
-                onClick={() => router.push('/pricing')}
-                className="vibrant-btn mt-4 inline-flex items-center gap-2"
-              >
-                See plans now
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </button>
             </div>
           </div>
         </section>
