@@ -1,7 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Maximize2, Minimize2, ZoomIn, ZoomOut } from 'lucide-react'
+import {
+  ExternalLink,
+  Maximize2,
+  Minimize2,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react'
 
 type Props = {
   src: string // e.g., /notes/chemistry/file.pdf#toolbar=0&navpanes=0&scrollbar=0
@@ -12,12 +18,21 @@ type Props = {
 export default function PdfViewer({ src, title, className }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [isFs, setIsFs] = useState(false)
+  const [useNativePdfViewer, setUseNativePdfViewer] = useState(false)
   const [zoom, setZoom] = useState(1) // 0.5x – 2x
 
   useEffect(() => {
     const onFsChange = () => setIsFs(!!document.fullscreenElement)
     document.addEventListener('fullscreenchange', onFsChange)
     return () => document.removeEventListener('fullscreenchange', onFsChange)
+  }, [])
+
+  useEffect(() => {
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+
+    setUseNativePdfViewer(isIOS)
   }, [])
 
   function zoomIn() {
@@ -52,6 +67,32 @@ export default function PdfViewer({ src, title, className }: Props) {
 
   // Compensate size so only the PDF scales (no layout jump, no flicker)
   const comp = (100 / zoom).toFixed(6)
+  const directPdfUrl = src.split('#', 1)[0]
+
+  if (useNativePdfViewer) {
+    return (
+      <div
+        className={`${
+          className ? className + ' ' : ''
+        }grid place-items-center bg-muted/30 p-6 text-center`}
+      >
+        <div className="max-w-sm space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Open this note in Safari&apos;s PDF viewer to read every page.
+          </p>
+          <a
+            href={directPdfUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          >
+            Open full PDF
+            <ExternalLink className="h-4 w-4" aria-hidden />
+          </a>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
