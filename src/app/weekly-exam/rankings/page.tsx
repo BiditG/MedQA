@@ -22,6 +22,20 @@ export default function WeeklyExamRankingsPage() {
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Mock Exam Rankings
         </h1>
+        <div className="mt-4 flex gap-3 text-sm">
+          <Link
+            href="/weekly-exam/rankings"
+            className="font-semibold text-primary"
+          >
+            Mock Exam
+          </Link>
+          <Link
+            href="/cee-rankbreaker/leaderboard"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            CEE Rankbreaker ranking
+          </Link>
+        </div>
       </header>
 
       <section className="mt-6">

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import {
   BookOpenText,
   KeyRound,
+  Trophy,
   LayoutDashboard,
   MessageSquareText,
   ShieldCheck,
@@ -38,6 +39,13 @@ const adminTools = [
     title: 'Exam Codes',
     description: 'Generate, copy, expire, and disable weekly exam codes.',
     icon: KeyRound,
+  },
+  {
+    href: '/admin/cee-rankbreaker',
+    title: 'CEE Rankbreaker',
+    description:
+      'Manage ranked editions, private access codes, imports, results, and answer-review release.',
+    icon: Trophy,
   },
   {
     href: '/admin/glossary-upload',

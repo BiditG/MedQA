@@ -21,6 +21,7 @@ import {
   ClipboardList,
   Newspaper,
   Trophy,
+  Timer,
   CalendarCheck,
   Megaphone,
   MessageSquareText,
@@ -67,6 +68,17 @@ export function AppSidebar({
       items: [
         { href: '/mock-exam', label: 'Mock Exam', icon: Brain },
         { href: '/mock-exam/rankings', label: 'Rankings', icon: Trophy },
+      ],
+    },
+    {
+      title: 'CEE Rankbreaker',
+      items: [
+        { href: '/cee-rankbreaker', label: 'CEE Rankbreaker', icon: Timer },
+        {
+          href: '/cee-rankbreaker/leaderboard',
+          label: 'Rankbreaker ranking',
+          icon: Trophy,
+        },
       ],
     },
     {
@@ -165,7 +177,14 @@ export function AppSidebar({
   function isRestricted(_gTitle: string, _itemHref: string) {
     // Non-logged-in users: lock everything except the weekly exam and pricing/subscribe
     // If profile is null (not signed in) then restrict unless the item is allowed publicly.
-    const publicPaths = ['/weekly-exam', '/mock-exam', '/pricing', '/blog', '/']
+    const publicPaths = [
+      '/weekly-exam',
+      '/mock-exam',
+      '/cee-rankbreaker',
+      '/pricing',
+      '/blog',
+      '/',
+    ]
     if (loading) return false
     if (!profile) {
       return !publicPaths.some(
